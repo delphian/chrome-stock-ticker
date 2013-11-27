@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+
+  "name": "Chrome Stock Ticker",
+  "description": "Chrome extension scans current page for any ticker symbols and if found will display relevant data in the ticker window; such as stock price, free cash flow, historic dividend growth rate, etc...",
+  "version": "0.9.0",
+
+  "homepage_url": "https://github.com/delphian/chrome-stock-ticker/wiki",
+
+  "permissions": [
+    "https://www.google.com/",
+    "http://finance.yahoo.com/",
+    "notifications"
+  ],
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  
+  "options_page": "options/options.html",
+
+  "browser_action": {
+    "default_icon": {
+      "19": "images/icon-19.png",
+      "38": "images/icon-38.png"
+    },
+    "default_title": "Chrome Stock Ticker",
+    "default_popup": "popup/popup.html"
+  },
+
+  "icons": { 
+    "16": "images/icon-16.png",
+    "19": "images/icon-19.png",
+    "38": "images/icon-38.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+
+  "background": {
+    "page": "background/background.html"
+  }
+
+}

@@ -1,0 +1,17 @@
+<html ng-app>
+<head>
+  <title>Options</title>
+  <script src="/libs/jquery/jquery.min.js"></script>
+  <script src="/libs/angular/angular.min.js"></script>
+  <script src="options.js"></script>
+</head>
+
+<body>
+  <h1>Chrome Stock Ticker Options</h1>
+  <div ng-controller="OptionsCtrl">
+    <input type="textbox" ng-model="tickers">
+    <button ng-click="save()">Save</button>
+  </div>
+</body>
+
+</html>
