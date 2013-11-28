@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
         $('body').append('<div id="cstContainer">Test</div>');
         $('#cstContainer').html('<p>'+tickers.join()+'</p>');
         $('body').css('position', 'relative');
-        $('body').css({'margin-top':'2em'});
+        $('body').css({'margin-top':'30px'});
         chrome.runtime.sendMessage('showbar');
     }
 });

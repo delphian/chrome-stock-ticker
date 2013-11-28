@@ -8,12 +8,14 @@
   border-bottom: 1px solid #888888;
   background-color: #F6F6F6;
   background: linear-gradient(#F8F8F8, #E8E8E8);
+  z-index: 999;
 }
 
 #cstContainer p {
   text-align: left;
   font-size: 10px;
   margin: 10px;
+  line-height:10px;
   padding: 0px;
   font-weight:800;
 }
