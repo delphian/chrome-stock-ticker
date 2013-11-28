@@ -10,7 +10,8 @@
   "permissions": [
     "https://www.google.com/",
     "http://finance.yahoo.com/",
-    "notifications"
+    "notifications",
+    "experimental"
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
@@ -25,6 +26,19 @@
     "default_title": "Chrome Stock Ticker",
     "default_popup": "popup/popup.html"
   },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "libs/jquery/jquery.min.js",
+        "content/find-tickers.js"
+      ],
+      "css": [
+        "content/find-tickers.css"
+      ]
+    }
+  ],
 
   "icons": { 
     "16": "images/icon-16.png",
