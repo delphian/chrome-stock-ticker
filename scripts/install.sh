@@ -9,6 +9,17 @@ if [ -d "libs" ]; then
 fi
 
 mkdir libs
-mkdir libs/jquery    && echo "Downloading jquery"    && curl --progress-bar -o libs/jquery/jquery.min.js     http://code.jquery.com/jquery-1.8.3.min.js
-mkdir libs/angular && echo "Downloading angularjs" && curl --progress-bar -o libs/angular/angular.min.js http://code.angularjs.org/1.2.2/angular.min.js
+
+echo "Downloading jquery"
+mkdir libs/jquery
+curl -L --progress-bar -o libs/jquery/jquery.min.js http://code.jquery.com/jquery-1.8.3.min.js
+
+echo "Downloading angularjs"
+mkdir libs/angular
+curl -L --progress-bar -o libs/angular/angular.min.js  http://code.angularjs.org/1.2.2/angular.min.js
+
+echo "Downloading bootstrap"
+mkdir libs/bootstrap
+curl -L --progress-bar -o libs/bootstrap/bootstrap.zip https://github.com/twbs/bootstrap/releases/download/v3.0.2/bootstrap-3.0.2-dist.zip 
+unzip libs/bootstrap/bootstrap.zip -d libs/bootstrap
 
