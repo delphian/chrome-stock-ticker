@@ -16,10 +16,9 @@ GSTContent.findTickers = function(patterns) {
     // Detect ticker symbols by matching a href urls to these patterns.
     if (typeof(patterns) == 'undefined' || patterns.length < 1) {
         patterns = [
-            '.*(ticker|symb).*?([A-Z]+)',
+            { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 }
         ];
     }
-
     // Store ticker symbols found in this array.
     var tickers = [];
     // Iterate through all 'a' elements.
@@ -30,10 +29,10 @@ GSTContent.findTickers = function(patterns) {
             href = decodeURIComponent(href);
             for (i=0; i<patterns.length; i++) {
                 var match;
-                var regex = new RegExp(patterns[i], 'g');
+                var regex = new RegExp(patterns[i].pattern, patterns[i].options);
                 // If the href attribute matches one of our patterns.
                 while ((match = regex.exec(href)) !== null) {
-                    tickers.push(match[2]);
+                    tickers.push(match[patterns[i].result]);
                 }
             }
         }
@@ -61,14 +60,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 jQuery(document).ready(function($) {
 
     var tickers = GSTContent.findTickers([
-        '.*(ticker|symb).*?([A-Z]+)',
+        { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
+        { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }  
     ]);
     // Create our box.
     if (tickers.length) {
         $('body').append('<div id="cstContainer">Test</div>');
         $('#cstContainer').html('<p>'+tickers.join()+'</p>');
-        $('body').css('position', 'relative');
-        $('body').css({'margin-top':'30px'});
-        chrome.runtime.sendMessage('showbar');
+        $('html').css('position', 'relative');
+        $('html').css({'margin-top':'30px'});
     }
 });

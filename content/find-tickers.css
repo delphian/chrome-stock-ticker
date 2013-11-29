@@ -8,7 +8,7 @@
   border-bottom: 1px solid #888888;
   background-color: #F6F6F6;
   background: linear-gradient(#F8F8F8, #E8E8E8);
-  z-index: 999;
+  z-index: 9999999;
 }
 
 #cstContainer p {

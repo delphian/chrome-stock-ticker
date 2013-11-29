@@ -3,7 +3,8 @@
 jQuery('document').ready(function($) {
     var background = chrome.extension.getBackgroundPage();
     var patterns = [
-        '.*(ticker|symb).*?([A-Z]+)',
+        { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
+        { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
     ];
 
     // Ask current tab if it has any tickers.
