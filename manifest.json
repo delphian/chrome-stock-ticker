@@ -13,6 +13,8 @@
     "notifications"
   ],
 
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
   "web_accessible_resources": [
     "http://finance.yahoo.com/"
   ],
@@ -33,7 +35,8 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": [
         "libs/jquery/jquery.min.js",
-        "content/find-tickers.js",
+        "content/GSTResource.js",
+        "content/GSTSymbols.js",
         "content/GSTTicker.js"
       ],
       "css": [

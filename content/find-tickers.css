@@ -9,6 +9,7 @@
   background-color: #F6F6F6;
   background: linear-gradient(#F8F8F8, #E8E8E8);
   z-index: 9999999;
+  overflow: hidden;
 }
 
 #cstContainer p {

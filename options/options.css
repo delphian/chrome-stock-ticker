@@ -1,0 +1,14 @@
+
+input.url-name {
+    width: 60px;
+}
+input.url {
+    width: 300px;
+}
+input.selector {
+    width: 300px;
+}
+
+table th {
+    text-align: left;
+}

@@ -1,17 +1,109 @@
-<html ng-app>
+<!DOCTYPE html>
+<html lang="en" ng-app>
 <head>
   <title>Options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/libs/jquery/jquery.min.js"></script>
-  <script src="/libs/angular/angular.min.js"></script>
-  <script src="options.js"></script>
+  <link rel="stylesheet" type="text/css" href="/libs/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="/options/options.css" />
 </head>
 
 <body>
-  <h1>Chrome Stock Ticker Options</h1>
-  <div ng-controller="OptionsCtrl">
-    <input type="textbox" ng-model="tickers">
-    <button ng-click="save()">Save</button>
+
+  <ul id="mainNav" class="nav nav-tabs">
+    <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+    <li><a href="#resource" data-toggle="tab">Resource</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="home">
+      <div class="container">
+        <h1>Chrome Stock Ticker Options</h1>
+        <div ng-controller="OptionsCtrl">
+          <input type="textbox" ng-model="tickers">
+          <button ng-click="save()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="resource">
+      <div class="container">
+
+        <h2>Resource</h2>
+        <p>The resource instructs the program how to obtain values (metrics) for
+        a ticker symbol. To obtain a price value for any given ticker two pieces of
+        information must first be provided: first, a url where that value lives
+        on the internet, and second, a selector path to locate the individual value
+        (metric, such as 'price') on the given url page.</p>
+        <div ng-controller="ResourceCtrl">
+          <div class="panel-group" id="accordion">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    URL Mapping
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <p>URL Maps instruct the browser on what, if anything, needs to be
+                  done first before accessing the given URL (such as a login process).
+                  Normally nothing needs to be done.</p>
+                  <table><tr><th>URL</th></tr>
+                    <tr ng-repeat="(index, url) in resource.urls">
+                      <td><input class="url" ng-model="url.url" /></td>
+                      <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="urlRemove(index)"> </button></td>
+                    </tr>
+                  </table>
+                  <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="urlAdd()"> URL</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                    Metric Mapping
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <p>Metric Maps instruct the browser how to locate a particular piece
+                  of information, such as a stock price. The URL is opened in the
+                  background and the individual data is targeted by the path in the
+                  selector. Each succesfully configured metric will be available to
+                  display on the ticker bar.</p>
+                  <table><tr><th>Metric</th><th>URL</th><th>Selector</th></tr>
+                    <tr ng-repeat="(index, metric) in resource.metrics">
+                      <td><input class="url-name" ng-model="metric.name" /></td>
+                      <td><input class="url" ng-model="metric.url" /></td>
+                      <td><input class="selector" ng-model="metric.selector" /></td>
+                      <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
+                    </tr>
+                  </table>
+                  <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="metricAdd()"> Metric</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <br />
+          <div id="saveConfirm"></div>
+          <button class="btn btn-warning" ng-click="save()">Update Resource</button>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <script src="/libs/angular/angular.min.js"></script>
+  <script src="options-angular.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.min.js" />
+  <script src="options-bootstrap.js"></script>
+
 </body>
 
 </html>
