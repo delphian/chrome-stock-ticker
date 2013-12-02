@@ -37,10 +37,11 @@
         "libs/jquery/jquery.min.js",
         "content/GSTResource.js",
         "content/GSTSymbols.js",
-        "content/GSTTicker.js"
+        "content/GSTTicker.js",
+        "content/find-symbols.js"
       ],
       "css": [
-        "content/find-tickers.css"
+        "content/find-symbols.css"
       ]
     }
   ],

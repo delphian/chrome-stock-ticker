@@ -7,6 +7,27 @@ function OptionsCtrl($scope) {
   };
 }
 
+function PatternCtrl($scope) {
+    $scope.patterns = [
+        { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
+        { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
+    ];
+    if (typeof(localStorage['patterns']) != 'undefined') {
+        $scope.patterns = JSON.parse(localStorage['patterns']);
+    }
+
+    $scope.patternAdd = function() {
+        $scope.patterns.push({ pattern: '', options: 'g', result: 1 });
+    }
+    $scope.patternRemove = function(index) {
+        $scope.patterns.splice(index, 1);
+    }
+    $scope.save = function() {
+        localStorage['patterns'] = angular.toJson($scope.patterns);
+        $('#saveConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+    }    
+}
+
 function ResourceCtrl($scope) {
     $scope.resource = {
         urls: [
@@ -17,7 +38,6 @@ function ResourceCtrl($scope) {
             { name: 'volume', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'table#table2 tr:nth-child(3) td.yfnc_tabledata1 span' },
         ]
     };
-
     if (typeof(localStorage['resource']) != 'undefined') {
         $scope.resource = JSON.parse(localStorage['resource']);
     }

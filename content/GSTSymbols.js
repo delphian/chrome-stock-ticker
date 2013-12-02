@@ -4,6 +4,9 @@ var GSTSymbols = function(html, patterns, resource) {
     this.html = html;
     // Detect ticker symbols by matching a href urls to these patterns.
     this.patterns = patterns;
+    if (typeof(patterns) == 'undefined' || patterns.length < 1) {
+        this.patterns = GSTSymbols.getDefaultPatterns();
+    }
     // Resource to map symbol metric (IBM: 'price') to value.
     this.resource = resource;
     // Store which symbols have been found in document.
@@ -12,17 +15,6 @@ var GSTSymbols = function(html, patterns, resource) {
     this.tickers = [];
     // Track which symbols are currently being loaded into ticker objects.
     this.fetching = [];
-
-    // Provide default patterns if none were specified.
-    if (typeof(patterns) == 'undefined' || patterns.length < 1) {
-        patterns = [{ 
-            pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)',
-            options: 'g',
-            result: 2 
-        }];
-    }
-
-    // Provide default resource if none was specified.
 };
 /**
  * Detect ticker symbols on current page by matching href urls to patterns.
@@ -108,20 +100,15 @@ GSTSymbols.prototype.fetchingRemove = function(value, callback) {
         callback();
     }
 }
-
-chrome.runtime.sendMessage({method: 'getGSTResource'}, function(response) {
-    if (response.status == 1) {
-        var resource = response.resource;
-        jQuery(document).ready(function($) {
-            var patterns = [
-                { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
-                { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
-            ];
-            symbols = new GSTSymbols($('html').html(), patterns, resource);
-            symbols.findSymbols();
-            symbols.loadTickers(function() {
-                symbols.showBar();
-            });
-        });
-    }
-});
+/**
+ * Return a minimal set of default patterns.
+ *
+ * Static method.
+ */
+GSTSymbols.getDefaultPatterns = function() {
+    var patterns = [
+        { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
+        { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
+    ];
+    return patterns;
+}

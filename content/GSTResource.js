@@ -23,9 +23,8 @@
  *   previous fetching of all metrics.
  */
 GSTResource = function(resource, cache) {
-    if (!this.validResource(resource)) {
-        throw 'Provided resource JSON is not valid.';
-    }
+    if (typeof(resource) == 'undefined') resource = GSTResource.getDefaultResource();
+    if (!this.validResource(resource)) throw 'Provided resource JSON is not valid.';
     this.resource = resource;
 
     // Store results of metric fetching.
@@ -269,4 +268,21 @@ GSTResource.prototype.replaceUrlVars = function (url, replacements) {
         url = url.replace(replacement.from, replacement.to);
     }
     return url;
+};
+/**
+ * Generate a default resource object.
+ *
+ * Static method.
+ */
+GSTResource.getDefaultResource = function () {
+    var resource = {
+        urls: [
+            { url: 'http://finance.yahoo.com/q?s=SYMBOL' }
+        ],
+        metrics: [
+            { name: 'price', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'span.time_rtq_ticker span' },
+            { name: 'volume', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'table#table2 tr:nth-child(3) td.yfnc_tabledata1 span' },
+        ]
+    };
+    return resource;
 };

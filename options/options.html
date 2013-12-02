@@ -13,6 +13,7 @@
   <ul id="mainNav" class="nav nav-tabs">
     <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
     <li><a href="#resource" data-toggle="tab">Resource</a></li>
+    <li><a href="#patterns" data-toggle="tab">Patterns</a></li>
   </ul>
 
   <div class="tab-content">
@@ -97,6 +98,31 @@
         </div>
       </div>
     </div>
+
+    <div class="tab-pane" id="patterns">
+      <div class="container">
+        <h2>Patterns</h2>
+        <p>Each page that is visited by the browser will have the url of all
+        anchor tags compared to these regular expressions. The expressions
+        are used to locate references to ticker symbols. Expressions are
+        formatted for use with <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">javascript's RegExp()</a>.</p>
+        <div ng-controller="PatternCtrl">
+          <table><tr><th>Pattern</th><th>Modifiers</th><th>Result</th></tr>
+            <tr ng-repeat="(index, pattern) in patterns">
+              <td><input class="selector" ng-model="pattern.pattern" /></td>
+              <td><input class="name" ng-model="pattern.options" /></td>
+              <td><input class="name" ng-model="pattern.result" /></td>
+              <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="patternRemove(index)"> </button></td>
+            </tr>
+          </table>
+          <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="patternAdd()"> Pattern</button>
+        </div>
+        <br />
+        <div id="saveConfirm"></div>
+        <button class="btn btn-warning" ng-click="save()">Update Patterns</button>
+      </div>
+    </div>    
+
   </div>
 
   <script src="/libs/angular/angular.min.js"></script>
