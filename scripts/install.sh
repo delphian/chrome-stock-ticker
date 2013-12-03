@@ -23,3 +23,7 @@ mkdir libs/bootstrap
 curl -L --progress-bar -o libs/bootstrap/bootstrap.zip https://github.com/twbs/bootstrap/releases/download/v3.0.2/bootstrap-3.0.2-dist.zip 
 unzip libs/bootstrap/bootstrap.zip -d libs/bootstrap
 
+echo "Downloading bootstrap switch"
+mkdir libs/bootstrap-switch
+curl -L --progress-bar -o libs/bootstrap-switch/bootstrap-switch.zip https://github.com/nostalgiaz/bootstrap-switch/archive/master.zip
+unzip libs/bootstrap-switch/bootstrap-switch.zip -d libs/bootstrap-switch
