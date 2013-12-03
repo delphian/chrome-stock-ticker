@@ -14,24 +14,24 @@ function PatternCtrl($scope) {
     ];
     if (typeof(localStorage['patterns']) != 'undefined') {
         $scope.patterns = JSON.parse(localStorage['patterns']);
-    }
+    };
     $scope.patternAdd = function() {
         $scope.patterns.push({ pattern: '', options: 'g', result: 1 });
-    }
+    };
     $scope.patternRemove = function(index) {
         $scope.patterns.splice(index, 1);
-    }
+    };
     $scope.save = function() {
         localStorage['patterns'] = angular.toJson($scope.patterns);
         $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
-    }    
+    };
 }
 
 function TickerBarCtrl($scope) {
     $scope.metrics = [];
     if (typeof(localStorage['resource']) != 'undefined') {
         var resource = JSON.parse(localStorage['resource']);
-        var tickerbar = {};
+        var tickerbar = { metrics: [] };
         if (typeof(localStorage['tickerbar']) != 'undefined') {
             tickerbar = JSON.parse(localStorage['tickerbar']);
         }
@@ -49,7 +49,7 @@ function TickerBarCtrl($scope) {
     $scope.save = function() {
         localStorage['tickerbar'] = angular.toJson( { metrics: $scope.metrics } );
         $('#saveConfirmTickerBar').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
-    }    
+    };
 }
 
 function ResourceCtrl($scope) {

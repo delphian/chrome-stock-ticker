@@ -26,7 +26,7 @@ showBar = function(symbols, tickerbar) {
         $('html').css('position', 'relative');
         $('html').css({'margin-top':'30px'});
     }
-}
+};
 
 chrome.runtime.sendMessage({method: 'getGSTOptions'}, function(response) {
     if (response.status == 1) {
