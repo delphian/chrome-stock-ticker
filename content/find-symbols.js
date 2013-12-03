@@ -8,18 +8,17 @@
  * Print all tickers into the ticker bar.
  */
 showBar = function(symbols, tickerbar) {
-console.log(tickerbar);
     var text = '';
     for (symbol in symbols.tickers) {
         var ticker = symbols.tickers[symbol];
-console.log(ticker.resource.cache);
         text = text + symbol + ': ';
         for (var i=0; i<tickerbar.metrics.length; i++) {
             tbmetric = tickerbar.metrics[i];
             if ((tbmetric.show == true) && (typeof(ticker.resource.cache.metrics[tbmetric.name]) != 'undefined')) {
-                text = text + ticker.resource.cache.metrics[tbmetric.name].value + ' ';
+                text = text + tbmetric.name + ':' + ticker.resource.cache.metrics[tbmetric.name].value + ' ';
             }
         }
+        text = text + ' &nbsp; ';
     }
     if (text.length) {
         $('body').append('<div id="cstContainer">Test</div>');
