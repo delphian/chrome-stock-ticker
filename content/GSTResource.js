@@ -33,46 +33,7 @@ GSTResource = function(resource, cache) {
         metrics: {}
     };
     if (typeof(cache) != 'undefined') this.cache = cache;
-    // Any ajax calls will be recorded in this array until finished.
-    this.fetching = [];
-    // Any metric fetch calls are recorded in this array until finished.
-    this.fetchingMetric = [];
 };
-/**
- * Remove a url from the fetching array. When the fetching array is empty
- * then the callback function will be invoked.
- *
- * @param string url
- *   The url to remove from the fetching array, generally because the fetch
- *   has completed.
- * @param object callback
- *   Invoke callback when fetching array is empty. In a loop to fetch all urls
- *   firing this callback indicates all urls have been fetched.
- */
-GSTResource.prototype.fetchingRemove = function(url, callback) {
-    this.fetching.splice(this.fetching.indexOf(url), 1);
-    if (!this.fetching.length) {
-        callback();
-    }
-}
-/**
- * Remove a metric name from the fetchingMetric array. When the array is empty
- * then the callback function will be invoked, indicating that all metrics
- * have been retrieved.
- *
- * @param string name
- *   The name to remove from the array, generally because the fetch has
- *   completed.
- * @param object callback
- *   Invoke callback when array is empty. In a loop to fetch all metrics
- *   firing this callback indicates all metrics have been fetched.
- */
-GSTResource.prototype.fetchingMetricRemove = function(name, callback) {
-    this.fetchingMetric.splice(this.fetchingMetric.indexOf(name), 1);
-    if (!this.fetchingMetric.length) {
-        callback.call(this, this.cache.metrics);
-    }
-}
 /**
  * Fetch a URL from the internet.
  *
@@ -92,10 +53,11 @@ GSTResource.prototype.fetchingMetricRemove = function(name, callback) {
  *   returned by the ajax request.
  */
 GSTResource.prototype.fetchUrl = function(url, params, callback) {
+    var thisGSTResource = this;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
           if (xhr.readyState == 4) {
-              callback(xhr.responseText);
+              callback.call(thisGSTResource, xhr.responseText);
           }
     }
     xhr.open("GET", url, true);
@@ -191,15 +153,17 @@ GSTResource.prototype.validCache = function (cache) {
  */
 GSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush) {
     var thisGSTResource = this;
+    var fetching = [];
     for (var i=0; i<this.resource.metrics.length; i++) {
         var metric = this.resource.metrics[i];
         // Record the begining of an async call to fetch metric value.
-        this.fetchingMetric.push(metric.name);
+        fetching.push(metric.name);
         this.fetchMetric(metric, replacements, function() {
             // Record the end of async call to fetch metric. When the last metric
             // has been retrieved, and the array empty, then the callback will be
-            // invoked by the remove method.
-            thisGSTResource.fetchingMetricRemove(metric.name, callback);
+            // invoked.
+            fetching.splice(fetching.indexOf(metric.name), 1);
+            if (!fetching.length) callback.call(this, this.cache.metrics);
         }, flush);
     }
 }
@@ -227,14 +191,14 @@ GSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
     if (typeof(this.cache.urls[url]) == 'undefined' || flush) {
         this.fetchUrl(url, {}, function(html) {
             var value = $(html).find(metric.selector).text();
-            thisGSTResource.cache.urls[url] = {};
-            thisGSTResource.cache.urls[url].html = html;
-            thisGSTResource.cache.urls[url].timestamp = new Date().getTime();
-            thisGSTResource.cache.metrics[metric.name] = {};
-            thisGSTResource.cache.metrics[metric.name].value = value;
-            thisGSTResource.cache.metrics[metric.name].timestamp = new Date().getTime();
-            callback(value);
-        });
+            this.cache.urls[url] = {};
+            this.cache.urls[url].html = html;
+            this.cache.urls[url].timestamp = new Date().getTime();
+            this.cache.metrics[metric.name] = {};
+            this.cache.metrics[metric.name].value = value;
+            this.cache.metrics[metric.name].timestamp = new Date().getTime();
+            callback.call(this, value);
+        });1
     } else {
         var value = null;
         if (this.cache.metrics[metric.name] == 'undefined' || flush) {
@@ -245,7 +209,7 @@ GSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
         } else {
             value = this.cache.metrics[metric.name].value;
         }
-        callback(value);
+        callback.call(this, value);
     }
 };
 /**
