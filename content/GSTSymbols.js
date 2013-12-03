@@ -70,24 +70,6 @@ GSTSymbols.prototype.loadTickers = function(callback) {
     }
 };
 /**
- * Print all tickers into the ticker bar.
- */
-GSTSymbols.prototype.showBar = function() {
-    var text = '';
-    for (symbol in this.tickers) {
-        var ticker = this.tickers[symbol];
-        text = text + symbol + ': ' 
-          + ticker.resource.cache.metrics.price.value + ' ' 
-          + ticker.resource.cache.metrics.volume.value + ' &nbsp; ';
-    }
-    if (text.length) {
-        $('body').append('<div id="cstContainer">Test</div>');
-        $('#cstContainer').html('<p>'+text+'</p>');
-        $('html').css('position', 'relative');
-        $('html').css({'margin-top':'30px'});
-    }
-}
-/**
  * Remove a symbol from the fetching ticker list.
  *
  * When the last symbol is removed from the list then fire the callback

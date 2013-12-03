@@ -6,10 +6,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse({status: 1, resource: resource});
     }
     if (request.method == 'getGSTOptions') {
-        var resource = undefined;
-        var patterns = undefined;
-        try { resource = JSON.parse(localStorage['resource']); } catch (err) {}
-        try { patterns = JSON.parse(localStorage['patterns']); } catch (err) {}
-        sendResponse( {status: 1, resource: resource, patterns: patterns} );
+        var resource  = undefined;
+        var patterns  = undefined;
+        var tickerbar = undefined;
+        try { resource  = JSON.parse(localStorage['resource']); } catch (err) {}
+        try { patterns  = JSON.parse(localStorage['patterns']); } catch (err) {}
+        try { tickerbar = JSON.parse(localStorage['tickerbar']); } catch (err) {}
+        sendResponse({
+            status: 1,
+            resource: resource,
+            patterns: patterns,
+            tickerbar: tickerbar
+        });
     }
 });
