@@ -18,7 +18,8 @@ GSTTicker = function(symbol, resource, cache) {
     ];
 };
 GSTTicker.prototype.fetchAllData = function(callback) {
+	var thisGSTTicker = this;
     this.resource.fetchAllMetrics(this.replacements, function() {
-        callback();
+        callback.call(thisGSTTicker);
     });
 };

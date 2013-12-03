@@ -70,7 +70,7 @@ GSTResource.prototype.fetchingRemove = function(url, callback) {
 GSTResource.prototype.fetchingMetricRemove = function(name, callback) {
     this.fetchingMetric.splice(this.fetchingMetric.indexOf(name), 1);
     if (!this.fetchingMetric.length) {
-        callback(this.cache.metrics);
+        callback.call(this, this.cache.metrics);
     }
 }
 /**

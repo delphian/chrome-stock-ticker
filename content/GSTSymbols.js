@@ -57,16 +57,15 @@ GSTSymbols.prototype.findSymbols = function() {
  */
 GSTSymbols.prototype.loadTickers = function(callback) {
     var thisSymbols = this;
+    var fetching = this.symbols;
     for (var i=0; i<this.symbols.length; i++) {
         var ticker = new GSTTicker(this.symbols[i], this.resource);
-        this.fetching.push(ticker.symbol);
         ticker.fetchAllData(function() {
             // Record the fully loaded ticker.
-            thisSymbols.tickers[ticker.symbol] = ticker;
+            thisSymbols.tickers[this.symbol] = this;
             // If the loading of all tickers is finished then invoke callback.
-            thisSymbols.fetchingRemove(ticker.symbol, function() {
-                callback();
-            });
+            fetching.splice(fetching.indexOf(this.symbol), 1);
+            if (!fetching.length) callback();
         });
     }
 };
