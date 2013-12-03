@@ -38,12 +38,12 @@ function TickerBarCtrl($scope) {
         for (var i=0; i<resource.metrics.length; i++) {
             var metric = resource.metrics[i];
             var show = false;
-            for (var j=0; j<tickerbar.length; j++) {
-                if (tickerbar[j].name == metric.name) {
-                    show = tickerbar[j].show;
+            for (var j=0; j<tickerbar.metrics.length; j++) {
+                if (tickerbar.metrics[j].name == metric.name) {
+                    show = tickerbar.metrics[j].show;
                 }
             }
-            $scope.metrics.push( { name: metric.name, show: false } );
+            $scope.metrics.push( { name: metric.name, show: show } );
         }
     }
     $scope.save = function() {
