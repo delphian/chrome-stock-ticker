@@ -14,6 +14,7 @@
     <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
     <li><a href="#resource" data-toggle="tab">Resource</a></li>
     <li><a href="#patterns" data-toggle="tab">Patterns</a></li>
+    <li><a href="#tickerbar" data-toggle="tab">Ticker Bar</a></li>
   </ul>
 
   <div class="tab-content">
@@ -116,10 +117,28 @@
             </tr>
           </table>
           <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="patternAdd()"> Pattern</button>
+          <br /><br />
+          <div id="saveConfirmPatterns"></div>
+          <button class="btn btn-warning" ng-click="save()">Update Patterns</button>
         </div>
-        <br />
-        <div id="saveConfirm"></div>
-        <button class="btn btn-warning" ng-click="save()">Update Patterns</button>
+      </div>
+    </div>    
+
+    <div class="tab-pane" id="tickerbar">
+      <div class="container">
+        <h2>Ticker Bar</h2>
+        <p>Select which metrics to show on the ticker bar.</p>
+        <div ng-controller="TickerBarCtrl">
+          <table><tr><th>Display</th><th>Metric</th></tr>
+            <tr ng-repeat="(index, metric) in metrics">
+              <td><input type="checkbox" ng-model="metric.show" /></td>
+              <td>{{metric.name}}</td>
+            </tr>
+          </table>
+          <br />
+          <div id="saveConfirmTickerBar"></div>
+          <button class="btn btn-warning" ng-click="save()">Update Ticker Bar</button>
+        </div>
       </div>
     </div>    
 

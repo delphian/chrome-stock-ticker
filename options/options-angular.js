@@ -15,7 +15,6 @@ function PatternCtrl($scope) {
     if (typeof(localStorage['patterns']) != 'undefined') {
         $scope.patterns = JSON.parse(localStorage['patterns']);
     }
-
     $scope.patternAdd = function() {
         $scope.patterns.push({ pattern: '', options: 'g', result: 1 });
     }
@@ -24,7 +23,32 @@ function PatternCtrl($scope) {
     }
     $scope.save = function() {
         localStorage['patterns'] = angular.toJson($scope.patterns);
-        $('#saveConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+        $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+    }    
+}
+
+function TickerBarCtrl($scope) {
+    $scope.metrics = [];
+    if (typeof(localStorage['resource']) != 'undefined') {
+        var resource = JSON.parse(localStorage['resource']);
+        var tickerbar = {};
+        if (typeof(localStorage['tickerbar']) != 'undefined') {
+            tickerbar = JSON.parse(localStorage['tickerbar']);
+        }
+        for (var i=0; i<resource.metrics.length; i++) {
+            var metric = resource.metrics[i];
+            var show = false;
+            for (var j=0; j<tickerbar.length; j++) {
+                if (tickerbar[j].name == metric.name) {
+                    show = tickerbar[j].show;
+                }
+            }
+            $scope.metrics.push( { name: metric.name, show: false } );
+        }
+    }
+    $scope.save = function() {
+        localStorage['tickerbar'] = angular.toJson( { metrics: $scope.metrics } );
+        $('#saveConfirmTickerBar').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
     }    
 }
 
