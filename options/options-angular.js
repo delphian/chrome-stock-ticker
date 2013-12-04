@@ -40,7 +40,8 @@ function PatternCtrl($scope) {
         $scope.patterns.splice(index, 1);
     };
     $scope.save = function() {
-        chrome.storage.sync.set({'patterns': $scope.patterns}, function() {
+        var patterns = angular.toJson($scope.patterns);
+        chrome.storage.sync.set( {'patterns': patterns} , function() {
             if (chrome.runtime.lastError) {
                 console.log('Could not save patterns.', chrome.runtime.lastError);
                 // Notify that we failed.
