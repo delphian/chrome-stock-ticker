@@ -22,6 +22,7 @@ function PatternCtrl($scope) {
     // Update the patterns and force resync between model and html anytime
     // the stored object is updated from anywhere.
     chrome.storage.onChanged.addListener(function(object, namespace) {
+console.log('Got a change: ', object);
         for (key in object) {
             if (key == 'patterns') {
                 $scope.patternUpdate(object.patterns);
@@ -41,8 +42,14 @@ function PatternCtrl($scope) {
     };
     $scope.save = function() {
         chrome.storage.sync.set({'patterns': $scope.patterns}, function() {
-            // Notify that we saved.
-            $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+            if (chrome.runtime.lastError) {
+                console.log('Could not save patterns.', chrome.runtime.lastError);
+                // Notify that we failed.
+                $('#saveConfirmPatterns').html('<div class="alert alert-failure"><a class="close" data-dismiss="alert">x</a>Failed to save!</div>');
+            } else {
+                // Notify that we saved.
+                $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+            }
         });
     };
 }
