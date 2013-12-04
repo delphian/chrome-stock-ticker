@@ -22,10 +22,9 @@ function PatternCtrl($scope) {
     // Update the patterns and force resync between model and html anytime
     // the stored object is updated from anywhere.
     chrome.storage.onChanged.addListener(function(object, namespace) {
-console.log('Got a change: ', object);
         for (key in object) {
             if (key == 'patterns') {
-                $scope.patternUpdate(object.patterns);
+                $scope.patternUpdate(object.patterns.newValue);
             }
         }
     });
