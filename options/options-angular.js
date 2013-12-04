@@ -12,8 +12,14 @@ function PatternCtrl($scope) {
         { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
         { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
     ];
-    if (typeof(localStorage['patterns']) != 'undefined') {
-        $scope.patterns = JSON.parse(localStorage['patterns']);
+    chrome.storage.sync.get('patterns', function(result) {
+        if (typeof(result['patterns']) != 'undefined') {
+            $scope.patternUpdate(result.patterns);
+        }
+    });
+    $scope.patternUpdate = function(patterns) {
+        $scope.patterns = patterns;
+        $scope.$apply();
     };
     $scope.patternAdd = function() {
         $scope.patterns.push({ pattern: '', options: 'g', result: 1 });
@@ -22,8 +28,10 @@ function PatternCtrl($scope) {
         $scope.patterns.splice(index, 1);
     };
     $scope.save = function() {
-        localStorage['patterns'] = angular.toJson($scope.patterns);
-        $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+        chrome.storage.sync.set({'patterns': $scope.patterns}, function() {
+            // Notify that we saved.
+            $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+        });
     };
 }
 
