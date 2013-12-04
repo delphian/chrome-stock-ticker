@@ -40,7 +40,8 @@ function PatternCtrl($scope) {
         $scope.patterns.splice(index, 1);
     };
     $scope.save = function() {
-        var patterns = angular.toJson($scope.patterns);
+        // Remove angular hashes but store result as an object.
+        var patterns = JSON.parse(angular.toJson($scope.patterns));
         chrome.storage.sync.set( {'patterns': patterns} , function() {
             if (chrome.runtime.lastError) {
                 console.log('Could not save patterns.', chrome.runtime.lastError);
