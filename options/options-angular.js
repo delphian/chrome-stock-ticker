@@ -90,33 +90,55 @@ function ResourceCtrl($scope) {
             { name: 'volume', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'table#table2 tr:nth-child(3) td.yfnc_tabledata1 span' },
         ]
     };
-    if (typeof(localStorage['resource']) != 'undefined') {
-        $scope.resource = JSON.parse(localStorage['resource']);
-    }
-
+    // Update the resource from local storage on first load.
+    chrome.storage.sync.get('resource', function(result) {
+        if (typeof(result['resource']) != 'undefined') {
+            $scope.resourceUpdate(result.resource);
+        }
+    });
+    // Update the resource and force resync between model and html anytime
+    // the stored object is updated from anywhere.
+    chrome.storage.onChanged.addListener(function(object, namespace) {
+        for (key in object) {
+            if (key == 'resource') {
+                $scope.resourceUpdate(object.resource.newValue);
+            }
+        }
+    });
+    // Update the model and force resync between model and html.
+    $scope.resourceUpdate = function(resource) {
+        $scope.resource = resource;
+        $scope.$apply();
+    };
     $scope.urlAdd = function() {
         $scope.resource.urls.push({ url: ''});
     }
     $scope.urlRemove = function(index) {
         $scope.resource.urls.splice(index, 1);
     }
-
     $scope.metricAdd = function() {
         $scope.resource.metrics.push({ name: '', url: '', selector: '' });
-        console.dir($scope.resource);
     }
     $scope.metricRemove = function(index) {
         $scope.resource.metrics.splice(index, 1);
     }
-
     $scope.load = function() {
         if (localStorage['resource'] != 'undefined') {
             $scope.resource = localStorage['resource'];
         }
     }
-
     $scope.save = function() {
-        localStorage['resource'] = angular.toJson($scope.resource);
-        $('#saveConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
-    }
+        // Remove angular hashes but store result as an object.
+        var resource = JSON.parse(angular.toJson($scope.resource));
+        chrome.storage.sync.set( {'resource': resource} , function() {
+            if (chrome.runtime.lastError) {
+                console.log('Could not save resource.', chrome.runtime.lastError);
+                // Notify that we failed.
+                $('#saveConfirmResource').html('<div class="alert alert-failure"><a class="close" data-dismiss="alert">x</a>Failed to save!</div>');
+            } else {
+                // Notify that we saved.
+                $('#saveConfirmResource').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+            }
+        });
+    };
 }
