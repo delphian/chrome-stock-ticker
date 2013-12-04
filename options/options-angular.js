@@ -56,13 +56,18 @@ function PatternCtrl($scope) {
 }
 
 function TickerBarCtrl($scope) {
-    $scope.metrics = [];
-    if (typeof(localStorage['resource']) != 'undefined') {
-        var resource = JSON.parse(localStorage['resource']);
-        var tickerbar = { metrics: [] };
-        if (typeof(localStorage['tickerbar']) != 'undefined') {
-            tickerbar = JSON.parse(localStorage['tickerbar']);
+    $scope.tickerbar = { metrics: [] };
+    var resource = { metrics: [] };
+    // Update the tickerbar from local storage on first load.
+    chrome.storage.sync.get(['resource', 'tickerbar'], function(result) {
+        if (typeof(result['resource']) != 'undefined') {
+            resource = result.resource;
+            $scope.tickerbarUpdate(result.tickerbar);
         }
+    });
+    // Update the model and force resync between model and html.
+    $scope.tickerbarUpdate = function(tickerbar) {
+        if (typeof(tickerbar) == 'undefined') tickerbar = { metrics: [] };
         for (var i=0; i<resource.metrics.length; i++) {
             var metric = resource.metrics[i];
             var show = false;
@@ -71,12 +76,24 @@ function TickerBarCtrl($scope) {
                     show = tickerbar.metrics[j].show;
                 }
             }
-            $scope.metrics.push( { name: metric.name, show: show } );
+            $scope.tickerbar.metrics.push( { name: metric.name, show: show } );
         }
-    }
+        $scope.$apply();
+    };
     $scope.save = function() {
-        localStorage['tickerbar'] = angular.toJson( { metrics: $scope.metrics } );
-        $('#saveConfirmTickerBar').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+        // Remove angular hashes but store result as an object.
+        var tickerbar = {};
+        tickerbar = JSON.parse(angular.toJson($scope.tickerbar));
+        chrome.storage.sync.set( {'tickerbar': tickerbar} , function() {
+            if (chrome.runtime.lastError) {
+                console.log('Could not save tickerbar.', chrome.runtime.lastError);
+                // Notify that we failed.
+                $('#saveConfirmTickerBar').html('<div class="alert alert-failure"><a class="close" data-dismiss="alert">x</a>Failed to save!</div>');
+            } else {
+                // Notify that we saved.
+                $('#saveConfirmTickerBar').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+            }
+        });
     };
 }
 

@@ -130,7 +130,7 @@
         <p>Select which metrics to show on the ticker bar.</p>
         <div ng-controller="TickerBarCtrl">
           <table><tr><th></th><th>Metric</th></tr>
-            <tr ng-repeat="(index, metric) in metrics">
+            <tr ng-repeat="(index, metric) in tickerbar.metrics">
               <td><input type="checkbox" ng-model="metric.show" /></td>
               <td>{{metric.name}}</td>
             </tr>
