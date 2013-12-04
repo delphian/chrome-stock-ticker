@@ -8,15 +8,27 @@ function OptionsCtrl($scope) {
 }
 
 function PatternCtrl($scope) {
+    // Provide some default patterns.
     $scope.patterns = [
         { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
         { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
     ];
+    // Update the pattern from local storage on first load.
     chrome.storage.sync.get('patterns', function(result) {
         if (typeof(result['patterns']) != 'undefined') {
             $scope.patternUpdate(result.patterns);
         }
     });
+    // Update the patterns and force resync between model and html anytime
+    // the stored object is updated from anywhere.
+    chrome.storage.onChanged.addListener(function(object, namespace) {
+        for (key in object) {
+            if (key == 'patterns') {
+                $scope.patternUpdate(object.patterns);
+            }
+        }
+    });
+    // Update the model and force resync between model and html.
     $scope.patternUpdate = function(patterns) {
         $scope.patterns = patterns;
         $scope.$apply();
