@@ -44,9 +44,8 @@ function PatternCtrl($scope) {
         var patterns = JSON.parse(angular.toJson($scope.patterns));
         chrome.storage.sync.set( {'patterns': patterns} , function() {
             if (chrome.runtime.lastError) {
-                console.log('Could not save patterns.', chrome.runtime.lastError);
                 // Notify that we failed.
-                $('#saveConfirmPatterns').html('<div class="alert alert-failure"><a class="close" data-dismiss="alert">x</a>Failed to save!</div>');
+                $('#saveConfirmPatterns').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+chrome.runtime.lastError.message+'</div>');
             } else {
                 // Notify that we saved.
                 $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
@@ -60,25 +59,67 @@ function TickerBarCtrl($scope) {
     var resource = { metrics: [] };
     // Update the tickerbar from local storage on first load.
     chrome.storage.sync.get(['resource', 'tickerbar'], function(result) {
-        if (typeof(result['resource']) != 'undefined') {
-            resource = result.resource;
-            $scope.tickerbarUpdate(result.tickerbar);
+        if (typeof(result['resource']) != 'undefined') resource = result.resource;
+        var change = $scope.tickerbarUpdate(result['tickerbar']);
+        console.log(change);
+    });
+    // Update the patterns and force resync between model and html anytime
+    // the stored resource or tickerbar is updated from elsewhere.
+    chrome.storage.onChanged.addListener(function(object, namespace) {
+        for (key in object) {
+            if (key == 'resource') {
+                resource = object.resource.newValue;
+                // Because the tickerbar has not changed, just send a cloned copy
+                // of the current scope tickerbar.
+                $scope.tickerbarUpdate($scope.tickerbar);
+            }
+            if (key == 'tickerbar') {
+                $scope.tickerbarUpdate(object.tickerbar.newValue);
+            }
         }
     });
-    // Update the model and force resync between model and html.
     $scope.tickerbarUpdate = function(tickerbar) {
-        if (typeof(tickerbar) == 'undefined') tickerbar = { metrics: [] };
+        var report = false;
+        var metrics = [];
+        var oldTickerbar = {};
+        var newTickerbar = {};
+        if (typeof(tickerbar) != 'undefined') {
+            oldTickerbar = JSON.parse(angular.toJson(tickerbar));
+        } else {
+            oldTickerbar = JSON.parse(angular.toJson($scope.tickerbar));
+        }
+        // Make a copy of the original tickerbar.
+        newTickerbar = JSON.parse(JSON.stringify(oldTickerbar));
+        // Compile a list of new metrics from scratch. The metric must exist
+        // in the resource to exist in the tickerbar.
         for (var i=0; i<resource.metrics.length; i++) {
-            var metric = resource.metrics[i];
-            var show = false;
-            for (var j=0; j<tickerbar.metrics.length; j++) {
-                if (tickerbar.metrics[j].name == metric.name) {
-                    show = tickerbar.metrics[j].show;
+            // Construct default metric if one does not exist in the tickerbar.
+            var newMetric = { name: resource.metrics[i].name, show: false };
+            for (var j=0; j<oldTickerbar.metrics.length; j++) {
+                // If metric does already exist in the tickerbar use it instead
+                // of the default.
+                if (resource.metrics[i].name == oldTickerbar.metrics[j].name) {
+                    // Manually assign all key values to cleanse object of junk.
+                    newMetric.name = oldTickerbar.metrics[j].name.toString();
+                    newMetric.show = (oldTickerbar.metrics[j].show === true);
                 }
             }
-            $scope.tickerbar.metrics.push( { name: metric.name, show: show } );
+            metrics.push(newMetric);
         }
+        newTickerbar.metrics = metrics;
+        // Update model with tickerbar containing reconstructed metrics.
+        $scope.tickerbar = JSON.parse(JSON.stringify(newTickerbar));
         $scope.$apply();
+        // Report to caller if the metrics changed from their old state.
+        if (JSON.stringify(oldTickerbar) != JSON.stringify(newTickerbar)) {
+            chrome.storage.sync.set( {'tickerbar': newTickerbar}, function() {
+                if (chrome.runtime.lastError) {
+                    console.log('Could not save tickerbar: ' + chrome.runtime.lastError.message);
+                }
+            });
+            report = true;
+        }
+        return report;
     };
     $scope.save = function() {
         // Remove angular hashes but store result as an object.
@@ -86,9 +127,8 @@ function TickerBarCtrl($scope) {
         tickerbar = JSON.parse(angular.toJson($scope.tickerbar));
         chrome.storage.sync.set( {'tickerbar': tickerbar} , function() {
             if (chrome.runtime.lastError) {
-                console.log('Could not save tickerbar.', chrome.runtime.lastError);
                 // Notify that we failed.
-                $('#saveConfirmTickerBar').html('<div class="alert alert-failure"><a class="close" data-dismiss="alert">x</a>Failed to save!</div>');
+                $('#saveConfirmTickerBar').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save:'+chrome.runtime.lastError.message+'</div>');
             } else {
                 // Notify that we saved.
                 $('#saveConfirmTickerBar').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
@@ -149,9 +189,8 @@ function ResourceCtrl($scope) {
         var resource = JSON.parse(angular.toJson($scope.resource));
         chrome.storage.sync.set( {'resource': resource} , function() {
             if (chrome.runtime.lastError) {
-                console.log('Could not save resource.', chrome.runtime.lastError);
                 // Notify that we failed.
-                $('#saveConfirmResource').html('<div class="alert alert-failure"><a class="close" data-dismiss="alert">x</a>Failed to save!</div>');
+                $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+chrome.runtime.lastError.message+'</div>');
             } else {
                 // Notify that we saved.
                 $('#saveConfirmResource').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
