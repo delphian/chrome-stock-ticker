@@ -28,14 +28,13 @@ showBar = function(symbols, tickerbar) {
     }
 };
 
-chrome.runtime.sendMessage({method: 'getGSTOptions'}, function(response) {
-    if (response.status == 1) {
-        jQuery(document).ready(function($) {
-            symbols = new GSTSymbols($('html').html(), response.patterns, response.resource);
-            symbols.findSymbols();
-            symbols.loadTickers(function() {
-                showBar(symbols, response.tickerbar);
-            });
+chrome.storage.sync.get(['resource', 'tickerbar', 'patterns'], function(result) {
+    jQuery(document).ready(function($) {
+        symbols = new GSTSymbols($('html').html(), result.patterns, result.resource);
+        symbols.findSymbols();
+        symbols.loadTickers(function() {
+            showBar(symbols, result.tickerbar);
         });
-    }
+    });
 });
+
