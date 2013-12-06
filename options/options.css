@@ -1,4 +1,8 @@
 
+input.ng-invalid {
+   border: 2px solid #ff0000;
+}
+
 input.url-name {
     width: 120px;
 }
