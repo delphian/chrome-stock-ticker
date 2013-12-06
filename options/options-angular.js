@@ -53,70 +53,24 @@ function PatternCtrl($scope) {
 
 function TickerBarCtrl($scope) {
     $scope.tickerbar = { metrics: [] };
-    var resource = { metrics: [] };
     // Update the tickerbar from local storage on first load.
-    chrome.storage.sync.get(['resource', 'tickerbar'], function(result) {
-        if (typeof(result['resource']) != 'undefined') resource = result.resource;
-        var change = $scope.tickerbarUpdate(result['tickerbar']);
-        console.log(change);
+    chrome.storage.sync.get('tickerbar', function(result) {
+        if (typeof(result['tickerbar']) != 'undefined') {
+            $scope.tickerbarUpdate(result['tickerbar']);
+        }
     });
     // Update the patterns and force resync between model and html anytime
     // the stored resource or tickerbar is updated from elsewhere.
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
-            if (key == 'resource') {
-                resource = object.resource.newValue;
-                // Because the tickerbar has not changed, just send a cloned copy
-                // of the current scope tickerbar.
-                $scope.tickerbarUpdate($scope.tickerbar);
-            }
             if (key == 'tickerbar') {
                 $scope.tickerbarUpdate(object.tickerbar.newValue);
             }
         }
     });
     $scope.tickerbarUpdate = function(tickerbar) {
-        var report = false;
-        var metrics = [];
-        var oldTickerbar = {};
-        var newTickerbar = {};
-        if (typeof(tickerbar) != 'undefined') {
-            oldTickerbar = JSON.parse(angular.toJson(tickerbar));
-        } else {
-            oldTickerbar = JSON.parse(angular.toJson($scope.tickerbar));
-        }
-        // Make a copy of the original tickerbar.
-        newTickerbar = JSON.parse(JSON.stringify(oldTickerbar));
-        // Compile a list of new metrics from scratch. The metric must exist
-        // in the resource to exist in the tickerbar.
-        for (var i=0; i<resource.metrics.length; i++) {
-            // Construct default metric if one does not exist in the tickerbar.
-            var newMetric = { name: resource.metrics[i].name, show: false };
-            for (var j=0; j<oldTickerbar.metrics.length; j++) {
-                // If metric does already exist in the tickerbar use it instead
-                // of the default.
-                if (resource.metrics[i].name == oldTickerbar.metrics[j].name) {
-                    // Manually assign all key values to cleanse object of junk.
-                    newMetric.name = oldTickerbar.metrics[j].name.toString();
-                    newMetric.show = (oldTickerbar.metrics[j].show === true);
-                }
-            }
-            metrics.push(newMetric);
-        }
-        newTickerbar.metrics = metrics;
-        // Update model with tickerbar containing reconstructed metrics.
-        $scope.tickerbar = JSON.parse(JSON.stringify(newTickerbar));
+        $scope.tickerbar = tickerbar;
         $scope.$apply();
-        // Report to caller if the metrics changed from their old state.
-        if (JSON.stringify(oldTickerbar) != JSON.stringify(newTickerbar)) {
-            chrome.storage.sync.set( {'tickerbar': newTickerbar}, function() {
-                if (chrome.runtime.lastError) {
-                    console.log('Could not save tickerbar: ' + chrome.runtime.lastError.message);
-                }
-            });
-            report = true;
-        }
-        return report;
     };
     $scope.save = function() {
         // Remove angular hashes but store result as an object.
