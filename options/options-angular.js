@@ -9,10 +9,7 @@ function OptionsCtrl($scope) {
 
 function PatternCtrl($scope) {
     // Provide some default patterns.
-    $scope.patterns = [
-        { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
-        { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
-    ];
+    $scope.patterns = [];
     // Update the pattern from local storage on first load.
     chrome.storage.sync.get('patterns', function(result) {
         if (typeof(result['patterns']) != 'undefined') {
@@ -138,15 +135,7 @@ function TickerBarCtrl($scope) {
 }
 
 function ResourceCtrl($scope) {
-    $scope.resource = {
-        urls: [
-            { url: 'http://finance.yahoo.com/q?s=SYMBOL' }
-        ],
-        metrics: [
-            { name: 'price', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'span.time_rtq_ticker span' },
-            { name: 'volume', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'table#table2 tr:nth-child(3) td.yfnc_tabledata1 span' },
-        ]
-    };
+    $scope.resource = { urls: [], metrics: [] };
     // Update the resource from local storage on first load.
     chrome.storage.sync.get('resource', function(result) {
         if (typeof(result['resource']) != 'undefined') {

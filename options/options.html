@@ -11,22 +11,12 @@
 <body>
 
   <ul id="mainNav" class="nav nav-tabs">
-    <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+    <li class="active"><a href="#tickerbar" data-toggle="tab">Ticker Bar</a></li>
     <li><a href="#resource" data-toggle="tab">Resource</a></li>
     <li><a href="#patterns" data-toggle="tab">Patterns</a></li>
-    <li><a href="#tickerbar" data-toggle="tab">Ticker Bar</a></li>
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane active" id="home">
-      <div class="container">
-        <h1>Chrome Stock Ticker Options</h1>
-        <div ng-controller="OptionsCtrl">
-          <input type="textbox" ng-model="tickers">
-          <button ng-click="save()">Save</button>
-        </div>
-      </div>
-    </div>
 
     <div class="tab-pane" id="resource">
       <div class="container">
@@ -125,7 +115,7 @@
       </div>
     </div>    
 
-    <div class="tab-pane" id="tickerbar">
+    <div class="tab-pane active" id="tickerbar">
       <div class="container">
         <h2>Ticker Bar</h2>
         <p>Select which metrics to show on the ticker bar.</p>
