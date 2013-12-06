@@ -82,8 +82,8 @@
                   <form name="metricForm" novalidate>
                   <table><tr><th>Metric</th><th>URL</th><th>Selector</th></tr>
                     <tr ng-repeat="(index, metric) in resource.metrics">
-                      <td><input name="metricName" class="url-name" ng-model="metric.name" ng-maxlength="3" /></td>
-                      <td><input class="url ng-dirty" ng-model="metric.url" /></td>
+                      <td><input name="metricName" class="url-name" ng-model="metric.name" ng-pattern="/^[a-z_]+$/" /></td>
+                      <td><input class="url" ng-model="metric.url" /></td>
                       <td><input class="selector" ng-model="metric.selector" /></td>
                       <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
                     </tr>
@@ -96,7 +96,7 @@
           </div>
           <br />
           <div id="saveConfirmResource"></div>
-          <button class="btn btn-warning" ng-click="save()">Update Resource</button>
+          <button class="btn btn-warning" ng-show="metricForm.$valid" ng-click="save()">Update Resource</button>
         </div>
       </div>
     </div>
