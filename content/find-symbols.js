@@ -15,7 +15,8 @@ showBar = function(symbols, tickerbar) {
         for (var i=0; i<tickerbar.metrics.length; i++) {
             tbmetric = tickerbar.metrics[i];
             if ((tbmetric.show == true) && (typeof(ticker.resource.cache.metrics[tbmetric.name]) != 'undefined')) {
-                text = text + tbmetric.name + ':' + ticker.resource.cache.metrics[tbmetric.name].value + ' ';
+                var formatted = tbmetric.format.replace('[[METRIC]]', ticker.resource.cache.metrics[tbmetric.name].value)
+                text = text + formatted + ' ';
             }
         }
         text = text + ' &nbsp; ';
