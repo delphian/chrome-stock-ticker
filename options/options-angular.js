@@ -52,7 +52,7 @@ function PatternCtrl($scope) {
 }
 
 function TickerBarCtrl($scope) {
-    $scope.tickerbar = { metrics: [] };
+    $scope.tickerbar = { items: [] };
     // Update the tickerbar from local storage on first load.
     chrome.storage.sync.get('tickerbar', function(result) {
         if (typeof(result['tickerbar']) != 'undefined') {
@@ -72,6 +72,12 @@ function TickerBarCtrl($scope) {
         $scope.tickerbar = tickerbar;
         $scope.$apply();
     };
+    $scope.itemAdd = function() {
+        $scope.tickerbar.items.push({ source: '', show: false, order: 0 });
+    }
+    $scope.itemRemove = function(index) {
+        $scope.tickerbar.items.splice(index, 1);
+    }
     $scope.save = function() {
         // Remove angular hashes but store result as an object.
         var tickerbar = {};

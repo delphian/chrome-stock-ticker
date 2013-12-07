@@ -118,16 +118,17 @@
     <div class="tab-pane active" id="tickerbar">
       <div class="container">
         <h2>Ticker Bar</h2>
-        <p>Select which metrics to show on the ticker bar.</p>
+        <p>Select which items to show on the ticker bar.</p>
         <div ng-controller="TickerBarCtrl">
-          <table><tr><th></th><th>Metric</th><th>Format</th></tr>
-            <tr ng-repeat="(index, metric) in tickerbar.metrics">
-              <td><input type="checkbox" ng-model="metric.show" /></td>
-              <td><input type="input" ng-model="metric.name" /></td>
-              <td><input type="input" ng-model="metric.format" /></td>
+          <table><tr><th></th><th>Item</th><th></th></tr>
+            <tr ng-repeat="(index, item) in tickerbar.items">
+              <td><input type="checkbox" ng-model="item.show" /></td>
+              <td><input type="input" ng-model="item.source" style="width:400px" /></td>
+              <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="itemRemove(index)"> </button></td>
             </tr>
           </table>
-          <br />
+          <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="itemAdd()"> Item</button>
+          <br /><br />
           <div id="saveConfirmTickerBar"></div>
           <button class="btn btn-warning" ng-click="save()">Update Ticker Bar</button>
         </div>

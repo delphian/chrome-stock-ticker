@@ -57,9 +57,9 @@ function resetPatterns(callback) {
  */
 function resetTickerbar(callback) {
     var tickerbar = { 
-        metrics: [
-            { name: 'yahoo_price', show: true, format: 'Price:[[METRIC]]' },
-            { name: 'yahoo_volume', show: false, format: 'Volume:[[METRIC]]' }
+        items: [
+            { source: 'Price:[[yahoo_price]]', show: true, order: 0 },
+            { source: 'Volume:[[yahoo_volume]]', show: false, order: 0 },
         ]
     };
     chrome.storage.sync.set({'tickerbar': tickerbar}, function() {
