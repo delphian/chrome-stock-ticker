@@ -14,6 +14,7 @@ function resetResource(callback) {
         metrics: [
             { name: 'yahoo_price', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'span.time_rtq_ticker span' },
             { name: 'yahoo_volume', url: 'http://finance.yahoo.com/q?s=SYMBOL', selector: 'table#table2 tr:nth-child(3) td.yfnc_tabledata1 span' },
+            { name: 'yahoo_cash_flow', url: 'http://finance.yahoo.com/q/cf?s=SYMBOL+Cash+Flow&annual', selector: 'table.yfnc_tabledata1 table tr:nth-child(12) td:nth-child(2) strong' }
         ]
     };
     chrome.storage.sync.set({'resource': resource}, function() {
@@ -60,6 +61,7 @@ function resetTickerbar(callback) {
         items: [
             { source: 'Price:[[yahoo_price]]', show: true, order: 0 },
             { source: 'Volume:[[yahoo_volume]]', show: false, order: 0 },
+            { source: 'Cash Flow:[[yahoo_cash_flow]]', show: false, order: 0 }
         ]
     };
     chrome.storage.sync.set({'tickerbar': tickerbar}, function() {

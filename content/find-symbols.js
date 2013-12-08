@@ -15,17 +15,19 @@ showBar = function(symbols, tickerbar) {
         var ticker = symbols.tickers[symbol];
         // Loop through each item in the tickerbar for this variable.
         for (var i=0; i<tickerbar.items.length; i++) {
-            var source = tickerbar.items[i].source;
-            var match;
-            var regex = new RegExp('\\[\\[([a-z_]+)\\]\\]', 'g');
-            // Search for metrics on each item and replace them with the
-            // values cached for this variable.
-            while ((match = regex.exec(source)) !== null) {
-                if (typeof(ticker.resource.cache.metrics[match[1]]) != 'undefined') {
-                    source = source.replace('[['+match[1]+']]', ticker.resource.cache.metrics[match[1]].value);
+            if (tickerbar.items[i].show == true) {
+                var source = tickerbar.items[i].source;
+                var match;
+                var regex = new RegExp('\\[\\[([a-z_]+)\\]\\]', 'g');
+                // Search for metrics on each item and replace them with the
+                // values cached for this variable.
+                while ((match = regex.exec(source)) !== null) {
+                    if (typeof(ticker.resource.cache.metrics[match[1]]) != 'undefined') {
+                        source = source.replace('[['+match[1]+']]', ticker.resource.cache.metrics[match[1]].value);
+                    }
                 }
+                text = text + source + ' ';
             }
-            text = text + source + ' ';
         }
     }
     if (text.length) {
