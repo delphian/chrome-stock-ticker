@@ -79,7 +79,15 @@ function ImportExportCtrl($scope) {
         });
     }
     $scope.reset = function() {
-
+        chrome.storage.sync.clear(function() {
+            if (chrome.runtime.lastError) {
+                // Notify that we failed.
+                $('#importConfirm').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to reset: '+chrome.runtime.lastError.message+'</div>');
+            } else {
+                // Notify that we saved.
+                $('#importConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Reset ok! Reload the extension to setup default values.</div>');
+            }
+        });
     }
 }
 
