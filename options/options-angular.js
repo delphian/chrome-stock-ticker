@@ -51,6 +51,41 @@ function PatternCtrl($scope) {
     };
 }
 
+/**
+ *
+ */
+function ImportExportCtrl($scope) {
+    $scope.export = function() {
+        chrome.storage.sync.get(['tickerbar', 'resource', 'patterns'], function(result) {
+            var blob = {
+                tickerbar: result.tickerbar,
+                resource: result.resource,
+                patterns: result.patterns
+            };
+            $('textarea#ImportExport').val(JSON.stringify(blob));
+        });
+    };
+    $scope.import = function() {
+        var blob = $('textarea#ImportExport').val();
+        blob = JSON.parse(blob);
+        chrome.storage.sync.set({ tickerbar: blob.tickerbar, resource: blob.resource, patterns: blob.patterns }, function() {
+            if (chrome.runtime.lastError) {
+                // Notify that we failed.
+                $('#importConfirm').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to import: '+chrome.runtime.lastError.message+'</div>');
+            } else {
+                // Notify that we saved.
+                $('#importConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Import ok!</div>');
+            }
+        });
+    }
+    $scope.reset = function() {
+
+    }
+}
+
+/**
+ *
+ */
 function TickerBarCtrl($scope) {
     $scope.tickerbar = { items: [] };
     // Update the tickerbar from local storage on first load.
@@ -73,7 +108,7 @@ function TickerBarCtrl($scope) {
         $scope.$apply();
     };
     $scope.itemAdd = function() {
-        $scope.tickerbar.items.push({ source: '', show: false, order: 0 });
+        $scope.tickerbar.items.push({ name: '', source: '', show: false, order: 0 });
     }
     $scope.itemRemove = function(index) {
         $scope.tickerbar.items.splice(index, 1);

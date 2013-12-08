@@ -14,12 +14,13 @@
     <li class="active"><a href="#tickerbar" data-toggle="tab">Ticker Bar</a></li>
     <li><a href="#resource" data-toggle="tab">Resource</a></li>
     <li><a href="#patterns" data-toggle="tab">Patterns</a></li>
+    <li><a href="#importexport" data-toggle="tab">Import/Export</a></li>
   </ul>
 
   <div class="tab-content">
 
     <div class="tab-pane" id="resource">
-      <div class="container">
+      <div class="container" ng-controller="ResourceCtrl">
 
         <h2>Resource</h2>
         <p>The resource instructs the program how to obtain values (metrics) for
@@ -28,7 +29,7 @@
         information must first be provided: first, a url where that value lives
         on the internet, and second, a selector path to locate the individual value
         on the given url page.</p>
-        <div ng-controller="ResourceCtrl">
+        <div>
           <div class="panel-group" id="accordion">
 
             <div class="panel panel-default">
@@ -92,14 +93,15 @@
       </div>
     </div>
 
+
     <div class="tab-pane" id="patterns">
-      <div class="container">
+      <div class="container" ng-controller="PatternCtrl">
         <h2>Patterns</h2>
         <p>Each page that is visited by the browser will have the url of all
         anchor tags compared to these regular expressions. The expressions
         are used to locate desired variables. Expressions are
         formatted for use with <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">javascript's RegExp()</a>.</p>
-        <div ng-controller="PatternCtrl">
+        <div>
           <table><tr><th>Pattern</th><th>Modifiers</th><th>Result</th></tr>
             <tr ng-repeat="(index, pattern) in patterns">
               <td><input class="selector" ng-model="pattern.pattern" /></td>
@@ -116,27 +118,44 @@
       </div>
     </div>    
 
+
     <div class="tab-pane active" id="tickerbar">
-      <div class="container">
+      <div class="container" ng-controller="TickerBarCtrl">
         <h2>Ticker Bar</h2>
         <p>Select which items to show on the ticker bar.</p>
-        <div ng-controller="TickerBarCtrl">
-          <table><tr><th></th><th>Item</th><th></th></tr>
+        <div>
+          <table><tr><th></th><th>Name</th><th>Display Format</th><th></th></tr>
             <tr ng-repeat="(index, item) in tickerbar.items">
               <td><input type="checkbox" ng-model="item.show" /></td>
-              <td><input type="input" ng-model="item.source" style="width:400px" /></td>
+              <td><input type="text" ng-model="item.name" style="width:150px" /></td>
+              <td><input type="text" ng-model="item.source" style="width:600px" /></td>
               <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="itemRemove(index)"> </button></td>
             </tr>
           </table>
           <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="itemAdd()"> Item</button>
           <br /><br />
           <div id="saveConfirmTickerBar"></div>
-          <button class="btn btn-warning" ng-click="save()">Update Ticker Bar</button>
+          <button class="btn btn-warning" ng-click="save()">Update &amp; Save</button>
         </div>
+
       </div>
     </div>    
 
+
+    <div class="tab-pane" id="importexport">
+      <div class="container" ng-controller="ImportExportCtrl">
+        <h2>Import / Export</h2>
+        <p>Export or import all the configuration and customizations.</p>
+        <textarea id="ImportExport" style="width:800px;height:200px;"></textarea>
+        <br /><br />
+        <div id="importConfirm"></div>
+        <button class="btn btn-warning" ng-click="import()">Import</button> &nbsp;
+        <button class="btn btn-success" ng-click="export()">Export</button>
+      </div>
+    </div>
+
   </div>
+
 
   <script src="/libs/jquery/jquery.min.js"></script>
   <script src="/libs/angular/angular.min.js"></script>
@@ -146,5 +165,4 @@
   <script src="options-bootstrap.js"></script>
 
 </body>
-
 </html>

@@ -1,4 +1,8 @@
 
+input {
+	font-family: "Arial Narrow";
+	letter-spacing: 0px;
+}
 input.ng-invalid {
    text-decoration: line-through;
    color: #ff0000;
