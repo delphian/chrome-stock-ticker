@@ -29,6 +29,8 @@ showBar = function(symbols, tickerbar) {
                 text = text + source + ' ';
             }
         }
+        // Replace the 'variable' variable.
+        text = text.replace('[[VARIABLE]]', symbol);
     }
     if (text.length) {
         $('body').append('<div id="cstContainer">Test</div>');
