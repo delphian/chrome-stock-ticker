@@ -23,10 +23,11 @@
 
         <h2>Resource</h2>
         <p>The resource instructs the program how to obtain values (metrics) for
-        a ticker symbol. To obtain a price value for any given ticker two pieces of
+        each variable found on a webpage. To obtain a metric value for any given
+        variable two pieces of
         information must first be provided: first, a url where that value lives
         on the internet, and second, a selector path to locate the individual value
-        (metric, such as 'price') on the given url page.</p>
+        on the given url page.</p>
         <div ng-controller="ResourceCtrl">
           <div class="panel-group" id="accordion">
 
@@ -96,7 +97,7 @@
         <h2>Patterns</h2>
         <p>Each page that is visited by the browser will have the url of all
         anchor tags compared to these regular expressions. The expressions
-        are used to locate references to ticker symbols. Expressions are
+        are used to locate desired variables. Expressions are
         formatted for use with <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">javascript's RegExp()</a>.</p>
         <div ng-controller="PatternCtrl">
           <table><tr><th>Pattern</th><th>Modifiers</th><th>Result</th></tr>

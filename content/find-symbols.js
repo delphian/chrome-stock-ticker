@@ -9,17 +9,24 @@
  */
 showBar = function(symbols, tickerbar) {
     var text = '';
+    // Loop through each variable to be displayed.
     for (symbol in symbols.tickers) {
-        var ticker = symbols.tickers[symbol];
         text = text + symbol + ': ';
-        for (var i=0; i<tickerbar.metrics.length; i++) {
-            tbmetric = tickerbar.metrics[i];
-            if ((tbmetric.show == true) && (typeof(ticker.resource.cache.metrics[tbmetric.name]) != 'undefined')) {
-                var formatted = tbmetric.format.replace('[[METRIC]]', ticker.resource.cache.metrics[tbmetric.name].value)
-                text = text + formatted + ' ';
+        var ticker = symbols.tickers[symbol];
+        // Loop through each item in the tickerbar for this variable.
+        for (var i=0; i<tickerbar.items.length; i++) {
+            var source = tickerbar.items[i].source;
+            var match;
+            var regex = new RegExp('\\[\\[([a-z_]+)\\]\\]', 'g');
+            // Search for metrics on each item and replace them with the
+            // values cached for this variable.
+            while ((match = regex.exec(source)) !== null) {
+                if (typeof(ticker.resource.cache.metrics[match[1]]) != 'undefined') {
+                    source = source.replace('[['+match[1]+']]', ticker.resource.cache.metrics[match[1]].value);
+                }
             }
+            text = text + source + ' ';
         }
-        text = text + ' &nbsp; ';
     }
     if (text.length) {
         $('body').append('<div id="cstContainer">Test</div>');
