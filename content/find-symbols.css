@@ -1,5 +1,5 @@
 
-#cstContainer {
+#cst-tickerbar {
   position: fixed;
   height: 30px;
   left: 0px;
@@ -10,13 +10,17 @@
   background: linear-gradient(#F8F8F8, #E8E8E8);
   z-index: 9999999;
   overflow: hidden;
-}
-
-#cstContainer p {
-  text-align: left;
   font-size: 10px;
-  margin: 10px;
-  line-height:10px;
-  padding: 0px;
-  font-weight:800;
+  font-family: 'arial narrow';
+  line-height: 10px;
+}
+div.cst-tickerbar-variable {
+  float: left;
+  margin-top: 5px;
+  margin-right: 16px;
+}
+div.cst-tickerbar-item {
+  float: left;
+  overflow: none;
+  margin-left: 4px;
 }
