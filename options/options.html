@@ -146,12 +146,14 @@
       <div class="container" ng-controller="ImportExportCtrl">
         <h2>Import / Export</h2>
         <p>Export or import all the configuration and customizations.</p>
-        <textarea id="ImportExport" style="width:800px;height:200px;"></textarea>
+        <textarea style="width:800px;height:200px;" ng-model="box"></textarea>
+        <br />
+        <input type="checkbox" ng-model="pretty" /> Make pretty.
         <br /><br />
         <div id="importConfirm"></div>
-        <button class="btn btn-warning" ng-click="import()">Import</button> &nbsp;
-        <button class="btn btn-success" ng-click="export()">Export</button> &nbsp;
-        <button class="btn btn-warning" ng-click="reset()">Reset</button>
+        <button class="btn btn-success" ng-click="export()">Export</button> &nbsp; &nbsp; 
+        <button class="btn btn-danger" ng-click="import()">Import</button>
+        <button class="btn btn-danger" ng-click="reset()">Reset</button>
       </div>
     </div>
 

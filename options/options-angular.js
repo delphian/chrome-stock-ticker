@@ -1,12 +1,4 @@
 
-function OptionsCtrl($scope) {
-  $scope.tickers = '';
-  
-  $scope.save = function() {
-    localStorage['tickers'] = $scope.tickers;
-  };
-}
-
 function PatternCtrl($scope) {
     // Provide some default patterns.
     $scope.patterns = [];
@@ -55,6 +47,9 @@ function PatternCtrl($scope) {
  *
  */
 function ImportExportCtrl($scope) {
+    $scope.box = '';
+    $scope.pretty = false;
+    //$scope.stringify = false;
     $scope.export = function() {
         chrome.storage.sync.get(['tickerbar', 'resource', 'patterns'], function(result) {
             var blob = {
@@ -62,7 +57,9 @@ function ImportExportCtrl($scope) {
                 resource: result.resource,
                 patterns: result.patterns
             };
-            $('textarea#ImportExport').val(JSON.stringify(blob));
+            //if ($scope.stringify == true) blob = JSON.stringify(blob);
+            $scope.box = JSON.stringify(blob, undefined, ($scope.pretty * 4));
+            $scope.$apply();
         });
     };
     $scope.import = function() {
@@ -79,14 +76,17 @@ function ImportExportCtrl($scope) {
         });
     }
     $scope.reset = function() {
-        chrome.storage.sync.clear(function() {
-            if (chrome.runtime.lastError) {
-                // Notify that we failed.
-                $('#importConfirm').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to reset: '+chrome.runtime.lastError.message+'</div>');
-            } else {
-                // Notify that we saved.
-                $('#importConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Reset ok! Reload the extension to setup default values.</div>');
-            }
+        $.get(chrome.extension.getURL('data/reset.json'), {}, function(data) {
+            blob = JSON.parse(data);
+            chrome.storage.sync.set({ resource: blob.resource, tickerbar: blob.tickerbar, patterns: blob.patterns }, function() {
+                if (chrome.runtime.lastError) {
+                    // Notify that we failed.
+                    $('#importConfirm').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to reset: '+chrome.runtime.lastError.message+'</div>');
+                } else {
+                    // Notify that we saved.
+                    $('#importConfirm').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Reset ok!</div>');
+                }
+            });
         });
     }
 }
