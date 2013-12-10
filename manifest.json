@@ -17,7 +17,8 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "web_accessible_resources": [
-    "http://finance.yahoo.com/"
+    "infobar/infobar.html",
+    "libs/jquery/jquery.min.js"
   ],
   
   "options_page": "options/options.html",
@@ -42,6 +43,7 @@
         "content/find-symbols.js"
       ],
       "css": [
+        "libs/bootstrap/dist/css/bootstrap.min.css",
         "content/find-symbols.css"
       ]
     }
