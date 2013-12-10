@@ -17,7 +17,9 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "web_accessible_resources": [
-    "infobar/infobar.html",
+    "libs/bootstrap/dist/js/bootstrap.min.js",
+    "libs/bootstrap/dist/css/bootstrap.min.css",
+    "libs/bootstrap/dist/css/test.css",
     "libs/jquery/jquery.min.js"
   ],
   
@@ -35,16 +37,15 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
+      "run_at" : "document_start",
       "js": [
         "libs/jquery/jquery.min.js",
-        "libs/bootstrap/dist/js/bootstrap.min.js",
         "content/GSTResource.js",
         "content/GSTSymbols.js",
         "content/GSTTicker.js",
         "content/find-symbols.js"
       ],
       "css": [
-        "libs/bootstrap/dist/css/bootstrap.min.css",
         "content/find-symbols.css"
       ]
     }
