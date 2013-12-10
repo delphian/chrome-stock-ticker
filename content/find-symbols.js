@@ -1,20 +1,18 @@
 
 /**
  * @file
- * Search for any ticker symbols on the current page and display the ticker
- * bar if any are found.
+ * Load an iframe onto the top of the current content page. Pass some
+ * variables into the iframe via chrome.storage.local
  */
-
 /**
  * Print all tickers into the ticker bar.
  */
 showBar = function(symbols, tickerbar) {
-    chrome.storage.local.set({'symbols': symbols, 'tickerbar': tickerbar}, function(result) {
-
-    var text = '<iframe src="' + chrome.extension.getURL('infobar/infobar.html') + '"></iframe>';
+    var text = '';
     // Loop through each variable to be displayed.
     for (symbol in symbols.tickers) {
         text = text + '<div class="cst-tickerbar-variable">';
+        text = text + makeBarButton(symbol);
         var ticker = symbols.tickers[symbol];
         // Loop through each item in the tickerbar for this variable.
         for (var i=0; i<tickerbar.items.length; i++) {
@@ -37,37 +35,45 @@ showBar = function(symbols, tickerbar) {
         }
         text = text + '</div>';
     }
-            text = text + '<div class="dropdown" style="float:left;">' +
-                          '<button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu1" data-toggle="dropdown">' +
-                          'Dropdown' +
-                          '<span class="caret"></span>' +
-                          '</button>' +
-                          '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">' +
-                          '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>' +
-                          '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>' +
-                          '  <li role="presentation" class="divider"></li>' +
-                          '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>' +
-                          '</ul>' +
-                          '</div>';
     if (text.length) {
-        $('body').append('<div id="cst-tickerbar">Test</div>');
-        $('#cst-tickerbar').html(text);
-        $('html').css('position', 'relative');
-        $('html').css({'margin-top':'30px'});
+            $('body').append('<div id="cst-tickerbar">'+text+'</div>');
+            $('html').css('position', 'relative');
+            $('html').css({'margin-top':'30px'});
     }
-
-
-    });
 };
 
+makeBarButton = function(variable) {
+    text = '<div class="dropdown cst-tickerbar-dropdown" style="float:left;">' +
+           '<button class="btn btn-success btn-xs dropdown-toggle" type="button" id="dropdownMenu'+variable+'" data-toggle="dropdown">' +
+           variable + '</button>' +
+           '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu'+variable+'">' +
+           '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>' +
+           '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>' +
+           '  <li role="presentation" class="divider"></li>' +
+           '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>' +
+           '</ul>' +
+           '</div>';
+    return text;
+}
+
 chrome.storage.sync.get(['resource', 'tickerbar', 'patterns'], function(result) {
+    var resource = result.resource;
+    var tickerbar = result.tickerbar;
+    var patterns = result.patterns;
     jQuery(document).ready(function($) {
-        symbols = new GSTSymbols($('html').html(), result.patterns, result.resource);
+        var html = $('html').html();
+
+        symbols = new GSTSymbols(html, result.patterns, result.resource);
         symbols.findSymbols();
         symbols.loadTickers(function() {
-            // Compile friendly cache here and set to local variable? Then load iframe. <--------
             showBar(symbols, result.tickerbar);
         });
+
+        // chrome.storage.local.set({ 'html': html, 'resource': resource, 'tickerbar': tickerbar, 'patterns': patterns }, function() {
+        //     var iframe = '<iframe src="' + chrome.extension.getURL('infobar/infobar.html') + '"></iframe>';
+        //     $('body').append('<div id="cst-tickerbar"></div>');
+        //     $('html').css('position', 'relative');
+        //     $('html').css({'margin-top':'30px'});
+        // });
     });
 });
-

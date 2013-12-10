@@ -37,6 +37,7 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": [
         "libs/jquery/jquery.min.js",
+        "libs/bootstrap/dist/js/bootstrap.min.js",
         "content/GSTResource.js",
         "content/GSTSymbols.js",
         "content/GSTTicker.js",
