@@ -17,10 +17,9 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "web_accessible_resources": [
-    "libs/bootstrap/dist/js/bootstrap.min.js",
-    "libs/bootstrap/dist/css/bootstrap.min.css",
-    "libs/bootstrap/dist/css/test.css",
-    "libs/jquery/jquery.min.js"
+    "libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js",
+    "libs/cst-bootstrap.css",
+    "libs/external/jquery/jquery.min.js"
   ],
   
   "options_page": "options/options.html",
@@ -39,10 +38,10 @@
       "matches": ["http://*/*", "https://*/*"],
       "run_at" : "document_start",
       "js": [
-        "libs/jquery/jquery.min.js",
-        "content/GSTResource.js",
-        "content/GSTSymbols.js",
-        "content/GSTTicker.js",
+        "libs/external/jquery/jquery.min.js",
+        "libs/CSTResource.js",
+        "libs/CSTSymbols.js",
+        "libs/CSTTicker.js",
         "content/find-symbols.js"
       ],
       "css": [

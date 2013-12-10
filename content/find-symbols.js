@@ -1,9 +1,8 @@
 
 /**
  * @file
- * Load an iframe onto the top of the current content page. Pass some
- * variables into the iframe via chrome.storage.local
  */
+
 /**
  * Print all tickers into the ticker bar.
  */
@@ -42,6 +41,9 @@ showBar = function(symbols, tickerbar) {
     }
 };
 
+/**
+ * Create a button for a variable.
+ */
 makeBarButton = function(variable) {
     text = '<div class="dropdown cst-tickerbar-dropdown" style="float:left;">' +
            '<button class="btn btn-success btn-xs dropdown-toggle" type="button" id="dropdownMenu'+variable+'" data-toggle="dropdown">' +
@@ -55,27 +57,6 @@ makeBarButton = function(variable) {
            '</div>';
     return text;
 };
-
-// http://stackoverflow.com/questions/18092310/legacy-css-conflicts-with-bootstrap-how-to-resolve
-// Then go ahead and use manifest file to load jquery and bootstrap.
-
-
-// Load jQuery if it is not realy present. We are taking some risk that the
-// version of jquery is not what we want, but the alternative is to crash
-// some web sites that already have jquery loaded.
-// window.onload = function() {
-//     if (typeof(jQuery) == 'function') {
-//         console.log('jQuery is loaded.');
-//     } else {
-//         console.log('Loading jQuery...');
-//         var script = document.createElement('script');
-//         script.src = chrome.extension.getURL('libs/jquery/jquery.min.js');
-//         script.type = 'text/javascript';
-//         document.getElementsByTagName('head')[0].appendChild(script);
-//     }
-//     loadBootstrap();
-//     parseHtml();
-// };
 
 /**
  * Detect if bootstrap has been loaded by content page.
@@ -91,11 +72,16 @@ bootstrapLoaded = function() {
     return loaded;
 };
 
+/**
+ * Load jquery and bootstrap into the content html. This means the scripts
+ * will not be accessible to us, but we don't care. The bootstrap will
+ * still operate on any markup we insert into the page.
+ */
 bootstrapLoad = function() {
     // Load jquery.
     console.log('Loading jQuery...');
     var script = document.createElement('script');
-    script.src = chrome.extension.getURL('libs/jquery/jquery.min.js');
+    script.src = chrome.extension.getURL('libs/external/jquery/jquery.min.js');
     script.type = 'text/javascript';
     document.getElementsByTagName('head')[0].appendChild(script);
     // Load bootstrap css.
@@ -103,12 +89,12 @@ bootstrapLoad = function() {
     var link = document.createElement('link');
     link.rel = "stylesheet";
     link.type = "text/css";
-    link.href = chrome.extension.getURL('libs/bootstrap/dist/css/test.css');
+    link.href = chrome.extension.getURL('libs/cst-bootstrap.css');
     document.getElementsByTagName('head')[0].appendChild(link);
     // Load bootstrap javascript.
     console.log('Loading Bootstrap JS...');
     var script = document.createElement('script');
-    script.src = chrome.extension.getURL('libs/bootstrap/dist/js/bootstrap.min.js');
+    script.src = chrome.extension.getURL('libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js');
     script.type = 'text/javascript';
     document.getElementsByTagName('head')[0].appendChild(script);
 };
@@ -125,15 +111,8 @@ $('document').ready(function() {
             symbols = new GSTSymbols(html, result.patterns, result.resource);
             symbols.findSymbols();
             symbols.loadTickers(function() {
-                //showBar(symbols, result.tickerbar);
+                showBar(symbols, result.tickerbar);
             });
-showBar(symbols, result.tickerbar);
-            // chrome.storage.local.set({ 'html': html, 'resource': resource, 'tickerbar': tickerbar, 'patterns': patterns }, function() {
-            //     var iframe = '<iframe src="' + chrome.extension.getURL('infobar/infobar.html') + '"></iframe>';
-            //     $('body').append('<div id="cst-tickerbar"></div>');
-            //     $('html').css('position', 'relative');
-            //     $('html').css({'margin-top':'30px'});
-            // });
         });
     });
 });
