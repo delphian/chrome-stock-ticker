@@ -21,7 +21,7 @@ curl -L --progress-bar -o libs/external/angular/angular.min.js  http://code.angu
 echo "Downloading bootstrap"
 mkdir libs/external/bootstrap
 curl -L --progress-bar -o libs/external/bootstrap/bootstrap.zip https://github.com/twbs/bootstrap/archive/v3.0.3.zip 
-unzip libs/external/bootstrap/bootstrap.zip -d libs/external/bootstrap
+unzip libs/external/bootstrap/bootstrap.zip -d libs/external/bootstrap > /dev/null
 
 echo "Namespacing bootstrap css"
 lessc libs/cst-bootstrap.less > libs/cst-bootstrap.css
