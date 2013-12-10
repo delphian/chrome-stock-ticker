@@ -22,8 +22,8 @@
  *   (optional) Preloaded cache object that contains the results of the
  *   previous fetching of all metrics.
  */
-GSTResource = function(resource, cache) {
-    if (typeof(resource) == 'undefined') resource = GSTResource.getDefaultResource();
+CSTResource = function(resource, cache) {
+    if (typeof(resource) == 'undefined') resource = CSTResource.getDefaultResource();
     if (!this.validResource(resource)) throw 'Provided resource JSON is not valid.';
     this.resource = resource;
 
@@ -52,12 +52,12 @@ GSTResource = function(resource, cache) {
  *   No return value is provided, use callback function to receive the html
  *   returned by the ajax request.
  */
-GSTResource.prototype.fetchUrl = function(url, params, callback) {
-    var thisGSTResource = this;
+CSTResource.prototype.fetchUrl = function(url, params, callback) {
+    var thisCSTResource = this;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
           if (xhr.readyState == 4) {
-              callback.call(thisGSTResource, xhr.responseText);
+              callback.call(thisCSTResource, xhr.responseText);
           }
     }
     xhr.open("GET", url, true);
@@ -69,7 +69,7 @@ GSTResource.prototype.fetchUrl = function(url, params, callback) {
  * @return array
  *   An array of URLs.
  */
-GSTResource.prototype.getMetricUrls = function() {
+CSTResource.prototype.getMetricUrls = function() {
     var urls = [];
     for (var i=0; i<this.resource.metrics; i++) {
         var metric = this.resource.metrics[i];
@@ -83,7 +83,7 @@ GSTResource.prototype.getMetricUrls = function() {
  * @return array
  *   An array of metric objects.
  */
-GSTResource.prototype.getMetricsByUrl = function(url) {
+CSTResource.prototype.getMetricsByUrl = function(url) {
     var metrics = [];
     for (var i=0; i<this.resource.metrics; i++) {
         var metric = this.resource.metrics[i];
@@ -100,7 +100,7 @@ GSTResource.prototype.getMetricsByUrl = function(url) {
  * @return object|null
  *   The metric object which is using the name or null on not found.
  */
-GSTResource.prototype.getMetricByName = function(name) {
+CSTResource.prototype.getMetricByName = function(name) {
     var response = null;
     for (var i=0; i<this.resource.metrics; i++) {
         var metric = this.resource.metrics[i];
@@ -120,7 +120,7 @@ GSTResource.prototype.getMetricByName = function(name) {
  * @return bool
  *   true of the object is formatted well, false othwerwise.
  */
-GSTResource.prototype.validResource = function (resource) {
+CSTResource.prototype.validResource = function (resource) {
     return true;
 };
 /**
@@ -132,7 +132,7 @@ GSTResource.prototype.validResource = function (resource) {
  * @return bool
  *   true of the object is formatted well, false othwerwise.
  */
-GSTResource.prototype.validCache = function (cache) {
+CSTResource.prototype.validCache = function (cache) {
     return true;
 };
 /**
@@ -151,8 +151,8 @@ GSTResource.prototype.validCache = function (cache) {
  *   of objects conaining the metric name and retrieved value, like:
  *     { name: 'price', value: '92.22' }
  */
-GSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush) {
-    var thisGSTResource = this;
+CSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush) {
+    var thisCSTResource = this;
     var fetching = [];
     for (var i=0; i<this.resource.metrics.length; i++) {
         var metric = this.resource.metrics[i];
@@ -184,9 +184,9 @@ GSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush)
  * @return string
  *   Value found in the html document.
  */
-GSTResource.prototype.fetchMetric = function (metric, replacements, callback, flush) {
+CSTResource.prototype.fetchMetric = function (metric, replacements, callback, flush) {
     if (typeof(flush) == 'undefined') flush = false;
-    var thisGSTResource = this;
+    var thisCSTResource = this;
     var url = this.replaceUrlVars(metric.url, replacements);
     if (typeof(this.cache.urls[url]) == 'undefined' || flush) {
         this.fetchUrl(url, {}, function(html) {
@@ -226,7 +226,7 @@ GSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
  * return string
  *   The url with variables replaced.
  */
-GSTResource.prototype.replaceUrlVars = function (url, replacements) {
+CSTResource.prototype.replaceUrlVars = function (url, replacements) {
     for (var i=0; i<replacements.length; i++) {
         var replacement = replacements[i];
         url = url.replace(replacement.from, replacement.to);
@@ -238,7 +238,7 @@ GSTResource.prototype.replaceUrlVars = function (url, replacements) {
  *
  * Static method.
  */
-GSTResource.getDefaultResource = function () {
+CSTResource.getDefaultResource = function () {
     var resource = {
         urls: [
             { url: 'http://finance.yahoo.com/q?s=SYMBOL' }

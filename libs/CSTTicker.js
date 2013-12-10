@@ -10,16 +10,16 @@
  * @param object data
  *   (optional) cached data, if any, for this symbol.
  */
-GSTTicker = function(symbol, resource, cache) {
+CSTTicker = function(symbol, resource, cache) {
     this.symbol = symbol;
-    this.resource = new GSTResource(resource, cache);
+    this.resource = new CSTResource(resource, cache);
     this.replacements = [
         { from: 'SYMBOL', to: symbol }
     ];
 };
-GSTTicker.prototype.fetchAllData = function(callback) {
-	var thisGSTTicker = this;
+CSTTicker.prototype.fetchAllData = function(callback) {
+	var thisCSTTicker = this;
     this.resource.fetchAllMetrics(this.replacements, function() {
-        callback.call(thisGSTTicker);
+        callback.call(thisCSTTicker);
     });
 };

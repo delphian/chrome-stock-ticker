@@ -161,21 +161,21 @@ function ResourceCtrl($scope) {
     };
     $scope.urlAdd = function() {
         $scope.resource.urls.push({ url: ''});
-    }
+    };
     $scope.urlRemove = function(index) {
         $scope.resource.urls.splice(index, 1);
-    }
+    };
     $scope.metricAdd = function() {
         $scope.resource.metrics.push({ name: '', url: '', selector: '' });
-    }
+    };
     $scope.metricRemove = function(index) {
         $scope.resource.metrics.splice(index, 1);
-    }
+    };
     $scope.load = function() {
         if (localStorage['resource'] != 'undefined') {
             $scope.resource = localStorage['resource'];
         }
-    }
+    };
     $scope.save = function() {
         // Remove angular hashes but store result as an object.
         var resource = JSON.parse(angular.toJson($scope.resource));

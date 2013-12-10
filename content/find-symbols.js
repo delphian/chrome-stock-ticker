@@ -108,7 +108,7 @@ $('document').ready(function() {
         var patterns = result.patterns;
         jQuery(document).ready(function($) {
             var html = $('html').html();
-            symbols = new GSTSymbols(html, result.patterns, result.resource);
+            symbols = new CSTSymbols(html, result.patterns, result.resource);
             symbols.findSymbols();
             symbols.loadTickers(function() {
                 showBar(symbols, result.tickerbar);

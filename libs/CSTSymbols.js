@@ -1,11 +1,11 @@
 
-var GSTSymbols = function(html, patterns, resource) {
+var CSTSymbols = function(html, patterns, resource) {
     // The document that will be examined for symbols.
     this.html = html;
     // Detect ticker symbols by matching a href urls to these patterns.
     this.patterns = patterns;
     if (typeof(patterns) == 'undefined' || patterns.length < 1) {
-        this.patterns = GSTSymbols.getDefaultPatterns();
+        this.patterns = CSTSymbols.getDefaultPatterns();
     }
     // Resource to map symbol metric (IBM: 'price') to value.
     this.resource = resource;
@@ -28,7 +28,7 @@ var GSTSymbols = function(html, patterns, resource) {
  * @return array
  *   Each element being a symbol found, or an empty array if none found.
  */
-GSTSymbols.prototype.findSymbols = function() {
+CSTSymbols.prototype.findSymbols = function() {
     var symbols = [];
     var thisSymbols = this;
     // Iterate through all 'a' elements.
@@ -55,11 +55,11 @@ GSTSymbols.prototype.findSymbols = function() {
 /**
  * Load all symbols into ticker array.
  */
-GSTSymbols.prototype.loadTickers = function(callback) {
+CSTSymbols.prototype.loadTickers = function(callback) {
     var thisSymbols = this;
     var fetching = this.symbols;
     for (var i=0; i<this.symbols.length; i++) {
-        var ticker = new GSTTicker(this.symbols[i], this.resource);
+        var ticker = new CSTTicker(this.symbols[i], this.resource);
         ticker.fetchAllData(function() {
             // Record the fully loaded ticker.
             thisSymbols.tickers[this.symbol] = this;
@@ -75,7 +75,7 @@ GSTSymbols.prototype.loadTickers = function(callback) {
  * When the last symbol is removed from the list then fire the callback
  * function informing the caller that all tickers have been loaded.
  */
-GSTSymbols.prototype.fetchingRemove = function(value, callback) {
+CSTSymbols.prototype.fetchingRemove = function(value, callback) {
     this.fetching.splice(this.fetching.indexOf(value), 1);
     if (!this.fetching.length) {
         callback();
@@ -86,7 +86,7 @@ GSTSymbols.prototype.fetchingRemove = function(value, callback) {
  *
  * Static method.
  */
-GSTSymbols.getDefaultPatterns = function() {
+CSTSymbols.getDefaultPatterns = function() {
     var patterns = [
         { pattern: '(ticker|symb).*?[^A-Z]{1}([A-Z]{1,4})([^A-Z]+|$)', options: 'g', result: 2 },
         { pattern: 'investing/stock/([A-Z]{1,4})', options: 'g', result: 1 }
