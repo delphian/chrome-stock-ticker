@@ -72,17 +72,41 @@ bootstrapLoaded = function() {
 };
 
 /**
- * Load jquery and bootstrap into the content html. This means the scripts
- * will not be accessible to us, but we don't care. The bootstrap will
- * still operate on any markup we insert into the page.
+ * Detect if jquery has been loaded by content page. Yes we can use jquery
+ * to test if jquery is loaded. The jquery we are using is the one loaded
+ * for this script, not the one that might be loaded for the native content
+ * page.
  */
-bootstrapLoad = function() {
+jqueryLoaded = function() {
+    var loaded = false;
+    $('script').each(function() {
+        var src = $(this).attr('src');
+        if (src && src.search(/jquery\./i) != -1) {
+            loaded = true;
+        }
+    });
+    return loaded;
+};
+
+/**
+ * Load jquery into the native content html. Only do this so that we can 
+ * load the bootstrap javascript in the native content html.
+ */
+jqueryLoad = function() {
     // Load jquery.
     console.log('Loading jQuery...');
     var script = document.createElement('script');
     script.src = chrome.extension.getURL('libs/external/jquery/jquery.min.js');
     script.type = 'text/javascript';
     document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+/**
+ * Load jquery and bootstrap into the content html. This means the scripts
+ * will not be accessible to us, but we don't care. The bootstrap will
+ * still operate on any markup we insert into the page.
+ */
+bootstrapLoad = function() {
     // Load bootstrap css.
     console.log('Loading Bootstrap CSS...');
     var link = document.createElement('link');
@@ -100,6 +124,7 @@ bootstrapLoad = function() {
 
 // Only load bootstrap if it is not already present on the content page.
 $('document').ready(function() {
+    if (!jqueryLoaded()) jqueryLoad(); 
     if (!bootstrapLoaded()) bootstrapLoad();
     chrome.storage.sync.get(['resource', 'tickerbar', 'patterns'], function(result) {
         var resource = result.resource;

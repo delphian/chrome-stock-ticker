@@ -2,15 +2,30 @@
 <html>
   <head>
     <title>Chrome Stock Ticker</title>
-    <script src="/libs/external/jquery/jquery.min.js"></script>
-    <script src="/libs/external/angular/angular.min.js"></script>
-    <script src="/popup/popup.js"></script>
-    <link rel="stylesheet" type="text/css" href="/popup/popup.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/libs/external/bootstrap/bootstrap-3.0.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/popup/popup.css" />
   </head>
   <body>
 
+    <ul id="popupNav" class="nav nav-tabs">
+      <li class="active"><a href="#news" data-toggle="tab">News</a></li>
+      <li><a href="#support" data-toggle="tab">Support</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="news">
+          <iframe src="http://chromestockticker.blogspot.com/"></iframe>
+      </div>
+      <div class="tab-pane" id="support">
+        <iframe id="support"
+         src="https://groups.google.com/forum/embed/?place=forum/chrome-stock-ticker">
+        </iframe>
+      </div>
+    </div>
 
-    <script src="/libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js" />
+    <script src="/libs/external/jquery/jquery.min.js"></script>
+    <script src="/libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js"></script>
+    <script src="/popup/popup.js"></script>
+
   </body>
 </html>
