@@ -42,7 +42,7 @@ CSTSymbols.prototype.findSymbols = function() {
                 var regex = new RegExp(thisSymbols.patterns[i].pattern, thisSymbols.patterns[i].options);
                 // If the href attribute matches one of our patterns.
                 while ((match = regex.exec(href)) !== null) {
-                    symbols.push(match[thisSymbols.patterns[i].result]);
+                    symbols.push(match[thisSymbols.patterns[i].result].toUpperCase());
                 }
             }
         }

@@ -7,7 +7,7 @@
  * Print all tickers into the ticker bar.
  */
 showBar = function(symbols, tickerbar) {
-    var text = makeBarButton('test');
+    var text = '';
     // Loop through each variable to be displayed.
     for (symbol in symbols.tickers) {
         text = text + '<div class="cst-tickerbar-variable">';
@@ -49,10 +49,9 @@ makeBarButton = function(variable) {
            '<button class="btn btn-success btn-xs dropdown-toggle" type="button" id="dropdownMenu'+variable+'" data-toggle="dropdown">' +
            variable + '</button>' +
            '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu'+variable+'">' +
-           '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>' +
-           '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>' +
+           '  <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://ycharts.com/companies/'+variable+'/free_cash_flow">Free Cash Flow Chart</a></li>' +
            '  <li role="presentation" class="divider"></li>' +
-           '  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>' +
+           '  <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://www.buyupside.com/dividendcharts/dividendchartdisplay.php?symbol='+variable+'&interval=allyears">Dividend Chart</a></li>' +
            '</ul>' +
            '</div>';
     return text;
