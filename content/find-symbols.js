@@ -50,8 +50,8 @@ makeBarButton = function(variable) {
            variable + '</button>' +
            '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu'+variable+'">' +
            '  <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://ycharts.com/companies/'+variable+'/free_cash_flow">Free Cash Flow Chart</a></li>' +
-           '  <li role="presentation" class="divider"></li>' +
            '  <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://www.buyupside.com/dividendcharts/dividendchartdisplay.php?symbol='+variable+'&interval=allyears">Dividend Chart</a></li>' +
+           '  <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://www.vuru.co/analysis/'+variable+'/valuation">Fair Value Calculator</a></li>' +
            '</ul>' +
            '</div>';
     return text;
