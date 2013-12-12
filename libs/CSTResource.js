@@ -198,7 +198,7 @@ CSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
             this.cache.metrics[metric.name].value = value;
             this.cache.metrics[metric.name].timestamp = new Date().getTime();
             callback.call(this, value);
-        });1
+        });
     } else {
         var value = null;
         if (this.cache.metrics[metric.name] == 'undefined' || flush) {
