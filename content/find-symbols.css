@@ -25,6 +25,7 @@ div.cst-tickerbar-variable {
   margin-right: 16px;
   margin-left: 2px;
   white-space: nowrap;
+  display: inline-block;
 }
 div.cst-tickerbar-item {
   float: left;

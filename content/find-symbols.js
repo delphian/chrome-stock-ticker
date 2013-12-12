@@ -7,7 +7,7 @@
  * Print all tickers into the ticker bar.
  */
 showBar = function(symbols, tickerbar) {
-    var text = makeBarButton('test');
+    var text = '';
     // Loop through each variable to be displayed.
     for (symbol in symbols.tickers) {
         text = text + '<div class="cst-tickerbar-variable">';
