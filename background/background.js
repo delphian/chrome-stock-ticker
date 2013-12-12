@@ -1,4 +1,12 @@
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
+    if (request.method == "load_js") {
+        chrome.tabs.executeScript(null, { file: request.file } );
+        sendResponse( { status: 1 } );
+    }
+});
+
 // Insert some default data into the resource and patterns
 $('document').ready(function() {
     chrome.storage.sync.get(['resource', 'patterns', 'tickerbar'], function(result) {

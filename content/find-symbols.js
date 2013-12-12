@@ -7,7 +7,7 @@
  * Print all tickers into the ticker bar.
  */
 showBar = function(symbols, tickerbar) {
-    var text = '';
+    var text = makeBarButton('test');
     // Loop through each variable to be displayed.
     for (symbol in symbols.tickers) {
         text = text + '<div class="cst-tickerbar-variable">';
@@ -95,10 +95,11 @@ jqueryLoaded = function() {
 jqueryLoad = function() {
     // Load jquery.
     console.log('Loading jQuery...');
-    var script = document.createElement('script');
-    script.src = chrome.extension.getURL('libs/external/jquery/jquery.min.js');
-    script.type = 'text/javascript';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    chrome.tabs.executeScript(null, {file: "libs/external/jquery/jquery.min.js"});
+    // var script = document.createElement('script');
+    // script.src = chrome.extension.getURL('libs/external/jquery/jquery.min.js');
+    // script.type = 'text/javascript';
+    // document.getElementsByTagName('head')[0].appendChild(script);
 }
 
 /**
@@ -108,24 +109,25 @@ jqueryLoad = function() {
  */
 bootstrapLoad = function() {
     // Load bootstrap css.
-    console.log('Loading Bootstrap CSS...');
-    var link = document.createElement('link');
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    link.href = chrome.extension.getURL('libs/cst-bootstrap.css');
-    document.getElementsByTagName('head')[0].appendChild(link);
+    // console.log('Loading Bootstrap CSS...');
+    // var link = document.createElement('link');
+    // link.rel = "stylesheet";
+    // link.type = "text/css";
+    // link.href = chrome.extension.getURL('libs/cst-bootstrap.css');
+    // document.getElementsByTagName('head')[0].appendChild(link);
     // Load bootstrap javascript.
     console.log('Loading Bootstrap JS...');
-    var script = document.createElement('script');
-    script.src = chrome.extension.getURL('libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js');
-    script.type = 'text/javascript';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    chrome.runtime.sendMessage({method: 'load_js', file: 'libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js'});
+    // var script = document.createElement('script');
+    // script.src = chrome.extension.getURL('libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js');
+    // script.type = 'text/javascript';
+    // document.getElementsByTagName('head')[0].appendChild(script);
 };
 
 // Only load bootstrap if it is not already present on the content page.
 $('document').ready(function() {
-    if (!jqueryLoaded()) jqueryLoad(); 
-    if (!bootstrapLoaded()) bootstrapLoad();
+    // if (!jqueryLoaded()) jqueryLoad(); 
+    // if (!bootstrapLoaded()) bootstrapLoad();
     chrome.storage.sync.get(['resource', 'tickerbar', 'patterns'], function(result) {
         var resource = result.resource;
         var tickerbar = result.tickerbar;
