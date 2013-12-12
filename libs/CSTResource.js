@@ -37,7 +37,7 @@ CSTResource = function(resource, cache) {
 /**
  * Fetch a URL from the internet.
  *
- * This is an async method call.
+ * This is an async method call. The results will be stored in cache.
  *
  * @param string url
  *   The url to access.
@@ -53,15 +53,39 @@ CSTResource = function(resource, cache) {
  *   returned by the ajax request.
  */
 CSTResource.prototype.fetchUrl = function(url, params, callback) {
-    var thisCSTResource = this;
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-          if (xhr.readyState == 4) {
-              callback.call(thisCSTResource, xhr.responseText);
-          }
+    // Return the cached copy if it exists.
+    if (typeof(this.cache.urls[url]) != 'undefined') {
+        callback.call(this, this.cache.urls[url].html);
+    } else {
+        var thisCSTResource = this;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+              if (xhr.readyState == 4) {
+                  // Record a cached copy of the url's contents.
+                  thisCSTResource.cache.urls[url] = {};
+                  thisCSTResource.cache.urls[url].html = xhr.responseText;
+                  thisCSTResource.cache.urls[url].timestamp = new Date().getTime();
+                  callback.call(thisCSTResource, xhr.responseText);
+              }
+        }
+        xhr.open("GET", url, true);
+        xhr.send();
     }
-    xhr.open("GET", url, true);
-    xhr.send();
+}
+CSTResource.prototype.fetchAllUrls = function (replacements, callback, flush) {
+    var urls = this.getMetricUrls();
+    var fetching = urls;
+    for (var i=0; i<urls.length; i++) {
+        var url = urls[i];
+        var actual_url = this.replaceUrlVars(url, replacements);
+        this.fetchUrl(actual_url, {}, function() {
+            // Record the end of async call to fetch url. When the last url
+            // has been retrieved, and the array empty, then the callback will be
+            // invoked.
+            fetching.splice(fetching.indexOf(url), 1);
+            if (!fetching.length) callback.call(this, this.cache.urls);
+        });
+    }
 }
 /**
  * Report all URLs required by all metrics in the resource.
@@ -71,7 +95,7 @@ CSTResource.prototype.fetchUrl = function(url, params, callback) {
  */
 CSTResource.prototype.getMetricUrls = function() {
     var urls = [];
-    for (var i=0; i<this.resource.metrics; i++) {
+    for (var i=0; i<this.resource.metrics.length; i++) {
         var metric = this.resource.metrics[i];
         if ($.inArray(metric.url, urls) === -1) urls.push(metric.url);
     }
@@ -169,7 +193,11 @@ CSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush)
 }
 /**
  * Retrieve metric value by accessing the metric url and using the selector.
- * A cached copy of the URL and metric value will be maintained.
+ * A cached copy of the URL and metric value will be maintained. All url
+ * fetches are made asyncronously: It is not possible to make use of a
+ * cached copy of a url fetch if the first time the fetch is made is inside
+ * of this function. To use a cached copy it is suggested that all urls be
+ * fetched first, then fetch metrics.
  *
  * @param object metric
  *   The metric object to parse.
@@ -186,32 +214,22 @@ CSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush)
  */
 CSTResource.prototype.fetchMetric = function (metric, replacements, callback, flush) {
     if (typeof(flush) == 'undefined') flush = false;
-    var thisCSTResource = this;
-    var url = this.replaceUrlVars(metric.url, replacements);
-    if (typeof(this.cache.urls[url]) == 'undefined' || flush) {
+    // Get the value by fetching the url and parsing the response.
+    if ((typeof(this.cache.metrics[metric.name]) == 'undefined') || flush) {
+        var url = this.replaceUrlVars(metric.url, replacements);
         this.fetchUrl(url, {}, function(html) {
             var value = $(html).find(metric.selector).text();
-            this.cache.urls[url] = {};
-            this.cache.urls[url].html = html;
-            this.cache.urls[url].timestamp = new Date().getTime();
             this.cache.metrics[metric.name] = {};
             this.cache.metrics[metric.name].value = value;
             this.cache.metrics[metric.name].timestamp = new Date().getTime();
             callback.call(this, value);
-        });
+        }, flush);
+    // Get the value from cache.
     } else {
-        var value = null;
-        if (this.cache.metrics[metric.name] == 'undefined' || flush) {
-            var html = this.cache.urls[url].html;
-            value = $(html).find(metric.selector).text();
-            this.cache.metrics[metric.name].value = value;
-            this.cache.metrics[metric.name].timestamp = new Date().getTime();
-        } else {
-            value = this.cache.metrics[metric.name].value;
-        }
+        var value = this.cache.metrics[metric.name].value;
         callback.call(this, value);
     }
-};
+ };
 /**
  * Replace varibles in URL string.
  *

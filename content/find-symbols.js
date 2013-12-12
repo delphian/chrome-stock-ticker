@@ -129,6 +129,9 @@ $('document').ready(function() {
     // if (!jqueryLoaded()) jqueryLoad(); 
     // if (!bootstrapLoaded()) bootstrapLoad();
     chrome.storage.sync.get(['resource', 'tickerbar', 'patterns'], function(result) {
+        if (chrome.runtime.lastError) {
+            console.log('Content script can\'t read from synced storage: ' + chrome.runtime.lastError.message);
+        }
         var resource = result.resource;
         var tickerbar = result.tickerbar;
         var patterns = result.patterns;

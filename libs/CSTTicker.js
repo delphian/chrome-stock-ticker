@@ -17,9 +17,19 @@ CSTTicker = function(symbol, resource, cache) {
         { from: 'SYMBOL', to: symbol }
     ];
 };
+/**
+ * Fetch all metrics from the resource.
+ *
+ * @param function callback
+ *   Callback will be invoked when all metrics have been fetched.
+ *
+ * @return void
+ */
 CSTTicker.prototype.fetchAllData = function(callback) {
 	var thisCSTTicker = this;
-    this.resource.fetchAllMetrics(this.replacements, function() {
-        callback.call(thisCSTTicker);
-    });
+	this.resource.fetchAllUrls(this.replacements, function() {
+        thisCSTTicker.resource.fetchAllMetrics(thisCSTTicker.replacements, function() {
+           callback.call(thisCSTTicker);
+        });
+	});
 };
