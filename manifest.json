@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
 
-  "name": "Chrome Stock Ticker",
-  "description": "Chrome extension scans current page for any ticker symbols and if found will display associated stock information in ticker bar.",
+  "name": "Stock Ticker for Chrome",
+  "description": "Scans current page for any ticker symbols and if found will display associated stock information in ticker bar.",
   "version": "0.9.0",
-
-  "homepage_url": "https://github.com/delphian/chrome-stock-ticker/wiki",
+  "author": "Bryan Hazelbaker",
+  "homepage_url": "http:www.chromestockticker.com",
 
   "permissions": [
     "https://www.google.com/",
@@ -30,7 +30,7 @@
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
     },
-    "default_title": "Chrome Stock Ticker",
+    "default_title": "Stock Ticker for Chrome",
     "default_popup": "popup/popup.html"
   },
 
