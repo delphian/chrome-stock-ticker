@@ -19,7 +19,7 @@ showBar = function(symbols, tickerbar) {
                 var source = tickerbar.items[i].source;
                 var new_source = source;
                 var match;
-                var regex = new RegExp('\\[\\[([a-z_]+)\\]\\]', 'g');
+                var regex = new RegExp('\\[\\[([a-zA-Z_ ]+)\\]\\]', 'g');
                 // Search for metrics on each item and replace them with the
                 // values cached for this variable.
                 while ((match = regex.exec(source)) !== null) {
