@@ -54,6 +54,8 @@ CSTSymbols.prototype.findSymbols = function() {
 };
 /**
  * Load all symbols into ticker array.
+ *
+ * @todo callback is being fired each time asyncronously...
  */
 CSTSymbols.prototype.loadTickers = function(callback) {
     var thisSymbols = this;
