@@ -12,6 +12,43 @@
  *
  * URLs may contain variables, for which the calling class is responsible
  * for passing in replacement values when required.
+ *
+ * @see CSTResource.getDefaultResource() for an example on how to construct
+ * a resource.
+ *
+ * Example fetching of price and volume for a stock ticker:
+ * @code
+ * // Setup a resource object to retrieve 'price' and 'volume' data from
+ * // the yahoo finance page.
+ * var resource_obj = {
+ *     urls: [
+ *         { url: 'http://finance.yahoo.com/q?s=SYMBOL' }
+ *     ],
+ *     metrics: [
+ *         {
+ *             name: 'price', 
+ *             url: 'http://finance.yahoo.com/q?s=SYMBOL',
+ *             selector: 'span.time_rtq_ticker span'
+ *         },
+ *         {
+ *             name: 'volume',
+ *             url: 'http://finance.yahoo.com/q?s=SYMBOL',
+ *             selector: 'table#table2 tr:nth-child(3) td.yfnc_tabledata1 span'
+ *         },
+ *     ]
+ * };
+ * // Replace all 'SYMBOLS' in the above resource_obj urls to 'WMT' (walmart
+ * // stock ticker).
+ * var replacements = [
+ *     { from: 'SYMBOL', to: 'WMT' }
+ * ];
+ * var resource = new CSTResource(resource_obj, null);
+ * resource.fetchAllMetrics(replacements, function() {
+ *     // Fetcing metrics is an asyncronous process. Inside this callback we
+ *     // know all metrics have been fetched and are available.
+ *     var price = resource.cache.metrics['price'].value;
+ * });
+ * @endcode
  */
 
 /**
