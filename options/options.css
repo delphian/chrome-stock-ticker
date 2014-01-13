@@ -9,13 +9,13 @@ input.ng-invalid {
 }
 
 input.url-name {
-    width: 120px;
+    width: 230px;
 }
 input.url {
     width: 300px;
 }
 input.selector {
-    width: 300px;
+    width: 360px;
 }
 
 table th {

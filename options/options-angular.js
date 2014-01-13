@@ -96,10 +96,19 @@ function ImportExportCtrl($scope) {
  */
 function TickerBarCtrl($scope) {
     $scope.tickerbar = { items: [] };
+    $scope.optionsMetricNames = [];
     // Update the tickerbar from local storage on first load.
     chrome.storage.sync.get('tickerbar', function(result) {
         if (typeof(result['tickerbar']) != 'undefined') {
             $scope.tickerbarUpdate(result['tickerbar']);
+        }
+    });
+    chrome.storage.sync.get('resource', function(result) {
+        if (typeof(result['resource']) != 'undefined') {
+            $.each(result['resource'].metrics, function(index, value) {
+                $scope.optionsMetricNames.push({ metricIndex: value.name, metricValue: value.name });
+            });
+        $scope.$apply();           
         }
     });
     // Update the patterns and force resync between model and html anytime
