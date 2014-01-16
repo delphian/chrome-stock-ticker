@@ -18,7 +18,9 @@ showBar = function(symbols, tickerbar) {
         var ticker = symbols.tickers[symbol];
         // Loop through each item in the tickerbar for this variable. 
         for (var i=0; i<tickerbar.items.length; i++) {
-            if (typeof(ticker.resource.cache.metrics[tickerbar.items[i].name]) != 'undefined') {
+            if (typeof(ticker.resource.cache.metrics[tickerbar.items[i].name]) != 'undefined' &&
+                typeof(ticker.resource.cache.metrics[tickerbar.items[i].name].value) == 'string' &&
+                ticker.resource.cache.metrics[tickerbar.items[i].name].value.length > 0) {
                 var new_source = tickerbar.items[i].source + '<br />' + ticker.resource.cache.metrics[tickerbar.items[i].name].value;
                 text = text + '<div class="cst-tickerbar-item">' + new_source + '</div>';
             }
