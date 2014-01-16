@@ -3,7 +3,7 @@
 
   "name": "Stock Ticker for Chrome",
   "description": "Scans current page for any ticker symbols and if found will display associated stock information in ticker bar.",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "author": "Bryan Hazelbaker",
   "homepage_url": "http:www.chromestockticker.com",
 
