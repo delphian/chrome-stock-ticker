@@ -10,6 +10,9 @@ Copyright (c) 2013 Bryan Hazelbaker bryan.hazelbaker@gmail.com Released under th
 
 Installation
 -----
+
+The easiest way to install is from the chrome web store: [Chrome Stock Ticker](https://chrome.google.com/webstore/detail/stock-ticker-for-chrome/eaghppefmpfgcloppacaehmeiibbboce?hl=en).
+
 ```
 git clone git@github.com:delphian/chrome-stock-ticker.git
 cd chrome-stock-ticker
