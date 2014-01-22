@@ -214,27 +214,22 @@ CSTResource.prototype.validCache = function (cache) {
  */
 CSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush) {
     var thisCSTResource = this;
-    var fetching = [];
+    var fetching = this.resource.metrics.length;
     for (var i=0; i<this.resource.metrics.length; i++) {
         var metric = this.resource.metrics[i];
-        // Record the begining of an async call to fetch metric value.
-        fetching.push(metric.name);
         this.fetchMetric(metric, replacements, function() {
             // Record the end of async call to fetch metric. When the last metric
             // has been retrieved, and the array empty, then the callback will be
             // invoked.
-            fetching.splice(fetching.indexOf(metric.name), 1);
-            if (!fetching.length) callback.call(this, this.cache.metrics);
+            fetching = fetching - 1;
+            if (!fetching) callback.call(this, this.cache.metrics);
         }, flush);
     }
 }
 /**
  * Retrieve metric value by accessing the metric url and using the selector.
  * A cached copy of the URL and metric value will be maintained. All url
- * fetches are made asyncronously: It is not possible to make use of a
- * cached copy of a url fetch if the first time the fetch is made is inside
- * of this function. To use a cached copy it is suggested that all urls be
- * fetched first, then fetch metrics.
+ * fetches are made asyncronously.
  *
  * @param object metric
  *   The metric object to parse.
@@ -251,8 +246,11 @@ CSTResource.prototype.fetchAllMetrics = function (replacements, callback, flush)
  */
 CSTResource.prototype.fetchMetric = function (metric, replacements, callback, flush) {
     if (typeof(flush) == 'undefined') flush = false;
-    // Get the value by fetching the url and parsing the response.
-    if ((typeof(this.cache.metrics[metric.name]) == 'undefined') || flush) {
+    // Get the value by fetching the url and parsing the response if it has not
+    // already been cached, or flush is specified, or the cache is older than
+    // 60 minutes.
+    if ((typeof(this.cache.metrics[metric.name]) == 'undefined') || flush 
+        || (this.cache.metrics[metric.name].timestamp + 60 * 60 * 1000) < new Date().getTime()) {
         var url = this.replaceUrlVars(metric.url, replacements);
         this.fetchUrl(url, {}, function(html) {
             var value = $(html).find(metric.selector).text();

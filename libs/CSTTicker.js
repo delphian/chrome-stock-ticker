@@ -26,10 +26,25 @@ CSTTicker = function(symbol, resource, cache) {
  * @return void
  */
 CSTTicker.prototype.fetchAllData = function(callback) {
-	var thisCSTTicker = this;
-	this.resource.fetchAllUrls(this.replacements, function() {
-        thisCSTTicker.resource.fetchAllMetrics(thisCSTTicker.replacements, function() {
-           callback.call(thisCSTTicker);
+	var self = this;
+    var cacheKey = 'cache_' + self.symbol;
+    chrome.storage.sync.get(cacheKey, function(result) {
+        if (typeof(result[cacheKey]) != 'undefined') {
+            self.resource.cache.metrics = result[cacheKey];
+        } else {
+            console.log('No cache found for ' + cacheKey + '.');
+        }
+        self.resource.fetchAllMetrics(self.replacements, function() {
+            var data = {};
+            data[cacheKey] = self.resource.cache.metrics;
+            chrome.storage.sync.set( data , function() {
+                if (chrome.runtime.lastError) {
+                    console.log('Failed to save: ' + chrome.runtime.lastError.message);
+                } else {
+                    console.log('Saved ' + cacheKey + '.');
+                }
+            });
+            callback.call(self);
         });
-	});
+    });
 };
