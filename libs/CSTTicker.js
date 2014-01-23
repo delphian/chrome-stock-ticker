@@ -1,24 +1,56 @@
 
 /**
+ * @file
+ * Retrieve all associated data from internet resource for a specified
+ * stock ticker symbol.
+ *
+ * Implements caching of metrics via chrome storage. Will retrieve the
+ * resource from chrome storage and set the replacement patterns for
+ * the resource urls.
+ *
+ * Example usage:
+ * @code
+ *   var ticker = new CSTTicker('WMT');
+ *   ticker.fetchAllData(function() {
+ *     console.log('Walmart price is: ' + this.resource.metrics.price.value);
+ *   });
+ * @endcode
+ */
+
+/**
  * Retrieve data for a specific stock ticker from the internet.
  *
  * @param string symbol
  *   The ticker symbol to fetch information on.
- * @param object resource
- *   object that maps ticker properties to the urls and css
- *   selectors required to fetch their data.
- * @param object data
- *   (optional) cached data, if any, for this symbol.
  */
-CSTTicker = function(symbol, resource, cache) {
+CSTTicker = function(symbol) {
     this.symbol = symbol;
-    this.resource = new CSTResource(resource, cache);
-    this.replacements = [
-        { from: 'SYMBOL', to: symbol }
-    ];
+    this.resource = null;
+    this.replacements = null;
 };
 /**
+ * Initialize the ticker.
+ *
+ * Load the resource and cached response from chrome storage.
+ */
+CSTTicker.prototype.init = function (callback) {
+    var self = this;
+    var cacheKey = 'cache_' + this.symbol;
+    this.replacements = [
+        { from: 'SYMBOL', to: this.symbol }
+    ];
+    chrome.storage.sync.get(['resource', cacheKey], function(result) {
+        if (typeof(result['resource']) == 'undefined') {
+            console.log('No resource found.');
+        }
+        self.resource = new CSTResource(result['resource'], result[cacheKey]);
+        if (callback) callback.call(self);
+    });    
+}
+/**
  * Fetch all metrics from the resource.
+ *
+ * Cache the results in chrome's synced storage.
  *
  * @param function callback
  *   Callback will be invoked when all metrics have been fetched.
@@ -27,13 +59,8 @@ CSTTicker = function(symbol, resource, cache) {
  */
 CSTTicker.prototype.fetchAllData = function(callback) {
 	var self = this;
-    var cacheKey = 'cache_' + self.symbol;
-    chrome.storage.sync.get(cacheKey, function(result) {
-        if (typeof(result[cacheKey]) != 'undefined') {
-            self.resource.cache.metrics = result[cacheKey];
-        } else {
-            console.log('No cache found for ' + cacheKey + '.');
-        }
+    var cacheKey = 'cache_' + this.symbol;
+    this.init(function() {
         self.resource.fetchAllMetrics(self.replacements, function() {
             var data = {};
             data[cacheKey] = self.resource.cache.metrics;
@@ -44,7 +71,7 @@ CSTTicker.prototype.fetchAllData = function(callback) {
                     console.log('Saved ' + cacheKey + '.');
                 }
             });
-            callback.call(self);
+            if (callback) callback.call(self);
         });
-    });
+    })
 };

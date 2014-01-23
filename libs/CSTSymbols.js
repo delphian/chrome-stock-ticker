@@ -61,7 +61,7 @@ CSTSymbols.prototype.loadTickers = function(callback) {
     var thisSymbols = this;
     var fetching = this.symbols;
     for (var i=0; i<this.symbols.length; i++) {
-        var ticker = new CSTTicker(this.symbols[i], this.resource);
+        var ticker = new CSTTicker(this.symbols[i]);
         ticker.fetchAllData(function() {
             // Record the fully loaded ticker.
             thisSymbols.tickers[this.symbol] = this;

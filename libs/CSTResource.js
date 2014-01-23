@@ -69,7 +69,7 @@ CSTResource = function(resource, cache) {
         urls: {},
         metrics: {}
     };
-    if (typeof(cache) != 'undefined') this.cache = cache;
+    if (typeof(cache) != 'undefined') this.cache.metrics = cache;
 };
 /**
  * Fetch a URL from the internet.
