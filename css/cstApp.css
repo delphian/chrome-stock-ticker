@@ -9,9 +9,6 @@
   background-color: #F6F6F6;
   background: linear-gradient(#F8F8F8, #E8E8E8);
   z-index: 9999999;
-  font-size: 10px;
-  font-family: 'arial narrow';
-  line-height: 10px;
   white-space: nowrap;
 }
 .cst-bar-item {
@@ -26,16 +23,19 @@
     float: left;
 }
 .cst-variable .dropdown button {
-  font-family: 'arial narrow';
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 400;
   text-transform: uppercase;
   padding: 2px;
 }
 .cst-variable table {}
-.cst-variable table td {
+.cst-variable table td, .cst-variable table th {
   padding: 0px;
+  padding-left: 4px;
   margin: 0px;
+  font-size: 11px;
+  line-height: 11px;
+  font-family: 'arial narrow';
 }
 .cst-metric-abbr {}
 .cst-metric-value {}
