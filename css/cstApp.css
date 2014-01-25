@@ -1,6 +1,4 @@
-.cst-metric {
-  float:left;
-}
+
 #cst-tickerbar {
   position: fixed;
   height: 30px;
@@ -21,17 +19,20 @@
   font-size: 10px;
   padding: 1px;
 }
-div.cst-tickerbar-variable {
-  float: left;
-  margin-top: 5px;
-  margin-right: 16px;
-  margin-left: 2px;
-  white-space: nowrap;
-  display: inline-block;
+.cst-variable {
+    position:relative;
+    margin-right:4px;
 }
-div.cst-tickerbar-item {
-  float: left;
-  overflow: none;
-  margin-left: 4px;
-  white-space: nowrap;
+.cst-metric {
+    float:left;
+    font-size: 11px;
+    font-family: 'arial narrow';
+    font-weight: 100;
+    line-height:11px;
+    padding: 0px;
+    margin: 0px;
+    margin-left: 4px;
+    text-align: left;
 }
+.cst-metric-abbr {}
+.cst-metric-value {}

@@ -20,7 +20,10 @@
   "web_accessible_resources": [
     "libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js",
     "libs/cst-bootstrap.css",
-    "libs/external/jquery/jquery.min.js"
+    "libs/external/jquery/jquery.min.js",
+    "libs/external/angular/angular.min.js",
+    "js/templates/variable.template.html",
+    "js/templates/metric.template.html"
   ],
   
   "options_page": "options/options.html",
@@ -40,15 +43,19 @@
       "run_at" : "document_idle",
       "js": [
         "libs/external/jquery/jquery.min.js",
+        "libs/external/angular/angular.min.js",
         "libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js",
         "libs/CSTResource.js",
         "libs/CSTSymbols.js",
         "libs/CSTTicker.js",
+        "js/cstApp.js",
+        "js/cstMetricCtrl.js",
+        "js/cstVariableCtrl.js",
         "content/find-symbols.js"
       ],
       "css": [
         "libs/cst-bootstrap.css",
-        "content/find-symbols.css"
+        "css/cstApp.css"
       ]
     }
   ],

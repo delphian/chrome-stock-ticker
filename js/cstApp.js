@@ -1,56 +1,13 @@
 
 var cstApp = angular.module('chromeStockTicker', []);
 
-cstApp.controller('metric', function($scope) {
-    $scope.metrics = {};
-    var ticker = new CSTTicker($scope.variable.toUpperCase());
-    ticker.fetchAllData(function() {
-        $scope.metrics = this.resource.cache.metrics;
-        $scope.$apply();
-    });
-});
-cstApp.controller('variable', function($scope) {
-    $scope.bar = {};
-    $scope.metrics = {};
-    var ticker = new CSTTicker($scope.variable.toUpperCase());
-    ticker.fetchAllData(function() {
-        $scope.metrics = this.resource.cache.metrics;
-        $scope.$apply();
-    });    
-    chrome.storage.sync.get('tickerbar', function(result) {
-        if (typeof(result['tickerbar']) != 'undefined') {
-            $scope.bar = result['tickerbar'];
-            // $.each(result['tickerbar'].items, function(index, value) {
-            //     $scope.bar[value.name] = value;
-            // });
-            $scope.$apply();
-        }
-    });
-});
-cstApp.directive('cstVariable', function() {
-    return {
-        restrict: 'E',
-        controller: 'variable',
-        replace: true,
-        // transclude: true,
-        scope: {
-            variable: '@',
-        },
-        templateUrl: '/libs/variable.template.html'
-    };
-});
-cstApp.directive('cstMetric', function() {
-    return {
-        restrict: 'E',
-        controller: 'metric',
-        // replace: true,
-        // transclude: true,
-        scope: {
-            variable: '@',
-            metricNames: '=metric'
-        },
-        templateUrl: '/libs/metric.template.html'
-    };
+cstApp.config(function($sceDelegateProvider) {
+  $sceDelegateProvider.resourceUrlWhitelist([
+    // Allow same origin resource loads.
+    'self',
+    // Allow loading from our assets domain.  Notice the difference between * and **.
+    'chrome-extension://**'
+  ]);
 });
 
 cstApp.controller('tickerBar', function($scope) {
