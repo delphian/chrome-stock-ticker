@@ -1,4 +1,6 @@
-
+.cst-metric {
+  float:left;
+}
 #cst-tickerbar {
   position: fixed;
   height: 30px;

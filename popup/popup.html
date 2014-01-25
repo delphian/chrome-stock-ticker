@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="chromeStockTicker">
   <head>
     <title>Chrome Stock Ticker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/libs/external/bootstrap/bootstrap-3.0.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/popup/popup.css" />
+    <link rel="stylesheet" type="text/css" href="/content/find-symbols.css" />
   </head>
-  <body >
+  <body>
 
     <ul id="popupNav" class="nav nav-tabs">
       <li class="active"><a href="#tickerbar" data-toggle="tab">Config</a></li>
@@ -16,7 +17,7 @@
 
     <div class="tab-content">
       <div class="tab-pane active" id="tickerbar">
-        <div class="container" ng-controller="TickerBarCtrl">
+        <div class="container" ng-controller="tickerBar">
           <h2>Ticker Bar</h2>
           <p>Select which metrics to show on the ticker bar.</p>
           <div>
@@ -38,6 +39,8 @@
       </div>
       <div class="tab-pane" id="watch">
 
+              <cst-variable variable="wmt"></cst-metric>
+
       </div>
       <div class="tab-pane" id="help">
         <iframe id="support"
@@ -48,7 +51,9 @@
 
     <script src="/libs/external/jquery/jquery.min.js"></script>
     <script src="/libs/external/angular/angular.min.js"></script>
-    <script src="/popup/popup-angular.js"></script>
+    <script src="/libs/CSTResource.js"></script>
+    <script src="/libs/CSTTicker.js"></script>
+    <script src="/libs/ChromeStockTicker-module.js"></script>
     <script src="/libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js"></script>
     <script src="/popup/popup.js"></script>
 
