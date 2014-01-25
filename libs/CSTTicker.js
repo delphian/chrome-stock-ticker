@@ -12,7 +12,7 @@
  * @code
  *   var ticker = new CSTTicker('WMT');
  *   ticker.fetchAllData(function() {
- *     console.log('Walmart price is: ' + this.resource.cache.metrics.price.value);
+ *     console.log('Walmart price is: ' + this.resource.cache.metrics.Price.value);
  *   });
  * @endcode
  */

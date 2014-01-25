@@ -14,25 +14,28 @@
   line-height: 10px;
   white-space: nowrap;
 }
-.cst-tickerbar-dropdown button {
-  font-family: 'arial narrow';
-  font-size: 10px;
-  padding: 1px;
+.cst-bar-item {
+    margin-top: 4px;
+    margin-left: 10px;
+    float: left;
 }
 .cst-variable {
-    position:relative;
     margin-right:4px;
 }
-.cst-metric {
-    float:left;
-    font-size: 11px;
-    font-family: 'arial narrow';
-    font-weight: 100;
-    line-height:11px;
-    padding: 0px;
-    margin: 0px;
-    margin-left: 4px;
-    text-align: left;
+.cst-variable .dropdown {
+    float: left;
+}
+.cst-variable .dropdown button {
+  font-family: 'arial narrow';
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px;
+}
+.cst-variable table {}
+.cst-variable table td {
+  padding: 0px;
+  margin: 0px;
 }
 .cst-metric-abbr {}
 .cst-metric-value {}

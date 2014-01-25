@@ -1,5 +1,5 @@
 <div class="cst-variable">
-  <div class="dropdown cst-tickerbar-dropdown" style="float:left;">
+  <div class="dropdown cst-tickerbar-dropdown">
     <button class="btn btn-success btn-xs dropdown-toggle" type="button" id="dropdownMenu{{variable}}" data-toggle="dropdown">{{variable}}</button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu{{variable}}">
       <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://ycharts.com/companies/'+variable+'/free_cash_flow">Free Cash Flow Chart</a></li>
@@ -7,11 +7,15 @@
       <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://www.vuru.co/analysis/{{variable}}/valuation">Fair Value Calculator</a></li>
     </ul>
   </div>
-
-  <div ng-repeat="item in bar.items">
-    <div class="cst-metric">
-      <div class="cst-metric-abbr">{{item.source}}</div>
-      <div class="cst-metric-value">{{metrics[item.name].value}}</div>
-    </div>
-  </div>
+  
+  <table>
+    <tbody>
+      <tr ng-if="heading">
+        <th class="cst-metric-abbr" ng-repeat="item in bar.items">{{item.source}}<th>
+      </tr>
+      <tr>
+        <td class="cst-metric-value" ng-repeat="item in bar.items">{{metrics[item.name].value}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

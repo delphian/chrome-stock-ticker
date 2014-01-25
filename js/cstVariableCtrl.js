@@ -1,5 +1,6 @@
 
 cstApp.controller('variable', function($scope) {
+    $scope.heading = true;
     $scope.bar = {};
     $scope.metrics = {};
     var ticker = new CSTTicker($scope.variable.toUpperCase());
@@ -20,7 +21,7 @@ cstApp.directive('cstVariable', function() {
         restrict: 'E',
         controller: 'variable',
         replace: true,
-        // transclude: true,
+        transclude: 'element',
         scope: {
             variable: '@',
         },

@@ -23,7 +23,8 @@
     "libs/external/jquery/jquery.min.js",
     "libs/external/angular/angular.min.js",
     "js/templates/variable.template.html",
-    "js/templates/metric.template.html"
+    "js/templates/metric.template.html",
+    "js/templates/bar.template.html"
   ],
   
   "options_page": "options/options.html",
@@ -51,6 +52,7 @@
         "js/cstApp.js",
         "js/cstMetricCtrl.js",
         "js/cstVariableCtrl.js",
+        "js/cstBarCtrl.js",
         "content/find-symbols.js"
       ],
       "css": [

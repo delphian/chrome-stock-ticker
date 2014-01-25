@@ -10,13 +10,16 @@
  * the metrics. Be prepared cache items that don't exist yet.
  */
 showBar = function(symbols) {
-    var text = '';
+    var variables = [];
     // Loop through each variable to be displayed.
     for (symbol in symbols.tickers) {
-        text = text + '<cst-variable variable="'+symbol+'"></cst-variable>';
+        variables.push(symbol);
     }
-    if (text.length) {
-        $('body').append('<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">'+text+'</div>');
+    if (variables.length) {
+        var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
+        markup = markup + '<cst-bar variable="' + variables.join(',') + '"></cst-bar>';
+        markup = markup + '</div>';
+        $('body').append(markup);
         $('html').css('position', 'relative');
         $('html').css({'margin-top':'30px'});
         var element = $('#cst-tickerbar');
