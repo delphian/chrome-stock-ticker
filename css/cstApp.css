@@ -12,6 +12,7 @@
 }
 .cst-bar {
     position: relative;
+    text-align: left;
 }
 .cst-bar-items {
     position: absolute;
