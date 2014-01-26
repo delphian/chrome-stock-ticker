@@ -1,3 +1,21 @@
-<div class="cst-bar-item" ng-repeat="variable in variables">
-  <cst-variable variable="{{variable}}"></cst-variable>
+<div class="cst-bar">
+  <div class="cst-bar-nav cst-bar-prev">
+    <div>
+      <button class="btn btn-default btn-xs" ng-click="prev()">
+        <span>&lt;</span>
+      </button>
+    </div>
+  </div>
+  <div class="cst-bar-items">
+    <div class="cst-bar-item" ng-repeat="variable in variables">
+      <cst-variable variable="{{variable}}"></cst-variable>
+    </div>
+  </div>
+  <div class="cst-bar-nav cst-bar-next">
+    <div>
+      <button class="btn btn-default btn-xs" ng-click="next()">
+        <span>&gt;</span>
+      </button>
+    </div>
+  </div>
 </div>

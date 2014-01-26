@@ -9,12 +9,49 @@
   background-color: #F6F6F6;
   background: linear-gradient(#F8F8F8, #E8E8E8);
   z-index: 9999999;
-  white-space: nowrap;
+}
+.cst-bar {
+    position: relative;
+}
+.cst-bar-items {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    top: 0px;
+    white-space: nowrap;
+}
+.cst-bar-nav {
+    position: absolute;
+    background-color: #F6F6F6;
+    background: linear-gradient(#F8F8F8, #E8E8E8);
+    width: 30px;
+    height: 30px;
+}
+.cst-bar-prev {
+    left: 0px;
+    top: 0px;
+}
+div.cst-bar-next {
+    width: 40px;
+    right: 0px;
+    top: 0px;
+}
+.cst-bar-prev div, .cst-bar-next div {
+    font-family: 'times new roman';
+    font-size: 22px;
+    font-weight: 800;
+    margin-top: 4px;
+}
+.cst-bar-prev div {
+    margin-left: 5px;
+}
+.cst-bar-next div {
+    margin-left: 14px;
 }
 .cst-bar-item {
     margin-top: 4px;
     margin-left: 10px;
-    float: left;
+    display: inline-block;
 }
 .cst-variable {
     margin-right:4px;
