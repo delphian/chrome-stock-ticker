@@ -10,7 +10,7 @@ cstApp.config(function($sceDelegateProvider) {
   ]);
 });
 
-cstApp.controller('tickerBar', function($scope) {
+cstApp.controller('tickerBar', ['$scope', 'resource', function($scope, resource) {
     $scope.tickerbar = { items: [] };
     $scope.optionsMetricNames = [];
     // Update the tickerbar from local storage on first load.
@@ -19,13 +19,11 @@ cstApp.controller('tickerBar', function($scope) {
             $scope.tickerbarUpdate(result['tickerbar']);
         }
     });
-    chrome.storage.sync.get('resource', function(result) {
-        if (typeof(result['resource']) != 'undefined') {
-            $.each(result['resource'].metrics, function(index, value) {
-                $scope.optionsMetricNames.push({ metricIndex: value.name, metricValue: value.name });
-            });
-        $scope.$apply();           
-        }
+    $scope.$on('resourceUpdate', function() {
+        $.each(resource.resource.metrics, function(index, value) {
+            $scope.optionsMetricNames.push({ metricIndex: value.name, metricValue: value.name });
+        });
+        $scope.$apply();
     });
     // Update the patterns and force resync between model and html anytime
     // the stored resource or tickerbar is updated from elsewhere.
@@ -60,4 +58,4 @@ cstApp.controller('tickerBar', function($scope) {
             }
         });
     };
-});
+}]);

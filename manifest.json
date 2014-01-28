@@ -50,6 +50,7 @@
         "libs/CSTSymbols.js",
         "libs/CSTTicker.js",
         "js/cstApp.js",
+        "js/cstFactoryResource.js",
         "js/cstMetricCtrl.js",
         "js/cstVariableCtrl.js",
         "js/cstBarCtrl.js",
