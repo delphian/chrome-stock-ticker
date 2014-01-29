@@ -23,7 +23,8 @@
     "libs/external/jquery/jquery.min.js",
     "libs/external/angular/angular.min.js",
     "js/variable/template/variable.html",
-    "js/templates/metric.template.html",
+    "js/variable/template/variable-config.html",
+    "js/variable/template/metric.html",
     "js/templates/bar.template.html",
     "js/resource/template/resource-config.html"
   ],

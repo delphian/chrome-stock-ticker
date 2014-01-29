@@ -1,0 +1,20 @@
+
+<div class="container">
+  <h2>Ticker Bar</h2>
+  <p>Select which metrics to show on the ticker bar.</p>
+  <div>
+    <table><tr><th>Name</th><th>Abbreviation</th><th></th></tr>
+      <tr ng-repeat="(index, item) in tickerbar.items">
+        <td>
+          <select class="form-control" ng-model="item.name" ng-options="item.metricIndex as item.metricValue for item in optionsMetricNames"></select>
+        </td>
+        <td><input class="form-control" type="text" ng-model="item.source" style="width:100px" /></td>
+        <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="itemRemove(index)"> </button></td>
+      </tr>
+    </table>
+    <br />
+    <div id="saveConfirmTickerBar"></div>
+    <button class="btn btn-success" ng-click="itemAdd()">Add Metric</button>
+    <button class="btn btn-warning" ng-click="save()">Update &amp; Save</button>
+  </div>
+</div>

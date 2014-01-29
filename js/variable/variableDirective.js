@@ -12,6 +12,15 @@ cstApp.directive('cstVariable', function() {
     };
 });
 
+cstApp.directive('cstVariableConfig', function() {
+    return {
+        restrict: 'E',
+        controller: 'variableConfig',
+        replace: true,
+        templateUrl: chrome.extension.getURL('/js/variable/template/variable-config.html')
+    };
+});
+
 cstApp.directive('cstMetric', function() {
     return {
         restrict: 'E',
