@@ -1,0 +1,71 @@
+
+<div class="container">
+  <h2>Resource</h2>
+  <p>The resource instructs the program how to obtain values (metrics) for
+  each variable found on a webpage. To obtain a metric value for any given
+  variable two pieces of
+  information must first be provided: first, a url where that value lives
+  on the internet, and second, a selector path to locate the individual value
+  on the given url page.</p>
+  <div>
+    <div class="panel-group" id="accordion">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              URL Mapping
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>URL Maps instruct the browser on what, if anything, needs to be
+            done first before accessing the given URL (such as a login process).
+            Normally nothing needs to be done.</p>
+            <table><tr><th>URL</th></tr>
+              <tr ng-repeat="(index, url) in resource.urls">
+                <td><input class="url" ng-model="url.url" /></td>
+                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="urlRemove(index)"> </button></td>
+              </tr>
+            </table>
+            <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="urlAdd()"> URL</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+              Metric Mapping
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Metric Maps instruct the browser how to locate a particular piece
+            of information, such as a stock price. The URL is opened in the
+            background and the individual data is targeted by the path in the
+            selector. Each succesfully configured metric will be available to
+            display on the ticker bar.</p>
+            <form name="metricForm" novalidate>
+            <table><tr><th>Metric</th><th>URL</th><th>Selector</th></tr>
+              <tr ng-repeat="(index, metric) in resource.metrics">
+                <td><input name="metricName" class="url-name" ng-model="metric.name" ng-pattern="/^[a-zA-Z_ ]+$/" /></td>
+                <td><input class="url" ng-model="metric.url" /></td>
+                <td><input class="selector" ng-model="metric.selector" /></td>
+                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
+              </tr>
+            </table></form>
+            <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="metricAdd()"> Metric</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <br />
+    <div id="saveConfirmResource"></div>
+    <button class="btn btn-warning" ng-show="metricForm.$valid" ng-click="save()">Update Resource</button>
+  </div>
+</div>

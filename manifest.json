@@ -8,8 +8,8 @@
   "homepage_url": "http:www.chromestockticker.com",
 
   "permissions": [
-    "https://www.google.com/",
-    "http://finance.yahoo.com/",
+    "http://*/*",
+    "https://*/*",
     "notifications",
     "storage",
     "tabs"
@@ -22,9 +22,10 @@
     "libs/cst-bootstrap.css",
     "libs/external/jquery/jquery.min.js",
     "libs/external/angular/angular.min.js",
-    "js/templates/variable.template.html",
+    "js/variable/template/variable.html",
     "js/templates/metric.template.html",
-    "js/templates/bar.template.html"
+    "js/templates/bar.template.html",
+    "js/resource/template/resource-config.html"
   ],
   
   "options_page": "options/options.html",
@@ -50,14 +51,15 @@
         "libs/CSTSymbols.js",
         "libs/CSTTicker.js",
         "js/cstApp.js",
-        "js/cstFactoryResource.js",
-        "js/cstMetricCtrl.js",
-        "js/cstVariableCtrl.js",
+        "js/resource/resourceFactory.js",
+        "js/variable/variableCtrl.js",
+        "js/variable/variableDirective.js",
         "js/cstBarCtrl.js",
         "content/find-symbols.js"
       ],
       "css": [
         "libs/cst-bootstrap.css",
+        "js/variable/css/variable.css",
         "css/cstApp.css"
       ]
     }

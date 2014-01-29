@@ -15,16 +15,3 @@ cstApp.controller('variable', function($scope) {
         }
     });
 });
-
-cstApp.directive('cstVariable', function() {
-    return {
-        restrict: 'E',
-        controller: 'variable',
-        replace: true,
-        transclude: 'element',
-        scope: {
-            variable: '@',
-        },
-        templateUrl: chrome.extension.getURL('/js/templates/variable.template.html')
-    };
-});
