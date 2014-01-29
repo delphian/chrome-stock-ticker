@@ -51,26 +51,3 @@
     margin-left: 10px;
     display: inline-block;
 }
-.cst-variable {
-    margin-right:4px;
-}
-.cst-variable .dropdown {
-    float: left;
-}
-.cst-variable .dropdown button {
-  font-size: 11px;
-  font-weight: 400;
-  text-transform: uppercase;
-  padding: 2px;
-}
-.cst-variable table {}
-.cst-variable table td, .cst-variable table th {
-  padding: 0px;
-  padding-left: 4px;
-  margin: 0px;
-  font-size: 11px;
-  line-height: 11px;
-  font-family: 'arial narrow';
-}
-.cst-metric-abbr {}
-.cst-metric-value {}
