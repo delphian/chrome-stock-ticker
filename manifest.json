@@ -26,6 +26,7 @@
     "js/variable/template/variable-config.html",
     "js/variable/template/metric.html",
     "js/bar/template/bar.html",
+    "js/pattern/template/pattern-config.html",
     "js/resource/template/resource-config.html"
   ],
   
@@ -57,13 +58,16 @@
         "js/variable/variableDirective.js",
         "js/bar/barCtrl.js",
         "js/bar/barDirective.js",
+        "js/pattern/patternCtrl.js",
+        "js/pattern/patternDirective.js",
         "content/find-symbols.js"
       ],
       "css": [
         "libs/cst-bootstrap.css",
         "js/variable/css/variable.css",
         "js/resource/css/resource.css",
-        "js/bar/css/bar.css"
+        "js/bar/css/bar.css",
+        "js/pattern/css/pattern.css"
       ]
     }
   ],
