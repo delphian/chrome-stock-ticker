@@ -11,7 +11,9 @@
   text-transform: uppercase;
   padding: 2px;
 }
-.cst-variable table {}
+.cst-variable table {
+  width: auto;
+}
 .cst-variable table td, .cst-variable table th {
   padding: 0px;
   padding-left: 4px;
@@ -19,4 +21,5 @@
   font-size: 11px;
   line-height: 11px;
   font-family: 'arial narrow';
+  border: none;
 }
