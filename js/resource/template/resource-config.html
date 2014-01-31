@@ -50,11 +50,12 @@
             selector. Each succesfully configured metric will be available to
             display on the ticker bar.</p>
             <form name="metricForm" novalidate>
-            <table><tr><th>Metric</th><th>URL</th><th>Selector</th></tr>
+            <table><tr><th>Metric</th><th>URL</th><th>Selector</th><th>Regex</th></tr>
               <tr ng-repeat="(index, metric) in resource.metrics">
                 <td><input name="metricName" class="url-name" ng-model="metric.name" ng-pattern="/^[a-zA-Z_ ]+$/" /></td>
                 <td><input class="url" ng-model="metric.url" /></td>
                 <td><input class="selector" ng-model="metric.selector" /></td>
+                <td><input class="regex" ng-model="metric.regex" /></td>
                 <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
               </tr>
             </table></form>

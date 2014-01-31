@@ -13,9 +13,6 @@
  * URLs may contain variables, for which the calling class is responsible
  * for passing in replacement values when required.
  *
- * @see CSTResource.getDefaultResource() for an example on how to construct
- * a resource.
- *
  * Example fetching of price and volume for a stock ticker:
  * @code
  * // Setup a resource object to retrieve 'price' and 'volume' data from
@@ -28,7 +25,8 @@
  *         {
  *             name: 'price', 
  *             url: 'http://finance.yahoo.com/q?s=SYMBOL',
- *             selector: 'span.time_rtq_ticker span'
+ *             selector: 'span.time_rtq_ticker span',
+ *             regex: '([0-9\.]+)'
  *         },
  *         {
  *             name: 'volume',
@@ -254,6 +252,12 @@ CSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
         var url = this.replaceUrlVars(metric.url, replacements);
         this.fetchUrl(url, {}, function(html) {
             var value = $(html).find(metric.selector).text();
+            if ((typeof(metric.regex) != 'undefined') && metric.regex.length) {
+                var regex = new RegExp(metric.regex, 'g');
+                if ((match = regex.exec(value)) !== null) {
+                    value = match[1];
+                }
+            }
             this.cache.metrics[metric.name] = {};
             this.cache.metrics[metric.name].value = value;
             this.cache.metrics[metric.name].timestamp = new Date().getTime();

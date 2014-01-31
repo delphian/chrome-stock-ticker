@@ -15,7 +15,7 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     };
 
     $scope.metricAdd = function() {
-        resource.addMetric({ name: '', url: '', selector: '' });
+        resource.addMetric({ name: '', url: '', selector: '', regex: '' });
     };
 
     $scope.metricRemove = function(index) {
