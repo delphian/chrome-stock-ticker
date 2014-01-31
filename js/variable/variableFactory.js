@@ -1,4 +1,7 @@
 
+/**
+ * Model to manage variable metrics.
+ */
 cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resource) {
     /**
      * Private data and methods.
@@ -42,7 +45,18 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
             }
         });
     };
-
+    /**
+     * @param string varName
+     *   The variable name.
+     * @param function callback
+     *   A callback function to invoke when results are ready.
+     *
+     * @return void
+     *   Invokes callback function with arguments:
+     *     metrics (array)
+     *       An array of metrics keyed by metric name such as:
+     *       ['Price': {timestamp: int, value: mixed}]
+     */
     api.getMetrics = function(varName, callback) {
         var replacements = [
             { from: 'SYMBOL', to: varName }
@@ -62,6 +76,80 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
             }
         });
     }; 
+
+    return api;
+}]);
+
+/**
+ * Model to manage configuration for displaying variables.
+ */
+cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope, resource) {
+    /**
+     * Private data and methods.
+     */
+    var pvt = {
+        data: {
+            items: []
+        }
+    };
+
+    /**
+     * Public api.
+     */
+    var api = {};
+
+    api.setConfig = function(config) {
+        pvt.data = config;
+        this.broadcastUpdate();
+    };
+
+    api.getData = function() {
+        return pvt.data;
+    };
+
+    api.addItem = function(item) {
+        pvt.data.items.push(item);
+        this.broadcastUpdate();
+    };
+
+    api.removeItem = function(index) {
+        pvt.data.items.splice(index, 1);
+        this.broadcastUpdate();
+    };
+
+    api.broadcastUpdate = function() {
+        $rootScope.$broadcast('variableConfigUpdate');
+    };
+
+    api.save = function(callback) {
+        chrome.storage.sync.set( {'tickerbar': this.getData()} , function() {
+            if (typeof(callback) != 'undefined') {
+                if (chrome.runtime.lastError) {
+                    callback({ success: 0, message: chrome.runtime.lastError.message });
+                } else {
+                    callback({ success: 1, message: null });
+                }
+            }
+        });
+    };
+
+    // Pull the resource out of chrome storage.
+    chrome.storage.sync.get(['tickerbar'], function(result) {
+        if (chrome.runtime.lastError) {
+            console.log('Could not load variable config from chrome storage: ' + chrome.runetime.lastError.message);
+        } else {
+            api.setConfig(result['tickerbar']);
+        }
+    });
+
+    // Listen for any updates to the resource in chrome storage.
+    chrome.storage.onChanged.addListener(function(object, namespace) {
+        for (key in object) {
+            if (key == 'tickerbar') {
+                api.setConfig(object.resource.newValue);
+            }
+        }
+    });
 
     return api;
 }]);

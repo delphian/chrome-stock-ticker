@@ -1,5 +1,5 @@
 
-cstApp.controller('variable', ['$scope', 'variable', function($scope, variable) {
+cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function($scope, variable, varConfig) {
     $scope.heading = true;
     $scope.bar = {};
     $scope.metrics = {};
@@ -7,22 +7,18 @@ cstApp.controller('variable', ['$scope', 'variable', function($scope, variable) 
         $scope.metrics = metrics;
         $scope.$apply();
     });
-    chrome.storage.sync.get('tickerbar', function(result) {
-        if (typeof(result['tickerbar']) != 'undefined') {
-            $scope.bar = result['tickerbar'];
-            $scope.$apply();
-        }
+    $scope.$on('variableConfigUpdate', function() {
+        $scope.bar = varConfig.getData();
+        $scope.$apply();
     });
 }]);
 
-cstApp.controller('variableConfig', ['$scope', 'resource', function($scope, resource) {
+cstApp.controller('variableConfig', ['$scope', 'resource', 'variableConfig', function($scope, resource, varConfig) {
     $scope.tickerbar = { items: [] };
     $scope.optionsMetricNames = [];
-    // Update the tickerbar from local storage on first load.
-    chrome.storage.sync.get('tickerbar', function(result) {
-        if (typeof(result['tickerbar']) != 'undefined') {
-            $scope.tickerbarUpdate(result['tickerbar']);
-        }
+    $scope.$on('variableConfigUpdate', function() {
+        $scope.tickerbar = varConfig.getData();
+        $scope.$apply();
     });
     $scope.$on('resourceUpdate', function() {
         var data = resource.getData();
@@ -31,36 +27,18 @@ cstApp.controller('variableConfig', ['$scope', 'resource', function($scope, reso
         });
         $scope.$apply();
     });
-    // Update the patterns and force resync between model and html anytime
-    // the stored resource or tickerbar is updated from elsewhere.
-    chrome.storage.onChanged.addListener(function(object, namespace) {
-        for (key in object) {
-            if (key == 'tickerbar') {
-                $scope.tickerbarUpdate(object.tickerbar.newValue);
-            }
-        }
-    });
-    $scope.tickerbarUpdate = function(tickerbar) {
-        $scope.tickerbar = tickerbar;
-        $scope.$apply();
-    };
     $scope.itemAdd = function() {
-        $scope.tickerbar.items.push({ name: '', source: '', show: false, order: 0 });
+        varConfig.addItem({ name: '', source: '', show: false, order: 0 });
     }
     $scope.itemRemove = function(index) {
-        $scope.tickerbar.items.splice(index, 1);
+        varConfig.removeItem(index);
     }
     $scope.save = function() {
-        // Remove angular hashes but store result as an object.
-        var tickerbar = {};
-        tickerbar = JSON.parse(angular.toJson($scope.tickerbar));
-        chrome.storage.sync.set( {'tickerbar': tickerbar} , function() {
-            if (chrome.runtime.lastError) {
-                // Notify that we failed.
-                $('#saveConfirmTickerBar').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save:'+chrome.runtime.lastError.message+'</div>');
-            } else {
-                // Notify that we saved.
+        varConfig.save(function(result) {
+            if (result.success) {
                 $('#saveConfirmTickerBar').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+            } else {
+                $('#saveConfirmTickerBar').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save:'+result.message+'</div>');
             }
         });
     };
