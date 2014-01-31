@@ -36,14 +36,18 @@ CSTSymbols.prototype.findSymbols = function() {
         var href = $(this).attr('href');
         // If the element has a 'href' attribute.
         if (typeof(href) != 'undefined') {
-            href = decodeURIComponent(href);
-            for (i=0; i<thisSymbols.patterns.length; i++) {
-                var match;
-                var regex = new RegExp(thisSymbols.patterns[i].pattern, thisSymbols.patterns[i].options);
-                // If the href attribute matches one of our patterns.
-                while ((match = regex.exec(href)) !== null) {
-                    symbols.push(match[thisSymbols.patterns[i].result].toUpperCase());
+            try {
+                href = decodeURIComponent(href);
+                for (i=0; i<thisSymbols.patterns.length; i++) {
+                    var match;
+                    var regex = new RegExp(thisSymbols.patterns[i].pattern, thisSymbols.patterns[i].options);
+                    // If the href attribute matches one of our patterns.
+                    while ((match = regex.exec(href)) !== null) {
+                        symbols.push(match[thisSymbols.patterns[i].result].toUpperCase());
+                    }
                 }
+            } catch (err) {
+                console.log('Can not examine href (' + href + '): ' + err);
             }
         }
     });

@@ -13,6 +13,7 @@
 }
 .cst-variable table {
   width: auto;
+  margin: 0px;
 }
 .cst-variable table td, .cst-variable table th {
   padding: 0px;
