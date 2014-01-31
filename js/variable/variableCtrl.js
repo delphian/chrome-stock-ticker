@@ -26,7 +26,8 @@ cstApp.controller('variableConfig', ['$scope', 'resource', function($scope, reso
         }
     });
     $scope.$on('resourceUpdate', function() {
-        $.each(resource.resource.metrics, function(index, value) {
+        var data = resource.getData();
+        $.each(data.metrics, function(index, value) {
             $scope.optionsMetricNames.push({ metricIndex: value.name, metricValue: value.name });
         });
         $scope.$apply();

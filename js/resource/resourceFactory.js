@@ -1,9 +1,16 @@
 
 cstApp.factory('resource', function($rootScope) {
-    var container = {};
-    container.data = {};
+    /**
+     * Private data and methods.
+     */
+    var data = {};
 
-    container.setResource = function(resource) {
+    /**
+     * Public api.
+     */
+    var api = {};
+
+    api.setResource = function(resource) {
         // Order metrics alphabetically.
         var newMetrics = [];
         for (i in resource.metrics) {
@@ -16,32 +23,42 @@ cstApp.factory('resource', function($rootScope) {
             });
         }
         resource.metrics = newMetrics;
-        container.data = resource;
-        container.broadcastResource();
+        data = resource;
+        api.broadcastResource();
     };
 
-    container.getData = function() {
-        return this.data;
+    api.getData = function() {
+        return data;
     };
 
-    container.addMetric = function(metric) {
-        this.data.metrics.push(metric);
+    api.addMetric = function(metric) {
+        data.metrics.push(metric);
         this.broadcastResource();
     };
 
-    container.removeMetric = function(index) {
-        this.data.metrics.splice(index, 1);
+    api.removeMetric = function(index) {
+        data.metrics.splice(index, 1);
         this.broadcastResource();
     };
 
-    container.broadcastResource = function() {
+    api.addUrl = function(url) {
+        data.urls.push(url);
+        this.broadcastResource();
+    };
+
+    api.removeUrl = function(index) {
+        data.urls.splice(index, 1);
+        this.broadcastResource();
+    };
+
+    api.broadcastResource = function() {
         $rootScope.$broadcast('resourceUpdate');
     };
 
-    container.save = function(callback) {
+    api.save = function(callback) {
         // Remove angular hashes but store result as an object.
-        var resource = JSON.parse(angular.toJson(container.data));
-        chrome.storage.sync.set( {'resource': resource} , function() {
+        var resource = JSON.parse(angular.toJson(data));
+        chrome.storage.sync.set( {'resource': data} , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
                     callback({ success: 0, message: chrome.runtime.lastError.message });
@@ -57,7 +74,7 @@ cstApp.factory('resource', function($rootScope) {
         if (chrome.runtime.lastError) {
             console.log('Could not load resource from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            container.setResource(result['resource']);
+            api.setResource(result['resource']);
         }
     });
 
@@ -65,10 +82,10 @@ cstApp.factory('resource', function($rootScope) {
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
             if (key == 'resource') {
-                container.setResource(object.resource.newValue);
+                api.setResource(object.resource.newValue);
             }
         }
     });
   
-    return container;
+    return api;
 });

@@ -3,15 +3,15 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     $scope.resource = { urls: [], metrics: [] };
 
     $scope.$on('resourceUpdate', function(event) {
-        $scope.resource = resource.data;
+        $scope.resource = resource.getData();
     });
 
     $scope.urlAdd = function() {
-        $scope.resource.urls.push({ url: ''});
+        resource.addUrl({ url: '' });
     };
 
     $scope.urlRemove = function(index) {
-        $scope.resource.urls.splice(index, 1);
+        resource.removeUrl(index);
     };
 
     $scope.metricAdd = function() {
