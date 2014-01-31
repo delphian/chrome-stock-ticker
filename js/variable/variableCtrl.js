@@ -1,20 +1,19 @@
 
-cstApp.controller('variable', function($scope) {
+cstApp.controller('variable', ['$scope', 'variable', function($scope, variable) {
     $scope.heading = true;
     $scope.bar = {};
     $scope.metrics = {};
-    var ticker = new CSTTicker($scope.variable.toUpperCase());
-    ticker.fetchAllData(function() {
-        $scope.metrics = this.resource.cache.metrics;
+    variable.getMetrics($scope.variable.toUpperCase(), function(metrics) {
+        $scope.metrics = metrics;
         $scope.$apply();
-    });    
+    });
     chrome.storage.sync.get('tickerbar', function(result) {
         if (typeof(result['tickerbar']) != 'undefined') {
             $scope.bar = result['tickerbar'];
             $scope.$apply();
         }
     });
-});
+}]);
 
 cstApp.controller('variableConfig', ['$scope', 'resource', function($scope, resource) {
     $scope.tickerbar = { items: [] };

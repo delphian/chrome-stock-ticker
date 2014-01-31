@@ -57,25 +57,6 @@ CSTSymbols.prototype.findSymbols = function() {
     });
 };
 /**
- * Load all symbols into ticker array.
- *
- * @todo callback is being fired each time asyncronously...
- */
-CSTSymbols.prototype.loadTickers = function(callback) {
-    var thisSymbols = this;
-    var fetching = this.symbols;
-    for (var i=0; i<this.symbols.length; i++) {
-        var ticker = new CSTTicker(this.symbols[i]);
-        ticker.fetchAllData(function() {
-            // Record the fully loaded ticker.
-            thisSymbols.tickers[this.symbol] = this;
-            // If the loading of all tickers is finished then invoke callback.
-            fetching.splice(fetching.indexOf(this.symbol), 1);
-            if (!fetching.length) callback();
-        });
-    }
-};
-/**
  * Remove a symbol from the fetching ticker list.
  *
  * When the last symbol is removed from the list then fire the callback

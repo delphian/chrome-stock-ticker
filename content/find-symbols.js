@@ -12,8 +12,8 @@
 showBar = function(symbols) {
     var variables = [];
     // Loop through each variable to be displayed.
-    for (symbol in symbols.tickers) {
-        variables.push(symbol);
+    for (i in symbols.symbols) {
+        variables.push(symbols.symbols[i]);
     }
     if (variables.length) {
         var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
@@ -39,8 +39,6 @@ $('document').ready(function() {
         var html = $('html').html();
         symbols = new CSTSymbols(html, result.patterns, result.resource);
         symbols.findSymbols();
-        symbols.loadTickers(function() {
-            showBar(symbols);
-        });
+        showBar(symbols);
     });
 });
