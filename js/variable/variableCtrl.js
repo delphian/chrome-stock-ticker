@@ -7,18 +7,18 @@ cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function(
         $scope.metrics = metrics;
         $scope.$apply();
     });
-    $scope.$on('variableConfigUpdate', function() {
+    $scope.$on('variableConfigUpdate', function(data) {
         $scope.bar = varConfig.getData();
-        $scope.$apply();
+        if (data.apply) $scope.$apply();
     });
 }]);
 
 cstApp.controller('variableConfig', ['$scope', 'resource', 'variableConfig', function($scope, resource, varConfig) {
     $scope.tickerbar = { items: [] };
     $scope.optionsMetricNames = [];
-    $scope.$on('variableConfigUpdate', function() {
+    $scope.$on('variableConfigUpdate', function(event, data) {
         $scope.tickerbar = varConfig.getData();
-        $scope.$apply();
+        if (data.apply) $scope.$apply();
     });
     $scope.$on('resourceUpdate', function() {
         var data = resource.getData();

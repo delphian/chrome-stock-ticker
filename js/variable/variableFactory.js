@@ -89,38 +89,119 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      */
     var pvt = {
         data: {
+            // An array of objects, each defining a metric that should be
+            // displayed when a variable is rendered. See addItem() for object
+            // details.
             items: []
         }
     };
+
+    pvt.cleanItem = function(item) {
+        cleanItem = {
+            name: item.name,
+            source: item.source
+        };
+        return cleanItem;
+    }
 
     /**
      * Public api.
      */
     var api = {};
-
-    api.setConfig = function(config) {
-        pvt.data = config;
-        this.broadcastUpdate();
+    /**
+     * Set variable configuration object to a new value.
+     *
+     * This will trigger a variable configuration broadcast udpate.
+     *
+     *
+     * @param object config
+     *   The new configuration to set pvt.data to. A copy of this object
+     *   will be made, the parameter will not be directly assigned:
+     *     - items: (array) An array of item objects:
+     *       see addItem() for object details.
+     * @param object broadcastData
+     *   see broadcastUpdate() for object details.
+     *
+     * @return void
+     */
+    api.setConfig = function(config, broadcastData) {
+        var cleanConfig = { items: [] };
+        if (typeof(config.items) != 'undefined') {
+            for (i in config.items) {
+                cleanConfig.items.push(pvt.cleanItem(config.items[i]));
+            }
+        }
+        pvt.data = cleanConfig;
+        this.broadcastUpdate(broadcastData);
     };
-
+    /**
+     * Get a copy of the variable display configuration object.
+     *
+     * @return object
+     */
     api.getData = function() {
-        return pvt.data;
+        return JSON.parse(JSON.stringify(pvt.data));
     };
-
+    /**
+     * Add a metric to be displayed when a variable is rendedred.
+     *
+     * This will trigger a variable configuration broadcast udpate.
+     *
+     * @param object item
+     *   An object to be pushed onto pvt.data.items. A copy of this object
+     *   will be made, the parameter will not be directly assigned:
+     *     - name: (string) A full name of a resource metric.
+     *     - source: (string) The text to display above the metric.
+     *
+     * @return void
+     */
     api.addItem = function(item) {
-        pvt.data.items.push(item);
+        var cleanItem = pvt.cleanItem(item);
+        pvt.data.items.push(cleanItem);
         this.broadcastUpdate();
     };
-
+    /**
+     * Remove a metric from being displayed when a variable is rendered.
+     *
+     * This will trigger a variable configuration broadcast udpate.
+     *
+     * @param int index
+     *   The array index of the metric to remove.
+     *
+     * @return void
+     */
     api.removeItem = function(index) {
         pvt.data.items.splice(index, 1);
         this.broadcastUpdate();
     };
-
-    api.broadcastUpdate = function() {
-        $rootScope.$broadcast('variableConfigUpdate');
+    /**
+     * Broadcast that the variable display configuration was updated.
+     *
+     * Controllers may listen for this with:
+     * $scope.$on('variableConfigUpdate', function(event, data) {});
+     *
+     * @param object data
+     *   An object to broadcast to the rootScope.
+     *     - apply: (bool) true to instruct watchers that they should manually
+     *       resync with $scope.$apply(). This may need to be done if the
+     *       broadcast was originally triggered by chrome.storage methods. This
+     *       is probably a hack; a better solution exists somewhere.
+     */
+    api.broadcastUpdate = function(data) {
+        if (typeof(data) == 'undefined') {
+            data = { apply: false };
+        }
+        $rootScope.$broadcast('variableConfigUpdate', data);
     };
-
+    /**
+     * Save the current variable display configuration to chrome storage.
+     *
+     * @param function callback
+     *   A function callback to be invoked when save is done with arguments:
+     *     result (object)
+     *       - success: (bool) true if save was sucessful, false otherwise.
+     *       - message: (string) will be set if success is false.
+     */
     api.save = function(callback) {
         chrome.storage.sync.set( {'tickerbar': this.getData()} , function() {
             if (typeof(callback) != 'undefined') {
@@ -133,20 +214,26 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
         });
     };
 
-    // Pull the resource out of chrome storage.
+    // When factory is first instantiated pull the variable display
+    // configuration object out of chrome storage. This will result
+    // in a broadcast update.
     chrome.storage.sync.get(['tickerbar'], function(result) {
         if (chrome.runtime.lastError) {
             console.log('Could not load variable config from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            api.setConfig(result['tickerbar']);
+            api.setConfig(result['tickerbar'], { apply: true } );
         }
     });
 
-    // Listen for any updates to the resource in chrome storage.
+    // Listen for any updates to the variable display configuration object
+    // in chrome storage. This should only happen if multiple browsers are
+    // open, or if extension code on the otherside of the javascript
+    // firewall (popup versus options versus content) has written a change
+    // to storage.
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
             if (key == 'tickerbar') {
-                api.setConfig(object.resource.newValue);
+                api.setConfig(object.tickerbar.newValue, { apply: true } );
             }
         }
     });
