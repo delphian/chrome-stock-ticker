@@ -1,8 +1,9 @@
 
-<div class="container">
+<div class="container cst-variable-config">
   <h2>Ticker Bar</h2>
   <p>Select which metrics to show on the ticker bar.</p>
   <div>
+    <div id="saveConfirmTickerBar"></div>
     <table><tr><th>Name</th><th>Abbreviation</th><th></th></tr>
       <tr ng-repeat="(index, item) in tickerbar.items">
         <td>
@@ -12,9 +13,15 @@
         <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="itemRemove(index)"> </button></td>
       </tr>
     </table>
-    <br />
-    <div id="saveConfirmTickerBar"></div>
-    <button class="btn btn-success" ng-click="itemAdd()">Add Metric</button>
-    <button class="btn btn-warning" ng-click="save()">Update &amp; Save</button>
+    <div class="cst-controls">
+      <div class="cst-control-select">
+        <select class="form-control" ng-model="addMetricName" ng-options="item.metricIndex as item.metricValue for item in optionsMetricNames"></select>
+      </div>
+      <div class="cst-control-add">
+        <button class="btn btn-success" ng-click="itemAdd()">Add Metric</button>
+      </div>
+      <div class="cst-control-save">
+        <button class="btn btn-warning" ng-click="save()">Update &amp; Save</button>
+      </div>
   </div>
 </div>

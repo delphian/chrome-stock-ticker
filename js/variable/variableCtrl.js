@@ -15,20 +15,22 @@ cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function(
 
 cstApp.controller('variableConfig', ['$scope', 'resource', 'variableConfig', function($scope, resource, varConfig) {
     $scope.tickerbar = { items: [] };
-    $scope.optionsMetricNames = [];
+    $scope.optionsMetricNames = [{ metricIndex: '- Select Metric -', metricValue: '- Select Metric -' }];
+    $scope.addMetricName = '- Select Metric -';
     $scope.$on('variableConfigUpdate', function(event, data) {
         $scope.tickerbar = varConfig.getData();
         if (data.apply) $scope.$apply();
     });
     $scope.$on('resourceUpdate', function() {
         var data = resource.getData();
+        $scope.optionsMetricNames = [{ metricIndex: '- Select Metric -', metricValue: '- Select Metric -' }];
         $.each(data.metrics, function(index, value) {
             $scope.optionsMetricNames.push({ metricIndex: value.name, metricValue: value.name });
         });
         $scope.$apply();
     });
     $scope.itemAdd = function() {
-        varConfig.addItem({ name: '', source: '', show: false, order: 0 });
+        varConfig.addItem({ name: $scope.addMetricName, source: '' });
     }
     $scope.itemRemove = function(index) {
         varConfig.removeItem(index);

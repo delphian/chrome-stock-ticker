@@ -1,4 +1,5 @@
 
+/* Variables when they are rendered */
 .cst-variable {
     margin-right:4px;
 }
@@ -23,4 +24,25 @@
   line-height: 11px;
   font-family: 'arial narrow';
   border: none;
+}
+
+/* Variable display configuration. */
+.cst-variable-config {
+  width: 100%;
+}
+.cst-variable-config .cst-controls {
+  width: 100%;
+  margin-top: 1em;
+}
+.cst-variable-config .cst-control-select {
+  width: 34%;
+  float: left;
+}
+.cst-variable-config .cst-control-add {
+  width: 33%;
+  float: left;
+}
+.cst-variable-config .cst-control-save {
+  width: 33%;
+  float: left;
 }

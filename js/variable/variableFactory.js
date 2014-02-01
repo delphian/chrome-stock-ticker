@@ -85,7 +85,8 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
  */
 cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope, resource) {
     /**
-     * Private data and methods.
+     * Private data and methods. These are not directly accesible to
+     * controllers or other factory services.
      */
     var pvt = {
         data: {
@@ -95,13 +96,43 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
             items: []
         }
     };
-
+    /**
+     * Ensure a metric display item contains only valid properties and values.
+     *
+     * @param object item
+     *   Metric to be displayed when a variable is rendered. Valid properties:
+     *     - name: (string) A full name of a resource metric.
+     *     - source: (string) The text to display above the metric.
+     *
+     * @return object
+     *   - name: (string) A full name of a resource metric.
+     *   - source: (string) The text to display above the metric.
+     */
     pvt.cleanItem = function(item) {
         cleanItem = {
             name: item.name,
             source: item.source
         };
         return cleanItem;
+    }
+    /**
+     * Add a metric to be displayed when a variable is rendedred.
+     *
+     * @param object item
+     *   See pvt.cleanItem() for object details.
+     *
+     * @return object
+     *   An object with properties:
+     *     - success: (bool) true on success, false otherwise.
+     *     - message: (string) will be set on failure.
+     */
+    pvt.addItem = function(item) {
+        var item = this.cleanItem(item);
+        if (!item.name.length) {
+            return { success: false, message: 'Empty metric name.' }
+        }
+        this.data.items.push(item);
+        return { success: true, message: null }
     }
 
     /**
@@ -118,20 +149,20 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      *   The new configuration to set pvt.data to. A copy of this object
      *   will be made, the parameter will not be directly assigned:
      *     - items: (array) An array of item objects:
-     *       see addItem() for object details.
+     *       see pvt.cleanItem() for object details.
      * @param object broadcastData
      *   see broadcastUpdate() for object details.
      *
      * @return void
      */
     api.setConfig = function(config, broadcastData) {
-        var cleanConfig = { items: [] };
+        pvt.data = { items: [] };
         if (typeof(config.items) != 'undefined') {
             for (i in config.items) {
-                cleanConfig.items.push(pvt.cleanItem(config.items[i]));
+                var result = pvt.addItem(config.items[i]);
+                if (!result.success) console.log('Unable to add metric to display: ' + result.message);
             }
         }
-        pvt.data = cleanConfig;
         this.broadcastUpdate(broadcastData);
     };
     /**
@@ -148,16 +179,13 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      * This will trigger a variable configuration broadcast udpate.
      *
      * @param object item
-     *   An object to be pushed onto pvt.data.items. A copy of this object
-     *   will be made, the parameter will not be directly assigned:
-     *     - name: (string) A full name of a resource metric.
-     *     - source: (string) The text to display above the metric.
+     *   See pvt.cleanItem() for object details.
      *
      * @return void
      */
     api.addItem = function(item) {
-        var cleanItem = pvt.cleanItem(item);
-        pvt.data.items.push(cleanItem);
+        var result = pvt.addItem(item);
+        if (!result.success) console.log('Unable to add metric to display: ' + result.message);
         this.broadcastUpdate();
     };
     /**
