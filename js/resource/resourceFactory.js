@@ -10,7 +10,11 @@ cstApp.factory('resource', function($rootScope) {
      */
     var api = {};
 
-    api.setResource = function(resource) {
+    /**
+     * @param object broadcastData
+     *   see broadcastUpdate() for object details.
+     */
+    api.setResource = function(resource, broadcastData) {
         // Order metrics alphabetically.
         var newMetrics = [];
         for (i in resource.metrics) {
@@ -24,7 +28,7 @@ cstApp.factory('resource', function($rootScope) {
         }
         resource.metrics = newMetrics;
         data = resource;
-        api.broadcastResource();
+        api.broadcastUpdate(broadcastData);
     };
 
     api.getData = function() {
@@ -49,26 +53,42 @@ cstApp.factory('resource', function($rootScope) {
 
     api.addMetric = function(metric) {
         data.metrics.push(metric);
-        this.broadcastResource();
+        this.broadcastUpdate();
     };
 
     api.removeMetric = function(index) {
         data.metrics.splice(index, 1);
-        this.broadcastResource();
+        this.broadcastUpdate();
     };
 
     api.addUrl = function(url) {
         data.urls.push(url);
-        this.broadcastResource();
+        this.broadcastUpdate();
     };
 
     api.removeUrl = function(index) {
         data.urls.splice(index, 1);
-        this.broadcastResource();
+        this.broadcastUpdate();
     };
 
-    api.broadcastResource = function() {
-        $rootScope.$broadcast('resourceUpdate');
+    /**
+     * Broadcast that the resource was updated.
+     *
+     * Controllers may listen for this with:
+     * $scope.$on('variableConfigUpdate', function(event, data) {});
+     *
+     * @param object data
+     *   An object to broadcast to the rootScope.
+     *     - apply: (bool) true to instruct watchers that they should manually
+     *       resync with $scope.$apply(). This may need to be done if the
+     *       broadcast was originally triggered by chrome.storage methods. This
+     *       is probably a hack; a better solution exists somewhere.
+     */
+    api.broadcastUpdate = function(data) {
+        if (typeof(data) == 'undefined') {
+            data = { apply: false };
+        }
+        $rootScope.$broadcast('resourceUpdate', data);
     };
 
     api.save = function(callback) {
@@ -90,7 +110,7 @@ cstApp.factory('resource', function($rootScope) {
         if (chrome.runtime.lastError) {
             console.log('Could not load resource from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            api.setResource(result['resource']);
+            api.setResource(result['resource'], { apply: true } );
         }
     });
 
@@ -98,7 +118,7 @@ cstApp.factory('resource', function($rootScope) {
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
             if (key == 'resource') {
-                api.setResource(object.resource.newValue);
+                api.setResource(object.resource.newValue, { apply: true } );
             }
         }
     });

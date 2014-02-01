@@ -105,18 +105,27 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      *     - source: (string) The text to display above the metric.
      *
      * @return object
-     *   - name: (string) A full name of a resource metric.
-     *   - source: (string) The text to display above the metric.
+     *   An object with properties:
+     *     - success: (bool) true on success, false otherwise.
+     *     - message: (string) will be set on failure to clean otherwise null.
+     *     - item: (object) will be set on success. The cleaned item with
+     *       properties:
+     *       - name: (string) A full name of a resource metric.
+     *       - source: (string) The text to display above the metric.
      */
     pvt.cleanItem = function(item) {
         cleanItem = {
             name: item.name,
             source: item.source
         };
-        return cleanItem;
+        if (resource.getMetricNames().indexOf(cleanItem.name) == -1)
+            return { success: false, message: 'Invalid resource metric name: ' + cleanItem.name }
+        if (!item.source.length)
+            return { success: false, message: 'Invalid abbreviation text: ' + cleanItem.name }
+        return { success: true, item: cleanItem }
     }
     /**
-     * Add a metric to be displayed when a variable is rendedred.
+     * Add a metric to be displayed when a variable is rendered.
      *
      * @param object item
      *   See pvt.cleanItem() for object details.
@@ -127,12 +136,33 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      *     - message: (string) will be set on failure.
      */
     pvt.addItem = function(item) {
-        var item = this.cleanItem(item);
-        if (resource.getMetricNames().indexOf(item.name) == -1) {
-            return { success: false, message: 'Invalid resource metric name: ' + item.name }
+        var result = this.cleanItem(item);
+        if (result.success) {
+            this.data.items.push(result.item);
+            return { success: true, message: null }
         }
-        this.data.items.push(item);
-        return { success: true, message: null }
+        return result;
+    }
+    /**
+     * Clean up a variable display config object, or construct a new one.
+     *
+     * @return object
+     *   Will always return a valid config object, even if its properties
+     *   are empty.
+     */
+    pvt.cleanConfig = function(config) {
+        var cleanConfig = {
+            items: []
+        };
+        if (typeof(config) != 'undefined') {
+            if (typeof(config.items) != 'undefined') {
+                for (i in config.items) {
+                    var result = this.cleanItem(config.items[i]);
+                    if (result.success) cleanConfig.items.push(result.item);
+                }
+            }
+        }
+        return cleanConfig;
     }
 
     /**
@@ -153,17 +183,25 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      * @param object broadcastData
      *   see broadcastUpdate() for object details.
      *
-     * @return void
+     * @return object
+     *   An object with properties:
+     *     - success: (bool) true on success, false otherwise.
+     *     - message: (string) will be set on failure.
      */
     api.setConfig = function(config, broadcastData) {
+        var rollback = pvt.data;
         pvt.data = { items: [] };
         if (typeof(config.items) != 'undefined') {
             for (i in config.items) {
                 var result = pvt.addItem(config.items[i]);
-                if (!result.success) console.log('Unable to add metric to display: ' + result.message);
+                if (!result.success) {
+                    pvt.data = rollback;
+                    return result;
+                }
             }
         }
         this.broadcastUpdate(broadcastData);
+        return { success: true, message: null }
     };
     /**
      * Get a copy of the variable display configuration object.
@@ -235,11 +273,13 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      *       - message: (string) will be set if success is false.
      */
     api.save = function(callback) {
+        var parent = this;
         chrome.storage.sync.set( {'tickerbar': this.getData()} , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
                     callback({ success: 0, message: chrome.runtime.lastError.message });
                 } else {
+                    parent.broadcastUpdate();
                     callback({ success: 1, message: null });
                 }
             }
@@ -253,7 +293,12 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
         if (chrome.runtime.lastError) {
             console.log('Could not load variable config from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            api.setConfig(result['tickerbar'], { apply: true } );
+            var config = pvt.cleanConfig(result['tickerbar']);
+            var result = api.setConfig(config, { apply: true } );
+            if (!result.success) {
+                console.log('Could not apply variable config from chrome storage: ' + result.message);
+                console.log(config);
+            }
         }
     });
 
@@ -265,7 +310,12 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
             if (key == 'tickerbar') {
-                api.setConfig(object.tickerbar.newValue, { apply: true } );
+                var config = pvt.cleanConfig(object.tickerbar.newValue);
+                var result = api.setConfig(config, { apply: true } );
+                if (!result.success) {
+                    console.log('Could not apply variable config from chrome storage: ' + result.message);
+                    console.log(config);
+                }
             }
         }
     });
