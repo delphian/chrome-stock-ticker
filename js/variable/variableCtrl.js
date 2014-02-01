@@ -30,7 +30,10 @@ cstApp.controller('variableConfig', ['$scope', 'resource', 'variableConfig', fun
         $scope.$apply();
     });
     $scope.itemAdd = function() {
-        varConfig.addItem({ name: $scope.addMetricName, source: '' });
+        var result = varConfig.addItem({ name: $scope.addMetricName, source: '' });
+        if (!result.success) {
+            $('#saveConfirmTickerBar').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
+        }
     }
     $scope.itemRemove = function(index) {
         varConfig.removeItem(index);

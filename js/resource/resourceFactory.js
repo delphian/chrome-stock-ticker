@@ -31,6 +31,22 @@ cstApp.factory('resource', function($rootScope) {
         return data;
     };
 
+    /**
+     * Get a simple array of metric name strings.
+     *
+     * @return array
+     *   An array of strings, each being a full metric name.
+     */
+    api.getMetricNames = function() {
+        var names = [];
+        if (typeof(data.metrics) != 'undefined') {
+            for (i in data.metrics) {
+                names.push(data.metrics[i].name);
+            }
+        }
+        return names;
+    }
+
     api.addMetric = function(metric) {
         data.metrics.push(metric);
         this.broadcastResource();

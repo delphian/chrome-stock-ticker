@@ -128,8 +128,8 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      */
     pvt.addItem = function(item) {
         var item = this.cleanItem(item);
-        if (!item.name.length) {
-            return { success: false, message: 'Empty metric name.' }
+        if (resource.getMetricNames().indexOf(item.name) == -1) {
+            return { success: false, message: 'Invalid resource metric name: ' + item.name }
         }
         this.data.items.push(item);
         return { success: true, message: null }
@@ -181,12 +181,16 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      * @param object item
      *   See pvt.cleanItem() for object details.
      *
-     * @return void
+     * @return object
+     *   An object with properties:
+     *     - success: (bool) true on success, false otherwise.
+     *     - message: (string) will be set on failure.
      */
     api.addItem = function(item) {
         var result = pvt.addItem(item);
-        if (!result.success) console.log('Unable to add metric to display: ' + result.message);
+        if (!result.success) return result;
         this.broadcastUpdate();
+        return { success: true, message: null }
     };
     /**
      * Remove a metric from being displayed when a variable is rendered.
