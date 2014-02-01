@@ -30,19 +30,27 @@
 .cst-variable-config {
   width: 100%;
 }
+.cst-variable-config table {
+  width: 100%;
+}
 .cst-variable-config .cst-controls {
   width: 100%;
   margin-top: 1em;
 }
 .cst-variable-config .cst-control-select {
-  width: 34%;
+  width: 25%;
   float: left;
 }
 .cst-variable-config .cst-control-add {
-  width: 33%;
+  width: 25%;
   float: left;
 }
+.cst-variable-config .cst-control-add button {
+  width: 100%;
+  margin-left: 1em;
+}
 .cst-variable-config .cst-control-save {
-  width: 33%;
+  width: 50%;
   float: left;
+  text-align: right;
 }
