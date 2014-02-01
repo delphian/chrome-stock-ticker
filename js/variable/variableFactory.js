@@ -146,6 +146,10 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
     /**
      * Clean up a variable display config object, or construct a new one.
      *
+     * @param object config
+     *   (optional) An existing variable display config object to clean,
+     *   such as one loaded from chrome storage, or imported via the gui.
+     *
      * @return object
      *   Will always return a valid config object, even if its properties
      *   are empty.
@@ -304,7 +308,7 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
 
     // Listen for any updates to the variable display configuration object
     // in chrome storage. This should only happen if multiple browsers are
-    // open, or if extension code on the otherside of the javascript
+    // open, or if extension code on the other side of the javascript
     // firewall (popup versus options versus content) has written a change
     // to storage.
     chrome.storage.onChanged.addListener(function(object, namespace) {
