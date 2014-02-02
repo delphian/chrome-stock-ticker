@@ -178,7 +178,6 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
      *
      * This will trigger a variable configuration broadcast udpate.
      *
-     *
      * @param object config
      *   The new configuration to set pvt.data to. A copy of this object
      *   will be made, the parameter will not be directly assigned:

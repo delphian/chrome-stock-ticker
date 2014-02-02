@@ -5,6 +5,13 @@ cstApp.factory('resource', function($rootScope) {
      */
     var pvt = {};
     /**
+     * Ensure a resource url object contains only valid properties and values.
+     */
+    pvt.cleanUrl = function(url) {
+        var cleanUrl = url;
+        return { success: true, message: null, url: cleanUrl };
+    }
+    /**
      * Ensure a resource metric object contains only valid properties and values.
      *
      * If any properties contain invalid data it will be removed. If the removal
@@ -45,25 +52,45 @@ cstApp.factory('resource', function($rootScope) {
             regex: regex
         };
         if (!cleanMetric.name.length)
-            return { success: false, message: 'Invalid metric name: ' + metric.name, metric: cleanMetric }
+            return { success: false, message: 'Invalid metric name: ' + metric.name, metric: cleanMetric };
         if (!cleanMetric.url.length)
-            return { success: false, message: 'Invalid metric url: ' + metric.name, metric: cleanMetric }
+            return { success: false, message: 'Invalid metric url: ' + metric.name, metric: cleanMetric };
         if (!cleanMetric.selector.length)
-            return { success: false, message: 'Invalid metric selector: ' + metric.name, metric: cleanMetric }
-        return { success: true, message: null, metric: cleanMetric }
+            return { success: false, message: 'Invalid metric selector: ' + metric.name, metric: cleanMetric };
+        return { success: true, message: null, metric: cleanMetric };
     }
     /**
      * Clean up a resource object, or construct a new one.
      *
      * @param object resource
-     *   (optional) An existing resource object to clean,
-     *   such as one loaded from chrome storage, or imported via the gui.
+     *   (optional) An existing resource object to clean, such as one loaded
+     *   from chrome storage, or imported via the gui. Properties:
+     *     - loaded: (bool) true if the resource came from storage or other
+     *       code, false if this resource is new.
+     *     - timestamp: (int) last time this resource was saved.
+     *     - autoUpdate: (bool) true if resource should automatically add
+     *       new data found in default data object or/and poll a remote source
+     *       for updates.
+     *     - urls: (array) For future use. This object will store what
+     *       operations may need to be performed before access to a url will
+     *       be granted (such as login). See cleanUrls() for object details.
+     *     - metrics: (array) An array of objects. Each object stores
+     *       information required to access a single piece of information
+     *       on a remote website. See cleanMetric() for object details.
      *
      * @return object
-     *   Will always return a valid resource object, even if its properties
-     *   are empty.
+     *   An object (report) with properties:
+     *     - success: (bool) true on if resource was clean, false if resource
+     *       required cleaning.
+     *     - message: (string) will be set to the last issue resolved when
+     *       resource requried cleaning.
+     *     - resource: (object) A resource object safe for storage and use,
+     *       even if properties are empty. See @param resource for object
+     *       details.
      */
     pvt.cleanResource = function(resource) {
+        // Default report to return.
+        var report = { success: true, message: null, resource: null };
         // Default empty resource.
         var cleanResource = {
             loaded: false,
@@ -80,19 +107,49 @@ cstApp.factory('resource', function($rootScope) {
             if (Object.prototype.toString.call(resource.metrics) === '[object Array]') {
                 for (i in resource.metrics) {
                     var result = this.cleanMetric(resource.metrics[i]);
-                    if (result.success) cleanResource.metrics.push(result.metric);
+                    if (result.success) {
+                        cleanResource.metrics.push(result.metric);
+                    } else {
+                        report.success = false;
+                        report.message = result.message;
+                    }
                 }
             }
             // Clean urls. If a invalid url is found then disregard it.
             if (Object.prototype.toString.call(resource.urls) === '[object Array]') {
                 for (i in resource.urls) {
-                    var result = this.cleanUrls(resource.urls[i]);
-                    if (result.success) cleanResource.urls.push(result.url);
+                    var result = this.cleanUrl(resource.urls[i]);
+                    if (result.success) {
+                        cleanResource.urls.push(result.url);
+                    } else {
+                        report.success = false;
+                        report.message = result.message;
+                    }
                 }
             }
         }
-        return cleanResource;
+        report.resource = cleanResource;
+        return report;
     }
+    /**
+     * Add a new metric to the resource.
+     *
+     * @param object metric
+     *   See pvt.cleanMetric for object details.
+     *
+     * @return object
+     *   An object with properties:
+     *     - success: (bool) true on success, false otherwise.
+     *     - message: (string) will be set on failure.
+     */
+    pvt.addMetric = function(metric) {
+        var result = this.cleanMetric(metric);
+        if (result.success) {
+            this.data.metrics.push(result.metric);
+            return { success: true, message: null }
+        }
+        return result;
+    };
     // Load an empty resource by default.
     pvt.data = pvt.cleanResource();
 
@@ -100,10 +157,23 @@ cstApp.factory('resource', function($rootScope) {
      * Public api.
      */
     var api = {};
-
     /**
+     * Set resource object to a new value.
+     *
+     * This will trigger a resource broadcast udpate.
+     *
+     * @param object resource
+     *   see cleanResource() for details.
      * @param object broadcastData
      *   see broadcastUpdate() for object details.
+     *
+     * @result object
+     *   An object with properties:
+     *     - success: (bool) true on success, false on failure.
+     *     - message: (string) will be set to the last issue found when
+     *       validating resource.
+     *
+     * @todo Move metric sorting to its own method.
      */
     api.setResource = function(resource, broadcastData) {
         // Order metrics alphabetically.
@@ -118,19 +188,27 @@ cstApp.factory('resource', function($rootScope) {
             });
         }
         resource.metrics = newMetrics;
-        pvt.data = resource;
-        this.broadcastUpdate(broadcastData);
+        // Make sure the resource is constructed properly.
+        var result = pvt.cleanResource(resource);
+        if (result.success) {
+            pvt.data = result.resource;
+            this.broadcastUpdate(broadcastData);
+        }
+        return result;
     };
-
+    /**
+     * Get a copy of the resource object.
+     *
+     * @return object
+     */
     api.getData = function() {
-        return pvt.data;
+        return JSON.parse(JSON.stringify(pvt.data));
     };
-
     /**
      * Get a simple array of metric name strings.
      *
      * @return array
-     *   An array of strings, each being a full metric name.
+     *   An array (names) of strings, each being a full metric name.
      */
     api.getMetricNames = function() {
         var names = [];
@@ -141,32 +219,59 @@ cstApp.factory('resource', function($rootScope) {
         }
         return names;
     }
-
+    /**
+     * Add a new metric to the resource.
+     *
+     * This will trigger a resource broadcast udpate.
+     *
+     * @see pvt.addMetric() for details.
+     *
+     * @todo Do not add if a metric with same name already exists.
+     */
     api.addMetric = function(metric) {
-        pvt.data.metrics.push(metric);
-        this.broadcastUpdate();
+        var result = pvt.addMetric(metric);
+        if (result.success) this.broadcastUpdate();
+        return result;
     };
-
+    /**
+     * Remove a metric from the resource.
+     *
+     * This will trigger a resource broadcast update.
+     *
+     * @param int index
+     *   The array index of the metric to remove.
+     *
+     * @return void
+     *
+     * @todo Add error checking and a normalized return object.
+     */
     api.removeMetric = function(index) {
         pvt.data.metrics.splice(index, 1);
         this.broadcastUpdate();
     };
-
+    /**
+     * Add a url to the resource.
+     *
+     * @todo Add error checking and a normalized return object.
+     */
     api.addUrl = function(url) {
         pvt.data.urls.push(url);
         this.broadcastUpdate();
     };
-
+    /**
+     * Remove a url from the resource.
+     *
+     * @todo Add error checking and a normalized return object.
+     */
     api.removeUrl = function(index) {
         pvt.data.urls.splice(index, 1);
         this.broadcastUpdate();
     };
-
     /**
      * Broadcast that the resource was updated.
      *
      * Controllers may listen for this with:
-     * $scope.$on('variableConfigUpdate', function(event, data) {});
+     * $scope.$on('resourceUpdate', function(event, data) {});
      *
      * @param object data
      *   An object to broadcast to the rootScope.
@@ -174,6 +279,8 @@ cstApp.factory('resource', function($rootScope) {
      *       resync with $scope.$apply(). This may need to be done if the
      *       broadcast was originally triggered by chrome.storage methods. This
      *       is probably a hack; a better solution exists somewhere.
+     *
+     * @return void
      */
     api.broadcastUpdate = function(data) {
         if (typeof(data) == 'undefined') {
@@ -196,20 +303,39 @@ cstApp.factory('resource', function($rootScope) {
         });
     };
 
-    // Pull the resource out of chrome storage.
+    // When factory is first instantiated pull the resource object out of
+    // chrome storage. This will result in a broadcast update.
     chrome.storage.sync.get(['resource'], function(result) {
         if (chrome.runtime.lastError) {
             console.log('Could not load resource from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            api.setResource(result['resource'], { apply: true } );
+            // Clean the resource, ignore any warnings (offenders removed).
+            var result = pvt.cleanResource(result['resource']);
+            var resource = result.resource;
+            var result = api.setResource(resource, { apply: true } );
+            if (!result.success) {
+                console.log('Could not apply resource from chrome storage: ' + result.message);
+                console.log(resource);
+            }
         }
     });
 
-    // Listen for any updates to the resource in chrome storage.
+    // Listen for any updates to the resource object in chrome storage. This
+    // should only happen if multiple browsers are open, or if extension code
+    // on the other side of the javascript firewall (popup versus options
+    // versus content) has written a change to storage. This will result in a
+    // broadcast update.
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
             if (key == 'resource') {
-                api.setResource(object.resource.newValue, { apply: true } );
+                // Clean the resource, ignore any warnings (offenders removed).
+                var result = pvt.cleanResource(object.resource.newValue);
+                var resource = result.resource;
+                var result = api.setResource(resource, { apply: true } );
+                if (!result.success) {
+                    console.log('Could not apply resource from chrome storage: ' + result.message);
+                    console.log(resource);
+                }
             }
         }
     });
