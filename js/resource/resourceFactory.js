@@ -136,73 +136,82 @@ cstApp.factory('resource', function($rootScope) {
      *
      * @param object metric
      *   See pvt.cleanMetric for object details.
+     * @param bool broadcast
+     *   Set to true if a broadcast update should be issued.
      *
      * @return object
      *   An object with properties:
      *     - success: (bool) true on success, false otherwise.
      *     - message: (string) will be set on failure.
+     *
+     * @todo Do not add if a metric with same name already exists.
      */
-    pvt.addMetric = function(metric) {
+    pvt.addMetric = function(metric, broadcast) {
         var result = this.cleanMetric(metric);
         if (result.success) {
             this.data.metrics.push(result.metric);
+            if (broadcast) this.broadcastUpdate();
             return { success: true, message: null }
         }
         return result;
     };
-    // Load an empty resource by default.
-    pvt.data = pvt.cleanResource();
-
     /**
-     * Public api.
+     * Remove a metric from the resource.
+     *
+     * @param int index
+     *   The array index of the metric to remove.
+     * @param bool broadcast
+     *   Set to true if a broadcast update should be issued.
+     *
+     * @return void
+     *
+     * @todo Add error checking and a normalized return object.
      */
-    var api = {};
-    /**
-     * Set resource object to a new value.
-     *
-     * This will trigger a resource broadcast udpate.
-     *
-     * @param object resource
-     *   see cleanResource() for details.
-     * @param object broadcastData
-     *   see broadcastUpdate() for object details.
-     *
-     * @result object
-     *   An object with properties:
-     *     - success: (bool) true on success, false on failure.
-     *     - message: (string) will be set to the last issue found when
-     *       validating resource.
-     *
-     * @todo Move metric sorting to its own method.
-     */
-    api.setResource = function(resource, broadcastData) {
-        // Order metrics alphabetically.
-        var newMetrics = [];
-        for (i in resource.metrics) {
-            newMetrics.push(resource.metrics[i]);
-            newMetrics.sort(function(a, b) {
-                if (a.name < b.name) {
-                    return -1;
-                }
-                return 1;
-            });
-        }
-        resource.metrics = newMetrics;
-        // Make sure the resource is constructed properly.
-        var result = pvt.cleanResource(resource);
-        if (result.success) {
-            pvt.data = result.resource;
-            this.broadcastUpdate(broadcastData);
-        }
-        return result;
+    pvt.removeMetric = function(index, broadcast) {
+        this.data.metrics.splice(index, 1);
+        if (broadcast) this.broadcastUpdate();
     };
     /**
-     * Get a copy of the resource object.
+     * Add a url to the resource.
      *
-     * @return object
+     * @todo Add error checking and a normalized return object.
      */
-    api.getData = function() {
-        return JSON.parse(JSON.stringify(pvt.data));
+    pvt.addUrl = function(url, broadcast) {
+        this.data.urls.push(url);
+        if (broadcast) this.broadcastUpdate();
+    };
+    /**
+     * Remove a url from the resource.
+     *
+     * @todo Add error checking and a normalized return object.
+     */
+    pvt.removeUrl = function(index, broadcast) {
+        this.data.urls.splice(index, 1);
+        if (broadcast) this.broadcastUpdate();
+    };
+    /**
+     * Sort array of metric objects in alphabetical order based on metric name.
+     *
+     * @param array metrics
+     *   An array of metric objects. See pvt.cleanMetric() for object details.
+     *
+     * @return array
+     *   The sorted array (sortedMetircs), or empty array on error.
+     */
+    pvt.sortMetrics = function(metrics) {
+        var sortedMetrics = [];
+        if (Object.prototype.toString.call(metrics) === '[object Array]') {
+            for (i in metrics) {
+                sortedMetrics.push(metrics[i]);
+                sortedMetrics.sort(function(a, b) {
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    return 1;
+                });
+            }
+        }
+        return sortedMetrics;
     };
     /**
      * Get a simple array of metric name strings.
@@ -210,62 +219,22 @@ cstApp.factory('resource', function($rootScope) {
      * @return array
      *   An array (names) of strings, each being a full metric name.
      */
-    api.getMetricNames = function() {
+    pvt.getMetricNames = function() {
         var names = [];
-        if (typeof(pvt.data.metrics) != 'undefined') {
-            for (i in pvt.data.metrics) {
-                names.push(pvt.data.metrics[i].name);
+        if (typeof(this.data.metrics) != 'undefined') {
+            for (i in this.data.metrics) {
+                names.push(this.data.metrics[i].name);
             }
         }
         return names;
-    }
-    /**
-     * Add a new metric to the resource.
-     *
-     * This will trigger a resource broadcast udpate.
-     *
-     * @see pvt.addMetric() for details.
-     *
-     * @todo Do not add if a metric with same name already exists.
-     */
-    api.addMetric = function(metric) {
-        var result = pvt.addMetric(metric);
-        if (result.success) this.broadcastUpdate();
-        return result;
     };
     /**
-     * Remove a metric from the resource.
+     * Get a copy of the resource object.
      *
-     * This will trigger a resource broadcast update.
-     *
-     * @param int index
-     *   The array index of the metric to remove.
-     *
-     * @return void
-     *
-     * @todo Add error checking and a normalized return object.
+     * @return object
      */
-    api.removeMetric = function(index) {
-        pvt.data.metrics.splice(index, 1);
-        this.broadcastUpdate();
-    };
-    /**
-     * Add a url to the resource.
-     *
-     * @todo Add error checking and a normalized return object.
-     */
-    api.addUrl = function(url) {
-        pvt.data.urls.push(url);
-        this.broadcastUpdate();
-    };
-    /**
-     * Remove a url from the resource.
-     *
-     * @todo Add error checking and a normalized return object.
-     */
-    api.removeUrl = function(index) {
-        pvt.data.urls.splice(index, 1);
-        this.broadcastUpdate();
+    pvt.getData = function() {
+        return JSON.parse(JSON.stringify(this.data));
     };
     /**
      * Broadcast that the resource was updated.
@@ -282,16 +251,53 @@ cstApp.factory('resource', function($rootScope) {
      *
      * @return void
      */
-    api.broadcastUpdate = function(data) {
+    pvt.broadcastUpdate = function(data) {
         if (typeof(data) == 'undefined') {
             data = { apply: false };
         }
         $rootScope.$broadcast('resourceUpdate', data);
     };
-
-    api.save = function(callback) {
+    /**
+     * Set resource object to a new value.
+     *
+     * This will trigger a resource broadcast update.
+     *
+     * @param object resource
+     *   see cleanResource() for details.
+     * @param object broadcastData
+     *   see broadcastUpdate() for object details.
+     *
+     * @return object
+     *   An object (result) with properties:
+     *     - success: (bool) true on success, false on failure.
+     *     - message: (string) will be set to the last issue found when
+     *       validating resource.
+     */
+    pvt.setResource = function(resource, broadcastData) {
+        // Order metrics alphabetically.
+        resource.metrics = this.sortMetrics(resource.metrics);
+        // Make sure the resource is constructed properly.
+        var result = this.cleanResource(resource);
+        if (result.success) {
+            this.data = result.resource;
+            this.broadcastUpdate(broadcastData);
+        }
+        return result;
+    };
+    /**
+     * Save resource object to chrome storage.
+     *
+     * @param function callback
+     *   Callback will be invoked when saving is finished.
+     *
+     * @return object
+     *   An object (result) with properties:
+     *     - success: (bool) true on success, false on failure.
+     *     - message: (string) will be set on failure.
+     */
+    pvt.save = function(callback) {
         // Remove angular hashes but store result as an object.
-        var resource = JSON.parse(angular.toJson(pvt.data));
+        var resource = JSON.parse(angular.toJson(this.data));
         chrome.storage.sync.set( { 'resource': resource } , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
@@ -301,6 +307,37 @@ cstApp.factory('resource', function($rootScope) {
                 }
             }
         });
+    };
+    // Load an empty resource by default.
+    pvt.data = pvt.cleanResource();
+
+    /**
+     * Public api.
+     */
+    var api = {};
+    api.setResource = function(resource, broadcastData) {
+        return pvt.setResource(resource, broadcastData);
+    };
+    api.getData = function() {
+        return pvt.getData();
+    };
+    api.getMetricNames = function() {
+        return pvt.getMetricNames();
+    };
+    api.addMetric = function(metric) {
+        return pvt.addMetric(metric, true);
+    };
+    api.removeMetric = function(index) {
+        return pvt.removeMetric(index, true);
+    };
+    api.addUrl = function(url) {
+        return pvt.addUrl(url, true);
+    };
+    api.removeUrl = function(index) {
+        return pvt.removeUrl(index, true);
+    };
+    api.save = function(callback) {
+        return pvt.save(callback);
     };
 
     // When factory is first instantiated pull the resource object out of
