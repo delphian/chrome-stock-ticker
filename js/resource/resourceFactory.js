@@ -1,5 +1,5 @@
 
-cstApp.factory('resource', function($rootScope) {
+cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMeta) {
     /**
      * Private data and methods.
      */
@@ -71,6 +71,8 @@ cstApp.factory('resource', function($rootScope) {
      *     - loaded: (bool) true if the resource came from storage or other
      *       code, false if this resource is new.
      *     - lastSave: (int) last time this resource was saved.
+     *     - lastUpdate: (int) last time updates were checked for.
+     *     - version: (string) application version at the time of last save.
      *     - autoUpdate: (bool) true if resource should automatically add
      *       new data found in default data object or/and poll a remote source
      *       for updates.
@@ -98,6 +100,8 @@ cstApp.factory('resource', function($rootScope) {
         var cleanResource = {
             loaded: false,
             lastSave: new Date().getTime(),
+            lastUpdate: 0,
+            version: appMeta.version,
             autoUpdate: true,
             urls: [],
             metrics: []
@@ -105,7 +109,9 @@ cstApp.factory('resource', function($rootScope) {
         if (typeof(resource) != 'undefined') {
             cleanResource.loaded = true;
             if (typeof(resource.lastSave) != 'undefined') cleanResource.lastSave = resource.lastSave;
+            if (typeof(resource.lastUpdate) == 'number') cleanResource.lastUpdate = resource.lastUpdate;
             if (typeof(resource.autoUpdate) == 'boolean') cleanResource.autoUpdate = resource.autoUpdate;
+            if (typeof(resource.version) == 'string') cleanResource.version = resource.version;
             // Clean metrics. If in invalid metric is found then disregard it.
             if (Object.prototype.toString.call(resource.metrics) === '[object Array]') {
                 for (i in resource.metrics) {
@@ -311,6 +317,22 @@ cstApp.factory('resource', function($rootScope) {
             }
         });
     };
+    /**
+     * Check for any remote updates to the resource and apply if found.
+     *
+     * @return void
+     */
+    pvt.update = function() {
+        var time = new Date().getTime();
+        if (time > (this.data.lastUpdate + (24 * 60 * 60 * 1000))) {
+            this.data.lastUpdate = time;
+            this.save(function(result) {
+                if (!result.success) {
+                    console.log('Resource requires update but has failed to do so!');
+                }
+            });
+        }
+    };
     // Load an empty resource by default.
     pvt.data = pvt.cleanResource();
 
@@ -346,6 +368,7 @@ cstApp.factory('resource', function($rootScope) {
         return pvt.save(callback);
     };
 
+
     // When factory is first instantiated pull the resource object out of
     // chrome storage. This will result in a broadcast update.
     chrome.storage.sync.get(['resource'], function(result) {
@@ -359,6 +382,9 @@ cstApp.factory('resource', function($rootScope) {
             if (!result.success) {
                 console.log('Could not apply resource from chrome storage: ' + result.message);
                 console.log(resource);
+            } else {
+                // Check for updates.
+                pvt.update();
             }
         }
     });
@@ -384,4 +410,4 @@ cstApp.factory('resource', function($rootScope) {
     });
   
     return api;
-});
+}]);
