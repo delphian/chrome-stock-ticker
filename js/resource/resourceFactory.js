@@ -322,7 +322,8 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
      *
      * Retrieves the update resource object and merges it with the
      * current. Update resource object will overwrite any properties
-     * in the current resource if there is a collision.
+     * in the current resource if there is a collision. The newly merged
+     * resource object will be written to storage.
      *
      * @return void
      */
