@@ -70,7 +70,7 @@ cstApp.factory('resource', function($rootScope) {
      *   from chrome storage, or imported via the gui. Properties:
      *     - loaded: (bool) true if the resource came from storage or other
      *       code, false if this resource is new.
-     *     - timestamp: (int) last time this resource was saved.
+     *     - lastSave: (int) last time this resource was saved.
      *     - autoUpdate: (bool) true if resource should automatically add
      *       new data found in default data object or/and poll a remote source
      *       for updates.
@@ -97,14 +97,14 @@ cstApp.factory('resource', function($rootScope) {
         // Default empty resource.
         var cleanResource = {
             loaded: false,
-            timestamp: new Date().getTime(),
+            lastSave: new Date().getTime(),
             autoUpdate: true,
             urls: [],
             metrics: []
         };
         if (typeof(resource) != 'undefined') {
             cleanResource.loaded = true;
-            if (typeof(resource.timestamp) != 'undefined') cleanResource.timestamp = resource.timestamp;
+            if (typeof(resource.lastSave) != 'undefined') cleanResource.lastSave = resource.lastSave;
             if (typeof(resource.autoUpdate) == 'boolean') cleanResource.autoUpdate = resource.autoUpdate;
             // Clean metrics. If in invalid metric is found then disregard it.
             if (Object.prototype.toString.call(resource.metrics) === '[object Array]') {

@@ -1,0 +1,90 @@
+{
+    "loaded": true,
+    "lastSave": 1391405043378,
+    "autoUpdate": true,
+    "urls": [
+        {
+            "url": "http://finance.yahoo.com/q?s=SYMBOL"
+        }
+    ],
+    "metrics": [
+        {
+            "name": "Cash Flow MRQ",
+            "url": "http://finance.yahoo.com/q/cf?s=SYMBOL+Cash+Flow&annual",
+            "selector": "table.yfnc_tabledata1 table tr:nth-child(12) td:nth-child(2) strong",
+            "regex": ""
+        },
+        {
+            "name": "Debt to Equity Total MRQ",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": "td.yfnc_modtitlew1 > table:nth-child(11) tr:nth-child(5) td:nth-child(2)",
+            "regex": ""
+        },
+        {
+            "name": "Dividend Ex Date",
+            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
+            "selector": "table.key_stat_data tr:nth-child(14) td",
+            "regex": ""
+        },
+        {
+            "name": "Dividend Growth All Time Average",
+            "url": "http://www.buyupside.com/calculators/dividendgrowthrateinclude.php?symbol=SYMBOL&submit=Display+Chart",
+            "selector": "div#contentbox div.colwrap table tr:nth-child(8) td:nth-child(2) div",
+            "regex": ""
+        },
+        {
+            "name": "Dividend Growth Last Five Years Average",
+            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
+            "selector": "table.key_stat_data tr:nth-child(15) td",
+            "regex": ""
+        },
+        {
+            "name": "Dividend Payment",
+            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
+            "selector": "table.key_stat_data tr:nth-child(13) td",
+            "regex": ""
+        },
+        {
+            "name": "Dividend Payout Ratio",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": ".yfnc_modtitlew2 .yfnc_datamodoutline1~ .yfnc_datamodoutline1+ .yfnc_datamodoutline1 td table tr:nth-child(7) td:nth-child(2)",
+            "regex": "([0-9\\.]+)"
+        },
+        {
+            "name": "Dividend Yield",
+            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
+            "selector": "table.key_stat_data tr:nth-child(12) td",
+            "regex": ""
+        },
+        {
+            "name": "EPS TTM",
+            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
+            "selector": "table.key_stat_data tr:nth-child(4) td",
+            "regex": ""
+        },
+        {
+            "name": "FCF Last Five Years Average",
+            "url": "http://ycharts.com/companies/SYMBOL/free_cash_flow",
+            "selector": "table.rangeModTable tr:nth-child(3) td.col2",
+            "regex": ""
+        },
+        {
+            "name": "PE TTM",
+            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
+            "selector": "table.key_stat_data tr:nth-child(1) td",
+            "regex": ""
+        },
+        {
+            "name": "Price",
+            "url": "http://finance.yahoo.com/q?s=SYMBOL",
+            "selector": "span.time_rtq_ticker span",
+            "regex": ""
+        },
+        {
+            "name": "Volume",
+            "url": "http://finance.yahoo.com/q?s=SYMBOL",
+            "selector": "table#table2 tr:nth-child(3) td.yfnc_tabledata1 span",
+            "regex": ""
+        }
+    ]
+}
