@@ -320,15 +320,30 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
     /**
      * Check for any remote updates to the resource and apply if found.
      *
+     * Retrieves the update resource object and merges it with the
+     * current. Update resource object will overwrite any properties
+     * in the current resource if there is a collision.
+     *
      * @return void
      */
     pvt.update = function() {
         var time = new Date().getTime();
         if (time > (this.data.lastUpdate + (24 * 60 * 60 * 1000))) {
-            this.data.lastUpdate = time;
-            this.save(function(result) {
-                if (!result.success) {
-                    console.log('Resource requires update but has failed to do so!');
+            var parent = this;
+            $.get(chrome.extension.getURL('data/resource.json'), {}, function(data) {
+                var oldResource = parent.getData();
+                var newResource = JSON.parse(data);
+                $.extend(true, oldResource, newResource);
+                oldResource.lastUpdate = time;
+                var result = parent.setResource(oldResource);
+                if (result.success) {
+                    parent.save(function(result) {
+                        if (!result.success) {
+                            console.log('Resource requires update but has failed to to save!');
+                        }
+                    });
+                } else {
+                    console.log('Resource requires update but could not merge objects.');
                 }
             });
         }
@@ -345,7 +360,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
     };
     api.cleanResource = function() {
         return pvt.cleanResource();
-    }
+    };
     api.getData = function() {
         return pvt.getData();
     };
@@ -383,8 +398,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
                 console.log('Could not apply resource from chrome storage: ' + result.message);
                 console.log(resource);
             } else {
-                // Check for updates.
-                pvt.update();
+                if (resource.autoUpdate) pvt.update();
             }
         }
     });
