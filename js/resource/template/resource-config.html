@@ -7,10 +7,15 @@
   information must first be provided: first, a url where that value lives
   on the internet, and second, a selector path to locate the individual value
   on the given url page.</p>
+  <p>
+    <input type="checkbox" ng-model="resource.autoUpdate" /> Auto update.<br />
+    Automatically add any new metrics when upgrading versions. Conflicting metric
+    names will be overwritten with the new values.
+  </p>
   <div>
     <div class="panel-group" id="accordion">
 
-      <div class="panel panel-default">
+      <div class="panel panel-default cst-url-map">
         <div class="panel-heading">
           <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -49,7 +54,6 @@
             background and the individual data is targeted by the path in the
             selector. Each succesfully configured metric will be available to
             display on the ticker bar.</p>
-
             <table>
               <tr>
                 <th class="cst-metric-name">Metric</th>
@@ -76,6 +80,33 @@
                 </tr>
               </form>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default cst-import-export">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+              Import / Export
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>Import will overwrite any metrics will name conflicts and add new metrics if any are missing.
+            The import will <b>not</b> remove old or custom metrics. Use reset to clear all all existing
+            metrics. Export operates on the saved resource object in chrome storage; be sure and save any
+            recent changes before exporting.</p>
+            <p>
+              <input type="checkbox" class="cst-checkbox" ng-model="export.pretty" /> Make JSON pretty.
+            </p>
+            <textarea class="form control"></textarea>
+            <div class="cst-controls">
+              <button class="btn btn-success" ng-click="export()">Export</button>
+              <button class="btn btn-warning" ng-click="import()">Import</button>
+              <button class="btn btn-danger" ng-click="reset()">Reset</button>
+            </div>
           </div>
         </div>
       </div>

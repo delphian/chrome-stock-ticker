@@ -104,7 +104,7 @@ cstApp.factory('resource', function($rootScope) {
         };
         if (typeof(resource) != 'undefined') {
             cleanResource.loaded = true;
-            cleanResource.timestamp = resource.timestamp;
+            if (typeof(resource.timestamp) != 'undefined') cleanResource.timestamp = resource.timestamp;
             if (typeof(resource.autoUpdate) == 'boolean') cleanResource.autoUpdate = resource.autoUpdate;
             // Clean metrics. If in invalid metric is found then disregard it.
             if (Object.prototype.toString.call(resource.metrics) === '[object Array]') {
@@ -321,6 +321,9 @@ cstApp.factory('resource', function($rootScope) {
     api.setResource = function(resource, broadcastData) {
         return pvt.setResource(resource, broadcastData);
     };
+    api.cleanResource = function() {
+        return pvt.cleanResource();
+    }
     api.getData = function() {
         return pvt.getData();
     };

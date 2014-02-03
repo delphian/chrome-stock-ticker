@@ -1,12 +1,8 @@
 
 cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, resource) {
-    $scope.resource = { urls: [], metrics: [] };
-    $scope.addMetric = {
-        name: '',
-        url: '',
-        selector: '',
-        regex: ''
-    };
+    $scope.resource = resource.cleanResource();
+    $scope.addMetric = { name: '', url: '', selector: '', regex: '' };
+    $scope.export = { pretty: false };
 
     $scope.$on('resourceUpdate', function(event) {
         $scope.resource = resource.getData();
@@ -15,7 +11,10 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     $scope.urlAdd = function() {
         resource.addUrl({ url: '' });
     };
-
+    $scope.export = function() {
+        var resourceObject = JSON.stringify(resource.getData(), null, ($scope.export.pretty * 4));
+        $('.cst-import-export textarea').val(resourceObject);
+    }
     $scope.urlRemove = function(index) {
         resource.removeUrl(index);
     };
@@ -37,13 +36,18 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     };
 
     $scope.saveResource = function() {
-        resource.save(function(result) {
-            if (result.success) {
-                $('#saveConfirmResource').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
-            } else {
-                $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
-            }
-        });
+        var result = resource.setResource($scope.resource);
+        if (result.success) {
+            resource.save(function(result) {
+                if (result.success) {
+                    $('#saveConfirmResource').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+                } else {
+                    $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
+                }
+            });
+        } else {
+            $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
+        }
     };
 
 }]);
