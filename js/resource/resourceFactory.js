@@ -51,8 +51,11 @@ cstApp.factory('resource', function($rootScope) {
             selector: selector,
             regex: regex
         };
-        if (!cleanMetric.name.length)
+        cleanMetric.name = cleanMetric.name.replace(/([^A-Za-z0-9 ]+)/g, '');
+        if (!cleanMetric.name.length) {
+            console.log(metric);
             return { success: false, message: 'Invalid metric name: ' + metric.name, metric: cleanMetric };
+        }
         if (!cleanMetric.url.length)
             return { success: false, message: 'Invalid metric url: ' + metric.name, metric: cleanMetric };
         if (!cleanMetric.selector.length)

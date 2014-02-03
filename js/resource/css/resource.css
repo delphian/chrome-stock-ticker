@@ -1,5 +1,21 @@
 
-input.ng-invalid {
+.cst-resource-config .cst-metric-map .cst-add-metric {
+	margin-top: 20px;
+}
+.cst-resource-config .cst-metric-map table {
+	width: 100%;
+}
+.cst-resource-config .cst-metric-map th.cst-metric-url {
+    width: 30%;
+}
+.cst-resource-config .cst-metric-map th.cst-metric-selector {
+    width: 30%;
+}
+.cst-resource-config .cst-metric-map th.cst-metric-regex {
+    width: 10%;
+}
+
+.cst-resource-config input.ng-invalid {
    text-decoration: line-through;
    color: #ff0000;
 }

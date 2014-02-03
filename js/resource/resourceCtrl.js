@@ -1,6 +1,12 @@
 
 cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, resource) {
     $scope.resource = { urls: [], metrics: [] };
+    $scope.addMetric = {
+        name: '',
+        url: '',
+        selector: '',
+        regex: ''
+    };
 
     $scope.$on('resourceUpdate', function(event) {
         $scope.resource = resource.getData();
@@ -15,7 +21,12 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     };
 
     $scope.metricAdd = function() {
-        var result = resource.addMetric({ name: '', url: '', selector: '', regex: '' });
+        var result = resource.addMetric({ 
+            name: $scope.addMetric.name,
+            url: $scope.addMetric.url,
+            selector: $scope.addMetric.selector, 
+            regex: $scope.addMetric.regex
+        });
         if (!result.success) {
             $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to add metric: '+result.message+'</div>');
         }

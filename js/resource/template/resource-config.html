@@ -1,5 +1,5 @@
 
-<div class="container">
+<div class="container cst-resource-config">
   <h2>Resource</h2>
   <p>The resource instructs the program how to obtain values (metrics) for
   each variable found on a webpage. To obtain a metric value for any given
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default cst-metric-map">
         <div class="panel-heading">
           <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
@@ -49,17 +49,33 @@
             background and the individual data is targeted by the path in the
             selector. Each succesfully configured metric will be available to
             display on the ticker bar.</p>
-            <form name="metricForm" novalidate>
-            <table><tr><th>Metric</th><th>URL</th><th>Selector</th><th>Regex</th></tr>
-              <tr ng-repeat="(index, metric) in resource.metrics">
-                <td><input name="metricName" class="url-name" ng-model="metric.name" ng-pattern="/^[a-zA-Z_ ]+$/" /></td>
-                <td><input class="url" ng-model="metric.url" /></td>
-                <td><input class="selector" ng-model="metric.selector" /></td>
-                <td><input class="regex" ng-model="metric.regex" /></td>
-                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
+
+            <table>
+              <tr>
+                <th class="cst-metric-name">Metric</th>
+                <th class="cst-metric-url">URL</th>
+                <th class="cst-metric-selector">Selector</th>
+                <th class="cst-metric-regex">Regex</th>
               </tr>
-            </table></form>
-            <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="metricAdd()"> Metric</button>
+              <form name="metricForm" novalidate>
+                <tr ng-repeat="(index, metric) in resource.metrics">
+                  <td><input name="metricName" class="form-control" ng-model="metric.name" ng-pattern="/^[a-zA-Z_ ]+$/" /></td>
+                  <td><input class="form-control" ng-model="metric.url" /></td>
+                  <td><input class="form-control" ng-model="metric.selector" /></td>
+                  <td><input class="form-control" ng-model="metric.regex" /></td>
+                  <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
+                </tr>
+              </form>
+              <form name="cstAddMetric" novalidate>
+                <tr class="cst-add-metric">
+                  <td><input class="form-control" ng-model="addMetric.name" ng-pattern="/^[a-zA-Z_ ]+$/" placeholder="Metric Name" /></td>
+                  <td><input class="form-control" ng-model="addMetric.url" ng-pattern="/^http://.+$/" placeholder="URL" /></td>
+                  <td><input class="form-control" ng-model="addMetric.selector" placeholder="CSS Selector" /></td>
+                  <td><input class="form-control" ng-model="addMetric.regex" placeholder="Regex" /></td>
+                  <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="metricAdd()" ng-show="cstAddMetric.$valid"> </button></td>
+                </tr>
+              </form>
+            </table>
           </div>
         </div>
       </div>
