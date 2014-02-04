@@ -9,7 +9,7 @@
     ],
     "metrics": [
         {
-            "name": "Cash Flow MRQ",
+            "name": "Cash Flow",
             "url": "http://finance.yahoo.com/q/cf?s=SYMBOL+Cash+Flow&annual",
             "selector": "table.yfnc_tabledata1 table tr:nth-child(12) td:nth-child(2) strong",
             "regex": ""

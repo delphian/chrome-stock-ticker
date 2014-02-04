@@ -2,8 +2,9 @@
   "manifest_version": 2,
 
   "name": "Stock Ticker for Chrome",
+  "short_name": "Stock Ticker",
   "description": "Scans current page for any ticker symbols and if found will display associated stock information in ticker bar.",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "author": "Bryan Hazelbaker",
   "homepage_url": "http:www.chromestockticker.com",
 
