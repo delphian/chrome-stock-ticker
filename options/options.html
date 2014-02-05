@@ -15,7 +15,6 @@
   <ul id="mainNav" class="nav nav-tabs">
     <li class="active"><a href="#resource" data-toggle="tab">Resource</a></li>
     <li><a href="#patterns" data-toggle="tab">Patterns</a></li>
-    <li><a href="#importexport" data-toggle="tab">Import/Export</a></li>
   </ul>
 
   <div class="tab-content">
@@ -25,25 +24,10 @@
     <div class="tab-pane" id="patterns">
       <cst-pattern-config></cst-pattern-config>
     </div>    
-    <div class="tab-pane" id="importexport">
-      <div class="container" ng-controller="ImportExportCtrl">
-        <h2>Import / Export</h2>
-        <p>Export or import all the configuration and customizations.</p>
-        <textarea style="width:800px;height:200px;" ng-model="box"></textarea>
-        <br />
-        <input type="checkbox" ng-model="pretty" /> Make pretty.
-        <br /><br />
-        <div id="importConfirm"></div>
-        <button class="btn btn-success" ng-click="export()">Export</button> &nbsp; &nbsp; 
-        <button class="btn btn-danger" ng-click="import()">Import</button>
-        <button class="btn btn-danger" ng-click="reset()">Reset</button>
-      </div>
-    </div>
   </div>
 
   <script src="/libs/external/jquery/jquery.min.js"></script>
   <script src="/libs/external/angular/angular.min.js"></script>
-  <script src="options-angular.js"></script>
   <script src="/libs/CSTResource.js"></script>
   <script src="/js/cstApp.js"></script>
   <!-- cst resource -->
@@ -59,6 +43,7 @@
   <!-- cst pattern -->
   <script src="/js/pattern/patternCtrl.js"></script>
   <script src="/js/pattern/patternDirective.js"></script>
+  <script src="/js/pattern/patternFactory.js"></script>
 
   <script src="/libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js"></script>
 

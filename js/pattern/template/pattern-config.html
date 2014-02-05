@@ -1,22 +1,70 @@
 
-<div class="container">
+<div class="container cst-pattern-config">
   <h2>Patterns</h2>
   <p>Each page that is visited by the browser will have the url of all
   anchor tags compared to these regular expressions. The expressions
   are used to locate desired variables. Expressions are
   formatted for use with <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">javascript's RegExp()</a>.</p>
-  <div>
-    <table><tr><th>Pattern</th><th>Modifiers</th><th>Result</th></tr>
-      <tr ng-repeat="(index, pattern) in patterns">
-        <td><input class="selector" ng-model="pattern.pattern" /></td>
-        <td><input class="name" ng-model="pattern.options" /></td>
-        <td><input class="name" ng-model="pattern.result" /></td>
-        <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="patternRemove(index)"> </button></td>
-      </tr>
-    </table>
-    <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="patternAdd()"> Pattern</button>
-    <br /><br />
-    <div id="saveConfirmPatterns"></div>
+  <p>
+    <input type="checkbox" ng-model="pattern.autoUpdate" /> Auto update.<br />
+    Automatically add any new patterns when upgrading versions. Old patterns
+    will not be removed.
+  </p>
+
+  <div class="panel-group" id="accordionPattern">
+    <!-- Pattern Tab -->
+    <div class="panel panel-default cst-pattern">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionPattern" href="#collapsePatternOne">
+            Patterns
+          </a>
+        </h4>
+      </div>
+      <div id="collapsePatternOne" class="panel-collapse collapse">
+        <div class="panel-body">
+          <table>
+            <tr>
+              <th class="cst-pattern-regex">Pattern</th>
+              <th class="cst-pattern-modifier">Modifiers</th>
+              <th class="cst-pattern-result">Result</th>
+            </tr>
+            <form name="patternForm" novalidate>
+              <tr ng-repeat="(index, pattern) in patterns">
+                <td><input class="form-control" ng-model="pattern.pattern" /></td>
+                <td><input class="form-control" ng-model="pattern.modifiers" /></td>
+                <td><input class="form-control" ng-model="pattern.result" /></td>
+                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="patternRemove(index)"> </button></td>
+              </tr>
+            </form>
+            <form name="cstAddPattern" novalidate>
+              <tr class="cst-add-pattern">
+                <td><input class="form-control" ng-model="addPattern.regex" ng-pattern="/^[a-zA-Z_ ]+$/" placeholder="Regex Pattern" /></td>
+                <td><input class="form-control" ng-model="addPattern.modifiers" ng-pattern="/^http://.+$/" placeholder="Modifiers" /></td>
+                <td><input class="form-control" ng-model="addPattern.result" placeholder="Capture Result Index" /></td>
+                <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="patternAdd()" ng-show="cstAddPattern.$valid"> </button></td>
+              </tr>
+            </form>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Import Export Tab -->
+    <div class="panel panel-default cst-import-export">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionPattern" href="#collapsePatternTwo">
+            Import / Export
+          </a>
+        </h4>
+      </div>
+      <div id="collapsePatternTwo" class="panel-collapse collapse">
+        <div class="panel-body">
+        </div>
+      </div>
+    </div>
+
+    <div id="saveConfirmPattern"></div>
     <button class="btn btn-warning" ng-click="save()">Update Patterns</button>
   </div>
 </div>

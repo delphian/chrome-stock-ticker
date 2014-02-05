@@ -34,10 +34,10 @@ cstApp.controller('patternConfig', ['$scope', 'resource', function($scope, resou
         chrome.storage.sync.set( {'patterns': patterns} , function() {
             if (chrome.runtime.lastError) {
                 // Notify that we failed.
-                $('#saveConfirmPatterns').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+chrome.runtime.lastError.message+'</div>');
+                $('#saveConfirmPattern').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+chrome.runtime.lastError.message+'</div>');
             } else {
                 // Notify that we saved.
-                $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+                $('#saveConfirmPattern').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
             }
         });
     };
