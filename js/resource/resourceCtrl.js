@@ -4,8 +4,9 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     $scope.addMetric = { name: '', url: '', selector: '', regex: '' };
     $scope.export = { pretty: false };
 
-    $scope.$on('resourceUpdate', function(event) {
+    $scope.$on('resourceUpdate', function(event, data) {
         $scope.resource = resource.getData();
+        if (data.apply) $scope.$apply();
     });
 
     $scope.urlAdd = function() {

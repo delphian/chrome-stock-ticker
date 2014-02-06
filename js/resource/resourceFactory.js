@@ -99,7 +99,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
         // Default empty resource.
         var cleanResource = {
             loaded: false,
-            lastSave: new Date().getTime(),
+            lastSave: 0,
             lastUpdate: 0,
             version: appMeta.version,
             autoUpdate: true,
@@ -141,10 +141,12 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
         return report;
     }
     /**
-     * Add a new metric to the resource.
+     * Add a new metric to an array of metrics.
      *
      * @param object metric
      *   See pvt.cleanMetric for object details.
+     * @param array metricList
+     *   An array of metric objects. See cleanMetric for object details.
      * @param bool broadcast
      *   Set to true if a broadcast update should be issued.
      *
@@ -155,20 +157,22 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
      *
      * @todo Do not add if a metric with same name already exists.
      */
-    pvt.addMetric = function(metric, broadcast) {
+    pvt.addMetric = function(metric, metricList, broadcast) {
         var result = this.cleanMetric(metric);
         if (result.success) {
-            this.data.metrics.push(result.metric);
+            metricList.push(result.metric);
             if (broadcast) this.broadcastUpdate();
             return { success: true, message: null }
         }
         return result;
     };
     /**
-     * Remove a metric from the resource.
+     * Remove a metric from an array of metrics.
      *
      * @param int index
      *   The array index of the metric to remove.
+     * @param array metricList
+     *   An array of metric objects. See cleanMetric for object details.
      * @param bool broadcast
      *   Set to true if a broadcast update should be issued.
      *
@@ -176,9 +180,49 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
      *
      * @todo Add error checking and a normalized return object.
      */
-    pvt.removeMetric = function(index, broadcast) {
-        this.data.metrics.splice(index, 1);
+    pvt.removeMetric = function(index, metricList, broadcast) {
+        metricList.splice(index, 1);
         if (broadcast) this.broadcastUpdate();
+    };
+    /**
+     * Report any conflicting properties of a potential new metric to an
+     * existing array of metrics.
+     *
+     * @param object metric
+     *   See cleanMetric() for object details.
+     * @param array metricList
+     *   An array of metric objects. See cleanMetric() for object details.
+     *
+     * @result object
+     *   An object (exists) with a property for each property in the metric
+     *   object parameter (i.e: name):
+     *   - name: (array) An array of objects each with the properties:
+     *     - index: (int) The metric items index in the resource where the
+     *     conflict was found.
+     *     - metric: (object) The metric that a property conflict was found on.
+     *
+     * Example usage:
+     * @code
+     *     var result = pvt.compareMetric({ name: 'find this name' });
+     *     // Check if any conflicts on the name were found.
+     *     if (typeof(result['name']) != 'undefined') {
+     *         // Remove the first offending metric in the resource found to be
+     *         // in confict.
+     *         pvt.removeMetric(result['name'][0]['index']);
+     *     }
+     * @endcode
+     */
+    pvt.compareMetric = function(metric, metricList) {
+        var exists = {};
+        for (var key in metric) {
+            exists[key] = [];
+            for (var i in metricList) {
+                if (metric[key] == metricList[i][key]) {
+                    exists[key].push({ index: i, metric: metricList[i] });
+                }
+            }
+        }
+        return exists;
     };
     /**
      * Add a url to the resource.
@@ -307,6 +351,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
     pvt.save = function(callback) {
         // Remove angular hashes but store result as an object.
         var resource = JSON.parse(angular.toJson(this.data));
+        resource.lastSave = new Date().getTime();
         chrome.storage.sync.set( { 'resource': resource } , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
@@ -332,19 +377,39 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
         if (time > (this.data.lastUpdate + (24 * 60 * 60 * 1000))) {
             var parent = this;
             $.get(chrome.extension.getURL('data/resource.json'), {}, function(data) {
-                var oldResource = parent.getData();
-                var newResource = JSON.parse(data);
-                $.extend(true, oldResource, newResource);
-                oldResource.lastUpdate = time;
-                var result = parent.setResource(oldResource);
-                if (result.success) {
-                    parent.save(function(result) {
-                        if (!result.success) {
-                            console.log('Resource requires update but has failed to to save!');
+                if (typeof(data) != 'undefined') {
+                    var currentResource = parent.getData();
+                    var updateResource = JSON.parse(data);
+                    // Add in any new metrics from the update resource to the
+                    // copy of the current resource.
+                    for (i in updateResource.metrics) {
+                        var result = parent.compareMetric(updateResource.metrics[i], currentResource.metrics);
+                        if (typeof(result['name']) != 'undefined') {
+                            // If a name conflict was found, remove the old metric.
+                            for (j in result['name']) {
+                                parent.removeMetric(result['name'][j]['index'], currentResource.metrics);
+
+                            }
                         }
-                    });
-                } else {
-                    console.log('Resource requires update but could not merge objects.');
+                        // Append the new metric
+                        var result = parent.addMetric(updateResource.metrics[i], currentResource.metrics);
+                    }
+                    // Put the copy of the current resource metrics (now
+                    // updated) back into the update resource.
+                    updateResource.metrics = currentResource.metrics;
+                    updateResource.lastUpdate = new Date().getTime();
+                    var result = parent.setResource(updateResource, { apply: true } );
+                    if (result.success) {
+                        parent.save(function(result) {
+                            if (result.success) {
+                                console.log('Resource has been updated.');
+                            } else {
+                                console.log('Resource requires update but has failed to to save!');
+                            }
+                        });
+                    } else {
+                        console.log('Resource requires update but could not merge objects.');
+                    }
                 }
             });
         }
@@ -369,10 +434,10 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
         return pvt.getMetricNames();
     };
     api.addMetric = function(metric) {
-        return pvt.addMetric(metric, true);
+        return pvt.addMetric(metric, pvt.data.metrics, true);
     };
     api.removeMetric = function(index) {
-        return pvt.removeMetric(index, true);
+        return pvt.removeMetric(index, pvt.data.metrics, true);
     };
     api.addUrl = function(url) {
         return pvt.addUrl(url, true);
