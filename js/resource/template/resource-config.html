@@ -8,7 +8,7 @@
   on the internet, and second, a selector path to locate the individual value
   on the given url page.</p>
   <p>
-    <input type="checkbox" ng-model="resource.autoUpdate" /> Auto update.<br />
+    <input type="checkbox" ng-model="resource.autoUpdate" /> Auto update. (Last update: {{ resource.lastUpdate | date:'MMM d, y h:mm:ss a' }})<br />
     Automatically add any new metrics when upgrading versions. Conflicting metric
     names will be overwritten with the new values.
   </p>
