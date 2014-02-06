@@ -62,7 +62,8 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
             { from: 'SYMBOL', to: varName }
         ];
         this.getCache(varName, function(cache) {
-            if ((cache.timestamp + 60 * 60 * 1000) > new Date().getTime()) {
+            // Cache for 2 hours.
+            if ((cache.timestamp + 2 * 60 * 60 * 1000) > new Date().getTime()) {
                 console.log('Loading from factory cache ' + varName);
                 if (callback) callback.call(this, cache.metrics);
             } else {
