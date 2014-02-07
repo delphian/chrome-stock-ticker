@@ -114,6 +114,8 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      *
      * @param object item
      *   See cleanItem() for object details.
+     * @param array itemList
+     *   An array of item objects. See cleanItem() for object details.
      * @param bool broadcast
      *   Set to true if a broadcast update should be issued.
      *
@@ -122,10 +124,10 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      *     - success: (bool) true on success, false otherwise.
      *     - message: (string) will be set on failure.
      */
-    pvt.addItem = function(item, broadcast) {
+    pvt.addItem = function(item, itemList, broadcast) {
         var result = this.cleanItem(item);
         if (result.success) {
-            this.data.items.push(result.item);
+            itemList.push(result.item);
             if (broadcast) this.broadcastUpdate();
             return { success: true, message: null }
         }
@@ -136,6 +138,8 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      *
      * @param int index
      *   The array index of the item to remove.
+     * @param array itemList
+     *   An array of item objects. See cleanItem() for object details.
      * @param bool broadcast
      *   Set to true if a broadcast update should be issued.
      *
@@ -143,9 +147,48 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      *
      * @todo Add error checking and a normalized return object.
      */
-    pvt.removeItem = function(index, broadcast) {
-        this.data.items.splice(index, 1);
+    pvt.removeItem = function(index, itemList, broadcast) {
+        itemList.splice(index, 1);
         if (broadcast) this.broadcastUpdate();
+    };
+    /**
+     * Report any conflicting properties of a potential new pattern item to an
+     * existing array of pattern items.
+     *
+     * @param object item
+     *   See cleanItem() for object details.
+     * @param array itemList
+     *   An array of item objects. See cleanItem() for object details.
+     *
+     * @result object
+     *   An object (exists) with a property for each property in the item
+     *   object parameter (i.e: regex):
+     *   - regex: (array) An array of objects each with the properties:
+     *     - index: (int) The items index in the list where the conflict was
+     *       found.
+     *     - item: (object) The item that a property conflict was found on.
+     *
+     * Example usage:
+     * @code
+     *     var result = pvt.compareItem({ regex: '[A-Z]' }, itemList);
+     *     // Check if any dulicates on the regex pattern were found.
+     *     if (typeof(result['regex']) != 'undefined') {
+     *         // Remove the duplicate item from the list.
+     *         pvt.removeItem(result['regex'][0]['index'], itemList);
+     *     }
+     * @endcode
+     */
+    pvt.compareItem = function(item, itemList) {
+        var exists = {};
+        for (var key in item) {
+            exists[key] = [];
+            for (var i in itemList) {
+                if (item[key] == itemList[i][key]) {
+                    exists[key].push({ index: i, item: itemList[i] });
+                }
+            }
+        }
+        return exists;
     };
     /**
      * Get a copy of the patterns object.
@@ -216,6 +259,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
     pvt.save = function(callback) {
         // Remove angular hashes but store result as an object.
         var patterns = JSON.parse(angular.toJson(this.data));
+        patterns.lastSave = new Date().getTime();
         chrome.storage.sync.set( { 'patterns': patterns } , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
@@ -241,6 +285,23 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         if (time > (this.data.lastUpdate + (24 * 60 * 60 * 1000))) {
             var parent = this;
             $.get(chrome.extension.getURL('data/patterns.json'), {}, function(data) {
+                if (typeof(data) != 'undefined') {
+                    var currentPatterns = parent.getData();
+                    var updatePatterns = JSON.parse(data);
+                    updatePatterns.lastUpdate = new Date().getTime();
+                    var result = parent.setPatterns(updatePatterns, { apply: true } );
+                    if (result.success) {
+                        parent.save(function(result) {
+                            if (result.success) {
+                                console.log('Patterns has been updated.');
+                            } else {
+                                console.log('Patterns requires update but has failed to to save!');
+                            }
+                        });
+                    } else {
+                        console.log('Patterns requires update but could not merge objects.');
+                    }
+                }
             });
         }
     };
@@ -251,6 +312,24 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      * Public api.
      */
     var api = {};
+    api.setPatterns = function(patterns, broadcastData) {
+        return pvt.setPatterns(patterns, broadcastData);
+    };
+    api.cleanPatterns = function() {
+        return pvt.cleanPatterns();
+    };
+    api.getData = function() {
+        return pvt.getData();
+    };
+    api.addItem = function(item) {
+        return pvt.addItem(item, pvt.data.items, true);
+    };
+    api.removeItem = function(item) {
+        return pvt.removeItem(index, pvt.data.items, true);
+    };
+    api.save = function(callback) {
+        return pvt.save(callback);
+    };
 
     return api;
 }]);
