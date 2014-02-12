@@ -415,7 +415,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
         }
     };
     // Load an empty resource by default.
-    pvt.data = pvt.cleanResource();
+    pvt.data = pvt.cleanResource().resource;
 
     /**
      * Public api.
@@ -457,8 +457,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
             console.log('Could not load resource from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
             // Clean the resource, ignore any warnings (offenders removed).
-            var result = pvt.cleanResource(result['resource']);
-            var resource = result.resource;
+            var resource = pvt.cleanResource(result['resource']).resource;
             var result = api.setResource(resource, { apply: true } );
             if (!result.success) {
                 console.log('Could not apply resource from chrome storage: ' + result.message);
@@ -478,8 +477,7 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
         for (key in object) {
             if (key == 'resource') {
                 // Clean the resource, ignore any warnings (offenders removed).
-                var result = pvt.cleanResource(object.resource.newValue);
-                var resource = result.resource;
+                var resource = pvt.cleanResource(object.resource.newValue).resource;
                 var result = api.setResource(resource, { apply: true } );
                 if (!result.success) {
                     console.log('Could not apply resource from chrome storage: ' + result.message);

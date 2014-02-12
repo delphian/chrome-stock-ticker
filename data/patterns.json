@@ -1,0 +1,89 @@
+{
+    "loaded": true,
+    "lastSave": 1392180013251,
+    "lastUpdate": 0,
+    "version": "0.9.3",
+    "autoUpdate": true,
+    "items": [
+        {
+            "regex": "investing/stock/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "finance\\.yahoo\\.com/q\\?s=([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "money\\.cnn\\.com/quote/quote.html\\?symb=([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "bloomberg\\.com/quote/([A-Z]{1,5}):US",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "data\\.cnbc\\.com/quotes/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "quotes\\.morningstar\\.com/stock/s\\?t=([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "quote\\.foxbusiness\\.com/symbol/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "ycharts\\.com/companies/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "quotes\\.wsj\\.com/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "seekingalpha\\.com/symbol/([a-z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "www\\.wikinvest\\.com/stock/[A-Za-z_-]+\\(([A-Z]{1,5})\\)",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "/stock/([A-Za-z]{1,5})\\#[A-Z]+",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "fool\\.com/Ticker/([A-Z]{1,5})\\.asp",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "/stock/quote/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "quotes\\.barrons\\.com/([A-Z]{1,5})",
+            "modifiers": "g",
+            "result": 1
+        },
+        {
+            "regex": "/quote/([A-Z]{1,5})\\.html",
+            "modifiers": "g",
+            "result": 1
+        }
+    ]
+}

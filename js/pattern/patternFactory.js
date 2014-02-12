@@ -36,15 +36,13 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         }
         if (!modifiers.length) modifiers = 'g';
         if (result < 1) result = 1;
-        cleanItem = {
+        var cleanItem = {
             regex: regex,
             modifiers: modifiers,
-            result: result,
+            result: result
         };
-        if (!cleanItem.name.length) {
-            console.log(item);
-            return { success: false, message: 'Invalid item regex: ' + item.regex, item: cleanItem };
-        }
+        // if (!cleanItem.regex.length)
+        //     return { success: false, message: 'Invalid item regex: ' + item.regex, item: cleanItem };
         return { success: true, message: null, item: cleanItem };
     };
     /**
@@ -95,7 +93,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
             if (typeof(patterns.version) == 'string') cleanPatterns.version = patterns.version;
             // Clean items. If in invalid items is found then disregard it.
             if (Object.prototype.toString.call(patterns.items) === '[object Array]') {
-                for (i in patterns.items) {
+                for (var i in patterns.items) {
                     var result = this.cleanItem(patterns.items[i]);
                     if (result.success) {
                         cleanPatterns.items.push(result.item);
@@ -106,7 +104,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
                 }
             }
         }
-        report.resource = cleanPatterns;
+        report.patterns = cleanPatterns;
         return report;
     };
     /**
@@ -273,10 +271,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
     /**
      * Check for any remote updates to the patterns object and apply if found.
      *
-     * Retrieves the update patterns object and merges it with the
-     * current. Update patterns object will overwrite any properties
-     * in the current resource if there is a collision. The newly merged
-     * patterns object will be written to storage.
+     * Retrieves the update patterns object and overwrites the current.
      *
      * @return void
      */
@@ -288,7 +283,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
                 if (typeof(data) != 'undefined') {
                     var currentPatterns = parent.getData();
                     var updatePatterns = JSON.parse(data);
-                    updatePatterns.lastUpdate = new Date().getTime();
+                    updatePatterns.lastUpdate = time;
                     var result = parent.setPatterns(updatePatterns, { apply: true } );
                     if (result.success) {
                         parent.save(function(result) {
@@ -330,6 +325,43 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
     api.save = function(callback) {
         return pvt.save(callback);
     };
+
+    // When factory is first instantiated pull the patterns object out of
+    // chrome storage. This will result in a broadcast update.
+    chrome.storage.sync.get(['patterns'], function(result) {
+        if (chrome.runtime.lastError) {
+            console.log('Could not load patterns object from chrome storage: ' + chrome.runetime.lastError.message);
+        } else {
+            // Clean the patterns, ignore any warnings (offenders removed).
+            var patterns = pvt.cleanPatterns(result['patterns']).patterns;
+            var result = api.setPatterns(patterns, { apply: true } );
+            if (!result.success) {
+                console.log('Could not apply patterns from chrome storage: ' + result.message);
+                console.log(patterns);
+            } else {
+                if (patterns.autoUpdate) pvt.update();
+            }
+        }
+    });
+
+    // Listen for any updates to the patterns object in chrome storage. This
+    // should only happen if multiple browsers are open, or if extension code
+    // on the other side of the javascript firewall (popup versus options
+    // versus content) has written a change to storage. This will result in a
+    // broadcast update.
+    chrome.storage.onChanged.addListener(function(object, namespace) {
+        for (key in object) {
+            if (key == 'patterns') {
+                // Clean the resource, ignore any warnings (offenders removed).
+                var patterns = pvt.cleanPatterns(object.resource.newValue).patterns;
+                var result = api.setPatterns(patterns, { apply: true } );
+                if (!result.success) {
+                    console.log('Could not apply patterns from chrome storage: ' + result.message);
+                    console.log(patterns);
+                }
+            }
+        }
+    });
 
     return api;
 }]);

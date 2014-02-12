@@ -1,19 +1,18 @@
 
-<div class="container cst-pattern-config">
+<div class="container cst-patterns-config">
   <h2>Patterns</h2>
   <p>Each page that is visited by the browser will have the url of all
   anchor tags compared to these regular expressions. The expressions
   are used to locate desired variables. Expressions are
   formatted for use with <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">javascript's RegExp()</a>.</p>
   <p>
-    <input type="checkbox" ng-model="pattern.autoUpdate" /> Auto update.<br />
-    Automatically add any new patterns when upgrading versions. Old patterns
-    will not be removed.
+    <input type="checkbox" ng-model="patterns.autoUpdate" /> Auto update. (Last update: {{ patterns.lastUpdate | date:'MMM d, y h:mm:ss a' }})<br />
+    Automatically overwrite current patterns (and customized patterns) with factory updates.
   </p>
 
   <div class="panel-group" id="accordionPattern">
     <!-- Pattern Tab -->
-    <div class="panel panel-default cst-pattern">
+    <div class="panel panel-default cst-patterns">
       <div class="panel-heading">
         <h4 class="panel-title">
           <a data-toggle="collapse" data-parent="#accordionPattern" href="#collapsePatternOne">
@@ -30,8 +29,8 @@
               <th class="cst-pattern-result">Result</th>
             </tr>
             <form name="patternForm" novalidate>
-              <tr ng-repeat="(index, pattern) in patterns">
-                <td><input class="form-control" ng-model="pattern.pattern" /></td>
+              <tr ng-repeat="(index, pattern) in patterns.items">
+                <td><input class="form-control" ng-model="pattern.regex" /></td>
                 <td><input class="form-control" ng-model="pattern.modifiers" /></td>
                 <td><input class="form-control" ng-model="pattern.result" /></td>
                 <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="patternRemove(index)"> </button></td>
@@ -60,11 +59,21 @@
       </div>
       <div id="collapsePatternTwo" class="panel-collapse collapse">
         <div class="panel-body">
+          <p>Still in beta.</p>
+          <p>
+            <input type="checkbox" class="cst-checkbox" ng-model="export.pretty" /> Make JSON pretty.
+          </p>
+          <textarea class="form control"></textarea>
+          <div class="cst-controls">
+            <button class="btn btn-success" ng-click="export()">Export</button>
+            <button class="btn btn-warning" ng-click="import()">Import</button>
+            <button class="btn btn-danger" ng-click="reset()">Reset</button>
+          </div>
         </div>
       </div>
     </div>
-
-    <div id="saveConfirmPattern"></div>
+    <br />
+    <div id="saveConfirmPatterns"></div>
     <button class="btn btn-warning" ng-click="save()">Update Patterns</button>
   </div>
 </div>

@@ -1,44 +1,44 @@
 
-cstApp.controller('patternConfig', ['$scope', 'resource', function($scope, resource) {
+cstApp.controller('patternsConfig', ['$scope', 'resource', 'patterns', function($scope, resource, patterns) {
     // Provide some default patterns.
-    $scope.patterns = [];
-    // Update the pattern from local storage on first load.
-    chrome.storage.sync.get('patterns', function(result) {
-        if (typeof(result['patterns']) != 'undefined') {
-            $scope.patternUpdate(result.patterns);
-        }
+    $scope.patterns = patterns.getData();
+    $scope.export = { pretty: false };
+    $scope.addPattern = { regex: '', options: '', result: '' };
+
+    $scope.$on('patternsUpdate', function(event, data) {
+        $scope.patterns = patterns.getData();
+        if (data.apply) $scope.$apply();
     });
-    // Update the patterns and force resync between model and html anytime
-    // the stored object is updated from anywhere.
-    chrome.storage.onChanged.addListener(function(object, namespace) {
-        for (key in object) {
-            if (key == 'patterns') {
-                $scope.patternUpdate(object.patterns.newValue);
-            }
-        }
-    });
-    // Update the model and force resync between model and html.
-    $scope.patternUpdate = function(patterns) {
-        $scope.patterns = patterns;
-        $scope.$apply();
-    };
     $scope.patternAdd = function() {
-        $scope.patterns.push({ pattern: '', options: 'g', result: 1 });
+        var result = patterns.addItem({
+            regex: '',
+            options: 'g',
+            result: 1
+        });
+        if (!result.success) {
+            $('#saveConfirmPatterns').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to add pattern: '+result.message+'</div>');
+        }
     };
     $scope.patternRemove = function(index) {
-        $scope.patterns.splice(index, 1);
+        patterns.removeItem(index);
     };
-    $scope.save = function() {
-        // Remove angular hashes but store result as an object.
-        var patterns = JSON.parse(angular.toJson($scope.patterns));
-        chrome.storage.sync.set( {'patterns': patterns} , function() {
-            if (chrome.runtime.lastError) {
-                // Notify that we failed.
-                $('#saveConfirmPattern').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+chrome.runtime.lastError.message+'</div>');
-            } else {
-                // Notify that we saved.
-                $('#saveConfirmPattern').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
-            }
-        });
+    $scope.export = function() {
+        var patternsObject = JSON.stringify(patterns.getData(), null, ($scope.export.pretty * 4));
+        $('.cst-import-export textarea').val(patternsObject);
+    }
+    $scope.savePatterns = function() {
+        var result = patterns.setPatterns($scope.patterns);
+        if (result.success) {
+            patterns.save(function(result) {
+                if (result.success) {
+                    $('#saveConfirmPatterns').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
+                } else {
+                    $('#saveConfirmPatterns').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
+                }
+            });
+        } else {
+            $('#saveConfirmPatterns').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
+        }
     };
+
 }]);

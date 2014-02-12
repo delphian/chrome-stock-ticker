@@ -51,7 +51,6 @@
         "libs/external/angular/angular.min.js",
         "libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js",
         "libs/CSTResource.js",
-        "libs/CSTSymbols.js",
         "js/cstApp.js",
         "js/resource/resourceFactory.js",
         "js/variable/variableCtrl.js",

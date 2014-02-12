@@ -1,6 +1,6 @@
 
 cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, resource) {
-    $scope.resource = resource.cleanResource();
+    $scope.resource = resource.getData();
     $scope.addMetric = { name: '', url: '', selector: '', regex: '' };
     $scope.export = { pretty: false };
 
