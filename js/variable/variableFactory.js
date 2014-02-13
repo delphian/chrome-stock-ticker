@@ -15,6 +15,24 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
      */
     var api = {};
 
+    /**
+     * Get variable metrics from cache if they exist.
+     *
+     * @param string varName
+     *   Cache key name to query storage against.
+     * @param function callback
+     *   Callback will be invoked with cache results.
+     *
+     * @return void
+     *   Callback will be invoked with arguments:
+     *     - result[cacheKey]: (object|undefined) with properties:
+     *       - timestamp: (int) Time that the cache was set.
+     *       - metrics: (object) An object with metric names as each property.
+     *         If price is a metric property then:
+     *         - price: (object) An object with properties:
+     *           - timestamp: (int) The time that the value was set.
+     *           - value: (mixed) The value of this metric.
+     */
     api.getCache = function(varName, callback) {
         if (typeof(pvt.cache[varName]) != 'undefined') {
             if (callback) callback.call(this, pvt.cache[varName]);
@@ -63,7 +81,7 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
         ];
         this.getCache(varName, function(cache) {
             // Cache for 2 hours.
-            if ((cache.timestamp + 2 * 60 * 60 * 1000) > new Date().getTime()) {
+            if ((typeof(cache) != 'undefined') && (cache.timestamp + 2 * 60 * 60 * 1000) > new Date().getTime()) {
                 console.log('Loading from factory cache ' + varName);
                 if (callback) callback.call(this, cache.metrics);
             } else {
