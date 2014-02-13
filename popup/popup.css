@@ -17,3 +17,9 @@ div.tab-content {
 div.tab-pane {
   height: 100%;
 }
+div#advanced {
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  font-size: 10px;
+}
