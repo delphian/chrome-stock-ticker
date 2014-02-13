@@ -14,7 +14,7 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
     };
     $scope.export = function() {
         var resourceObject = JSON.stringify(resource.getData(), null, ($scope.export.pretty * 4));
-        $('.cst-import-export textarea').val(resourceObject);
+        $('.cst-resource-config .cst-import-export textarea').val(resourceObject);
     }
     $scope.urlRemove = function(index) {
         resource.removeUrl(index);

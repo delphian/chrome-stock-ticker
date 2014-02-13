@@ -24,7 +24,7 @@ cstApp.controller('patternsConfig', ['$scope', 'resource', 'patterns', function(
     };
     $scope.export = function() {
         var patternsObject = JSON.stringify(patterns.getData(), null, ($scope.export.pretty * 4));
-        $('.cst-import-export textarea').val(patternsObject);
+        $('.cst-patterns-config .cst-import-export textarea').val(patternsObject);
     }
     $scope.savePatterns = function() {
         var result = patterns.setPatterns($scope.patterns);

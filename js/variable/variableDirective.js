@@ -17,6 +17,7 @@ cstApp.directive('cstVariableConfig', function() {
         restrict: 'E',
         controller: 'variableConfig',
         replace: true,
+        scope: true,
         templateUrl: chrome.extension.getURL('/js/variable/template/variable-config.html')
     };
 });
