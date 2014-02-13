@@ -13,12 +13,16 @@
 <body>
 
   <ul id="mainNav" class="nav nav-tabs">
-    <li class="active"><a href="#resource" data-toggle="tab">Resource</a></li>
+    <li class="active"><a href="#tickerbar" data-toggle="tab">Ticker Bar</a></li>
+    <li><a href="#resource" data-toggle="tab">Resource</a></li>
     <li><a href="#patterns" data-toggle="tab">Patterns</a></li>
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane active" id="resource">
+    <div class="tab-pane active" id="tickerbar">
+      <cst-variable-config></cst-variable-config>
+    </div>
+    <div class="tab-pane" id="resource">
       <cst-resource-config></cst-resource-config>
     </div>
     <div class="tab-pane" id="patterns">

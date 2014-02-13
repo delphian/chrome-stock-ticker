@@ -1,5 +1,5 @@
 
-/* Variables when they are rendered */
+/* Variables Rendered. */
 .cst-variable {
     margin-right:4px;
 }
@@ -26,31 +26,12 @@
   border: none;
 }
 
-/* Variable display configuration. */
-.cst-variable-config {
-  width: 100%;
-}
-.cst-variable-config table {
-  width: 100%;
-}
-.cst-variable-config .cst-controls {
-  width: 100%;
-  margin-top: 1em;
-}
-.cst-variable-config .cst-control-select {
-  width: 25%;
-  float: left;
-}
-.cst-variable-config .cst-control-add {
-  width: 25%;
-  float: left;
-}
-.cst-variable-config .cst-control-add button {
-  width: 100%;
-  margin-left: 1em;
-}
-.cst-variable-config .cst-control-save {
-  width: 50%;
-  float: left;
-  text-align: right;
-}
+/* Variable Configuration. */
+.cst-variable-config table { width: 100%; }
+.cst-variable-config table th.cst-ticker-name { width: 65%; }
+.cst-variable-config table th.cst-ticker-abbr { width: 35%; }
+.cst-variable-config .cst-controls { width: 100%; margin-top: 1em; }
+.cst-variable-config .cst-control-select { width: 25%; float: left; }
+.cst-variable-config .cst-control-add { width: 25%; float: left; }
+.cst-variable-config .cst-control-add button { width: 100%; margin-left: 1em; }
+.cst-variable-config .cst-control-save { width: 50%; float: left; text-align: right; }
