@@ -1,6 +1,8 @@
 {
     "loaded": true,
-    "lastSave": 1391405043378,
+    "lastSave": 1392254742679,
+    "lastUpdate": 1392176986093,
+    "version": "0.9.3",
     "autoUpdate": true,
     "urls": [
         {
@@ -18,7 +20,7 @@
             "name": "Debt to Equity Total MRQ",
             "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
             "selector": "td.yfnc_modtitlew1 > table:nth-child(11) tr:nth-child(5) td:nth-child(2)",
-            "regex": ""
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Dividend Ex Date",
@@ -30,13 +32,13 @@
             "name": "Dividend Growth All Time Average",
             "url": "http://www.buyupside.com/calculators/dividendgrowthrateinclude.php?symbol=SYMBOL&submit=Display+Chart",
             "selector": "div#contentbox div.colwrap table tr:nth-child(8) td:nth-child(2) div",
-            "regex": ""
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Dividend Growth Last Five Years Average",
             "url": "http://www.bloomberg.com/quote/SYMBOL:US",
             "selector": "table.key_stat_data tr:nth-child(15) td",
-            "regex": ""
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Dividend Payment",
@@ -48,13 +50,13 @@
             "name": "Dividend Payout Ratio",
             "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
             "selector": ".yfnc_modtitlew2 .yfnc_datamodoutline1~ .yfnc_datamodoutline1+ .yfnc_datamodoutline1 td table tr:nth-child(7) td:nth-child(2)",
-            "regex": "([0-9\\.]+)"
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Dividend Yield",
             "url": "http://www.bloomberg.com/quote/SYMBOL:US",
             "selector": "table.key_stat_data tr:nth-child(12) td",
-            "regex": ""
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "EPS TTM",
@@ -72,7 +74,7 @@
             "name": "PE TTM",
             "url": "http://www.bloomberg.com/quote/SYMBOL:US",
             "selector": "table.key_stat_data tr:nth-child(1) td",
-            "regex": ""
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Price",
