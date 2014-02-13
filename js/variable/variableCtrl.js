@@ -3,6 +3,7 @@ cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function(
     $scope.heading = true;
     $scope.bar = {};
     $scope.metrics = {};
+console.log($scope);
     variable.getMetrics($scope.variable.toUpperCase(), function(metrics) {
         $scope.metrics = metrics;
         $scope.$apply();

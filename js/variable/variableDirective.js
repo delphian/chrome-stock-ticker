@@ -1,10 +1,12 @@
 
+/**
+ * <cst-variable variable="WMT"></cst-variable>
+ */
 cstApp.directive('cstVariable', function() {
     return {
         restrict: 'E',
         controller: 'variable',
         replace: true,
-        transclude: 'element',
         scope: {
             variable: '@',
         },
