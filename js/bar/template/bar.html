@@ -9,8 +9,11 @@
   </div>
   <div class="cst-bar-items">
     <div class="cst-bar-item" ng-repeat="variable in variables">
-      <cst-variable variable="{{variable}}"></cst-variable>
+      <cst-variable variable="variable"></cst-variable>
     </div>
+  </div>
+  <div class="cst-bar-add">
+    <input type="text" class="form-control" placeholder="Symbol" ng-model="addVariable" ui-keypress="{enter: 'add(addVariable)'}"></input>
   </div>
   <div class="cst-bar-nav cst-bar-next">
     <div>

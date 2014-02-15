@@ -1,9 +1,9 @@
 
 cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function($scope, variable, varConfig) {
     $scope.heading = true;
-    $scope.bar = {};
+    $scope.bar = varConfig.getData();
     $scope.metrics = {};
-console.log($scope);
+
     variable.getMetrics($scope.variable.toUpperCase(), function(metrics) {
         $scope.metrics = metrics;
         $scope.$apply();

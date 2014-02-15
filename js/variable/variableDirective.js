@@ -8,7 +8,7 @@ cstApp.directive('cstVariable', function() {
         controller: 'variable',
         replace: true,
         scope: {
-            variable: '@',
+            variable: '=',
         },
         templateUrl: chrome.extension.getURL('/js/variable/template/variable.html')
     };

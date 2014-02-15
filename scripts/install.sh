@@ -18,6 +18,11 @@ echo "Downloading angularjs"
 mkdir libs/external/angular
 curl -L --progress-bar -o libs/external/angular/angular.min.js  http://code.angularjs.org/1.2.2/angular.min.js
 
+echo "Downloading angular-ui-utils"
+cd libs/external
+bower install angular-ui-utils\#v0.1.1
+cd ../..
+
 echo "Downloading bootstrap"
 mkdir libs/external/bootstrap
 curl -L --progress-bar -o libs/external/bootstrap/bootstrap.zip https://github.com/twbs/bootstrap/archive/v3.0.3.zip 

@@ -49,6 +49,7 @@
       "js": [
         "libs/external/jquery/jquery.min.js",
         "libs/external/angular/angular.min.js",
+        "libs/external/bower_components/angular-ui-utils/ui-utils.min.js",
         "libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js",
         "libs/CSTResource.js",
         "js/cstApp.js",

@@ -1,5 +1,5 @@
 
-var cstApp = angular.module('chromeStockTicker', []);
+var cstApp = angular.module('chromeStockTicker', ['ui.utils']);
 
 cstApp.config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([

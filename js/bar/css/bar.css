@@ -17,7 +17,7 @@
 .cst-bar-items {
     position: absolute;
     left: 30px;
-    right: 30px;
+    right: 84px;
     top: 0px;
     white-space: nowrap;
 }
@@ -40,14 +40,26 @@
 .cst-bar-prev div, .cst-bar-next div {
     margin-top: 4px;
 }
-.cst-bar-prev div {
-    margin-left: 5px;
-}
-.cst-bar-next div {
-    margin-left: 14px;
-}
+.cst-bar-prev div { margin-left: 5px; }
+.cst-bar-next div { margin-left: 14px; }
 .cst-bar-item {
     margin-top: 4px;
     margin-left: 10px;
     display: inline-block;
+}
+
+/* Bar add variable form */
+.cst-bar .cst-bar-add { 
+  position: absolute;
+  width: 54px;
+  right: 40px;
+}
+.cst-bar .cst-bar-add input {
+  text-transform: capitalize;
+  padding: 1px; 
+  margin: 1px;
+  margin-top: 3px;
+  height: 24px; 
+  width: 52px; 
+  float: left; 
 }
