@@ -1,4 +1,13 @@
 
+cstApp.controller('linksButton', ['$scope', 'links', function($scope, links) {
+    // $scope.variable = '';
+    $scope.links = links.getData();
+    $scope.$on('linksUpdate', function(event, data) {
+        $scope.links = links.getData();
+        if (data.apply) $scope.$apply();
+    });
+}]);
+
 cstApp.controller('linksConfig', ['$scope', 'links', function($scope, links) {
     // Provide some default patterns.
     $scope.links = links.getData();

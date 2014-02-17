@@ -15,6 +15,22 @@
                 "name": "Balance Sheet",
                 "url": "http://finance.yahoo.com/q/bs?s=SYMBOL+Balance+Sheet&annual"
             }
+            {
+                "name": "Cash Flow",
+                "url": "http://finance.yahoo.com/q/cf?s=SYMBOL+Cash+Flow&annual"
+            }
+            {
+                "name": "Free Cash Flow Chart",
+                "url": "http://ycharts.com/companies/SYMBOL/free_cash_flow"
+            },
+            {
+                "name": "Dividend Chart",
+                "url": "http://www.buyupside.com/dividendcharts/dividendchartdisplay.php?symbol=SYMBOL&interval=allyears"
+            },
+            {
+                "name": "Fair Value Calculator",
+                "url": "http://www.vuru.co/analysis/SYMBOL/valuation"
+            }
         ],
         "custom": []
     }

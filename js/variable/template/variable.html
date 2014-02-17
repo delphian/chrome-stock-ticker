@@ -1,14 +1,8 @@
 
 <div class="cst-variable">
-  <div class="dropdown cst-tickerbar-dropdown">
-    <button class="btn btn-success btn-xs dropdown-toggle" type="button" id="dropdownMenu{{variable}}" data-toggle="dropdown">{{variable}}</button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu{{variable}}">
-      <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://ycharts.com/companies/{{variable}}/free_cash_flow">Free Cash Flow Chart</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://www.buyupside.com/dividendcharts/dividendchartdisplay.php?symbol={{variable}}&interval=allyears">Dividend Chart</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="http://www.vuru.co/analysis/{{variable}}/valuation">Fair Value Calculator</a></li>
-    </ul>
+  <div class="fix-angular-or-bootstrap" style="float:left;">
+    <cst-links-button variable="variable"></cst-links-button>
   </div>
-  
   <table>
     <tbody>
       <tr ng-if="heading">
