@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/js/resource/css/resource.css" />
     <link rel="stylesheet" type="text/css" href="/js/bar/css/bar.css" />
     <link rel="styelsheet" type="text/css" href="/js/pattern/css/pattern.css" />
+    <link rel="stylesheet" type="text/css" href="/js/links/css/links.css" />
   </head>
   <body>
 
@@ -17,8 +18,8 @@
     </div>
 
     <ul id="popupNav" class="nav nav-tabs">
-      <li class="active"><a href="#tickerbar" data-toggle="tab">Config</a></li>
-      <li><a href="#watch" data-toggle="tab">Watch List</a></li>
+      <li class="active"><a href="#tickerbar" data-toggle="tab">Metrics</a></li>
+      <li><a href="#links" data-toggle="tab">Menu Links</a></li>
       <li><a href="#help" data-toggle="tab">Help</a></li>
     </ul>
 
@@ -26,8 +27,8 @@
       <div class="tab-pane active container" id="tickerbar">
         <cst-variable-config></cst-variable-config>
       </div>
-      <div class="tab-pane container" id="watch">
-        <cst-variable variable="'WMT'"></cst-variable>
+      <div class="tab-pane container" id="links">
+        <cst-links-config></cst-links-config>
       </div>
       <div class="tab-pane container" id="help">
         <br />
@@ -60,6 +61,10 @@
     <script src="/js/pattern/patternCtrl.js"></script>
     <script src="/js/pattern/patternDirective.js"></script>
     <script src="/js/pattern/patternFactory.js"></script>
+    <!-- cst links -->
+    <script src="/js/links/linksCtrl.js"></script>
+    <script src="/js/links/linksDirective.js"></script>
+    <script src="/js/links/linksFactory.js"></script>
 
     <script src="/libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js"></script>
 
