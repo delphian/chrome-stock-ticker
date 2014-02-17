@@ -6,19 +6,47 @@
     <input type="checkbox" ng-model="links.autoUpdate" /> Auto update. (Last update: {{ links.lastUpdate | date:'MMM d, y h:mm:ss a' }})<br />
     Automatically update default factory links.
   </p>
+  <p>
+    <input type="checkbox" ng-model="links.useDefault" /> Use factory default links when constructing menu.
+  </p>
 
   <div class="panel-group" id="accordionLinks">
-    <!-- Links Tab -->
-    <div class="panel panel-default cst-links">
+    <!-- Default Links Tab -->
+    <div class="panel panel-default cst-links" ng-if="links.useDefault">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordionLinks" href="#collapseLinksOne">
-            Links
+          <a data-toggle="collapse" data-parent="#accordionLinks" href="#collapseLinksDefault">
+            Factory Default Links
           </a>
         </h4>
       </div>
-      <div id="collapseLinksOne" class="panel-collapse collapse">
+      <div id="collapseLinksDefault" class="panel-collapse collapse">
         <div class="panel-body">
+          <table>
+            <tr>
+              <th class="cst-link-name">Name</th>
+              <th class="cst-link-url">URL</th>
+            </tr>
+            <tr ng-repeat="(index, link) in links.items.default">
+              <td>{{link.name}}</td>
+              <td>{{link.url}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Custom Links Tab -->
+    <div class="panel panel-default cst-links">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionLinks" href="#collapseLinksCustom">
+            Custom Links
+          </a>
+        </h4>
+      </div>
+      <div id="collapseLinksCustom" class="panel-collapse collapse">
+        <div class="panel-body">
+          <p>The text 'SYMBOL' will be replaced with the appropriate stock symbol when the links are inserted into the drop down menu.</p>
           <table>
             <tr>
               <th class="cst-link-name">Name</th>
@@ -33,8 +61,8 @@
             </form>
             <form name="cstAddLink">
               <tr class="cst-add-link">
-                <td><input class="form-control" ng-model="addLink.name" ng-pattern="/^[a-zA-Z_ ]+$/" placeholder="Name" /></td>
-                <td><input class="form-control" ng-model="addLink.url" ng-pattern="/^http://.+$/" placeholder="URL" /></td>
+                <td><input class="form-control" ng-model="addLink.name" ng-pattern="/^[a-zA-Z_ ]+$/" placeholder="Income Statement" /></td>
+                <td><input class="form-control" ng-model="addLink.url" ng-pattern="/^http://.+$/" placeholder="http://finance.yahoo.com/q/is?s=SYMBOL+Income+Statement&annual" /></td>
                 <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="add()" ng-show="cstAddLink.$valid"> </button></td>
               </tr>
             </form>
@@ -53,11 +81,11 @@
       </div>
       <div id="collapseLinksTwo" class="panel-collapse collapse">
         <div class="panel-body">
-          <p>Still in beta.</p>
+          <p>Importing or Reseting will cause the loss of all custom links.</p>
           <p>
             <input type="checkbox" class="cst-checkbox" ng-model="export.pretty" /> Make JSON pretty.
           </p>
-          <textarea class="form control"></textarea>
+          <textarea class="form control" ng-model="export.data"></textarea>
           <div class="cst-controls">
             <button class="btn btn-success" ng-click="export()">Export</button>
             <button class="btn btn-warning" ng-click="import()">Import</button>

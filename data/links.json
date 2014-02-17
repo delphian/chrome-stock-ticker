@@ -1,11 +1,21 @@
 {
     "loaded": true,
-    "lastSave": 1392593588070,
-    "lastUpdate": 0,
+    "lastSave": 1392600872109,
+    "lastUpdate": 1392593681747,
     "version": "0.9.4",
     "autoUpdate": true,
+    "useDefault": true,
     "items": {
-        "default": [],
+        "default": [
+            {
+                "name": "Income Statement",
+                "url": "http://finance.yahoo.com/q/is?s=SYMBOL+Income+Statement&annual"
+            },
+            {
+                "name": "Balance Sheet",
+                "url": "http://finance.yahoo.com/q/bs?s=SYMBOL+Balance+Sheet&annual"
+            }
+        ],
         "custom": []
     }
 }

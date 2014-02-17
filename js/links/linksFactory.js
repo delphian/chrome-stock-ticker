@@ -91,6 +91,7 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
             lastUpdate: 0,
             version: appMeta.version,
             autoUpdate: true,
+            useDefault: true,
             items: {
                 default: [],
                 custom: []
@@ -101,6 +102,7 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
             if (typeof(data.lastSave) != 'undefined') cleanData.lastSave = data.lastSave;
             if (typeof(data.lastUpdate) == 'number') cleanData.lastUpdate = data.lastUpdate;
             if (typeof(data.autoUpdate) == 'boolean') cleanData.autoUpdate = data.autoUpdate;
+            if (typeof(data.useDefault) == 'boolean') cleanData.useDefault = data.useDefault;
             if (typeof(data.version) == 'string') cleanData.version = data.version;
             // Clean items. If in invalid item is found then disregard it.
             if (typeof(data.items != 'undefined')) {
@@ -284,9 +286,40 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
         });
     };
     /**
+     * Reset data object to the default json object file, save results to
+     * storage.
+     *
+     * @param function callback
+     *   Callback will be invoked when saving is finished.
+     * @param object resetData
+     *   (optional) If provided then this object will be used to reset against
+     *   instead of reading from the default json object file.
+     *
+     * @return void
+     *   Callback is invoked when operation is finished with arguments:
+     *   - result: (object) An object with properties:
+     *     - success: (bool) true on success, false on failure.
+     *     - message: (string) will be set on failure.
+     */
+    pvt.reset = function(callback, resetData) {
+        parent = this;
+        $.get(chrome.extension.getURL('data/links.json'), {}, function(data) {
+            if (typeof(resetData) != 'undefined')
+                data = resetData;
+            resetData = parent.cleanData(JSON.parse(data)).data;
+            var result = parent.setData(resetData, { apply: true } );
+            if (result.success) {
+                parent.save(function(result) {
+                    callback(result);
+                });
+            }
+            callback(result);
+        });
+    }
+    /**
      * Check for any remote updates to the data object and apply if found.
      *
-     * Retrieves the update data object and overwrites the current.
+     * Retrieves the update data object and updates the current.
      *
      * @return void
      */
@@ -297,7 +330,10 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
             $.get(chrome.extension.getURL('data/links.json'), {}, function(data) {
                 if (typeof(data) != 'undefined') {
                     var currentData = parent.getData();
-                    var updateData = JSON.parse(data);
+                    var updateData = parent.cleanData(JSON.parse(data)).data;
+                    // Preserve custom settings.
+                    updateData.useDefault = currentData.useDefault;
+                    updateData.items.custom = currentData.items.custom;
                     updateData.lastUpdate = time;
                     var result = parent.setData(updateData, { apply: true } );
                     if (result.success) {
@@ -334,12 +370,15 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
     api.addItem = function(item) {
         return pvt.addItem(item, pvt.data.items.custom, true);
     };
-    api.removeItem = function(item) {
+    api.removeItem = function(index) {
         return pvt.removeItem(index, pvt.data.items.custom, true);
     };
     api.save = function(callback) {
         return pvt.save(callback);
     };
+    api.reset = function(callback, resetData) {
+        return pvt.reset(callback, resetData);
+    }
 
     // When factory is first instantiated pull the data object out of
     // chrome storage. This will result in a broadcast update.
