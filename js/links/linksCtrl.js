@@ -1,9 +1,23 @@
 
 cstApp.controller('linksButton', ['$scope', 'links', function($scope, links) {
     // $scope.variable = '';
-    $scope.links = links.getData();
+
+    var replaceVariables = function(itemList) {
+        for (var i in itemList) {
+            itemList[i].url = itemList[i].url.replace('SYMBOL', $scope.variable);
+        }
+    }
+
+    var data = links.getData();
+    replaceVariables(data.items.custom);
+    replaceVariables(data.items.default);
+    $scope.links = data;
+
     $scope.$on('linksUpdate', function(event, data) {
-        $scope.links = links.getData();
+        var linksData = links.getData();
+        replaceVariables(linksData.items.custom);
+        replaceVariables(linksData.items.default);
+        $scope.links = linksData;
         if (data.apply) $scope.$apply();
     });
 }]);

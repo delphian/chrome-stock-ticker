@@ -352,7 +352,7 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
         }
     };
     // Load an empty (but valid) data object by default.
-    pvt.data = pvt.cleanData();
+    pvt.data = pvt.cleanData().data;
 
     /**
      * Public api.

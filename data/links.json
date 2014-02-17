@@ -14,11 +14,11 @@
             {
                 "name": "Balance Sheet",
                 "url": "http://finance.yahoo.com/q/bs?s=SYMBOL+Balance+Sheet&annual"
-            }
+            },
             {
                 "name": "Cash Flow",
                 "url": "http://finance.yahoo.com/q/cf?s=SYMBOL+Cash+Flow&annual"
-            }
+            },
             {
                 "name": "Free Cash Flow Chart",
                 "url": "http://ycharts.com/companies/SYMBOL/free_cash_flow"
