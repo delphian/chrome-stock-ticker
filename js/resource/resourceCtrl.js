@@ -29,6 +29,8 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
         });
         if (!result.success) {
             $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to add metric: '+result.message+'</div>');
+        } else {
+            $scope.addMetric = { name: '', url: '', selector: '', regex: '' };
         }
     };
 
