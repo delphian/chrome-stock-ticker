@@ -1,0 +1,73 @@
+
+<div class="cst-links-config">
+  <h2>Links</h2>
+  <p>Web links appear on the dropdown menu of each symbol button.</p>
+  <p>
+    <input type="checkbox" ng-model="links.autoUpdate" /> Auto update. (Last update: {{ links.lastUpdate | date:'MMM d, y h:mm:ss a' }})<br />
+    Automatically update default factory links.
+  </p>
+
+  <div class="panel-group" id="accordionLinks">
+    <!-- Links Tab -->
+    <div class="panel panel-default cst-links">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionLinks" href="#collapseLinksOne">
+            Links
+          </a>
+        </h4>
+      </div>
+      <div id="collapseLinksOne" class="panel-collapse collapse">
+        <div class="panel-body">
+          <table>
+            <tr>
+              <th class="cst-link-name">Name</th>
+              <th class="cst-link-url">URL</th>
+            </tr>
+            <form name="cstLinksForm" novalidate>
+              <tr ng-repeat="(index, link) in links.items.custom">
+                <td><input class="form-control" ng-model="link.name" /></td>
+                <td><input class="form-control" ng-model="link.url" /></td>
+                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="remove(index)"> </button></td>
+              </tr>
+            </form>
+            <form name="cstAddLink">
+              <tr class="cst-add-link">
+                <td><input class="form-control" ng-model="addLink.name" ng-pattern="/^[a-zA-Z_ ]+$/" placeholder="Name" /></td>
+                <td><input class="form-control" ng-model="addLink.url" ng-pattern="/^http://.+$/" placeholder="URL" /></td>
+                <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="add()" ng-show="cstAddLink.$valid"> </button></td>
+              </tr>
+            </form>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Import Export Tab -->
+    <div class="panel panel-default cst-import-export">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionLinks" href="#collapseLinksTwo">
+            Import / Export
+          </a>
+        </h4>
+      </div>
+      <div id="collapseLinksTwo" class="panel-collapse collapse">
+        <div class="panel-body">
+          <p>Still in beta.</p>
+          <p>
+            <input type="checkbox" class="cst-checkbox" ng-model="export.pretty" /> Make JSON pretty.
+          </p>
+          <textarea class="form control"></textarea>
+          <div class="cst-controls">
+            <button class="btn btn-success" ng-click="export()">Export</button>
+            <button class="btn btn-warning" ng-click="import()">Import</button>
+            <button class="btn btn-danger" ng-click="reset()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div id="saveConfirmLinks"></div>
+    <button class="btn btn-warning" ng-click="save()">Update Links</button>
+  </div>
+</div>

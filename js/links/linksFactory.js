@@ -1,11 +1,17 @@
 
-cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMeta) {
+/**
+ * @file
+ * All factories for use with links. Links appear in variable drop down menus
+ * and are dynamically constructed in the context of the found variable.
+ */
+
+cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) {
     /**
      * Private data and methods.
      */
     var pvt = {};
     /**
-     * Ensure a pattern item object contains only valid properties and values.
+     * Ensure a link item object contains only valid properties and values.
      *
      * If any properties contain invalid data it will be removed. If the removal
      * results in an invalid item then the overall result will be considered
@@ -13,10 +19,11 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      * code.
      *
      * @param object item
-     *   Describes one specific way (from many) on how to search for a variable.
-     *     - regex: (string) Regular expression to search with.
-     *     - modifiers: (string) Modifiers option to Regexp()
-     *     - result: (int) Result of the regex pattern match to claim as variable.
+     *   Describes a web url to use in the context of a variable drop down.
+     *     - name: (string) Name of the link text.
+     *     - url: (string) URL to link to. URL must contain the string VARIABLE
+     *       that will later be dynamically replaced with the value of a variable
+     *       as determined by the patterns class.
      *
      * @return object
      *   An object with properties:
@@ -26,89 +33,97 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      *       @param object item for details.
      */
     pvt.cleanItem = function(item) {
-        var regex = '';
-        var modifiers = '';
-        var result = 1;
+        var name = '';
+        var url = '';
         if (typeof(item) != 'undefined') {
-            if (typeof(item.regex) == 'string') regex = item.regex;
-            if (typeof(item.modifiers) == 'string') modifiers = item.modifiers;
-            if (typeof(item.result) == 'number') result = item.result;
+            if (typeof(item.name) == 'string') name = item.name;
+            if (typeof(item.url) == 'string') url = item.url;
         }
-        if (!modifiers.length) modifiers = 'g';
-        if (result < 1) result = 1;
         var cleanItem = {
-            regex: regex,
-            modifiers: modifiers,
-            result: result
+            name: name,
+            url: url,
         };
-        // if (!cleanItem.regex.length)
-        //     return { success: false, message: 'Invalid item regex: ' + item.regex, item: cleanItem };
+        if (!cleanItem.name.length)
+            return { success: false, message: 'Invalid item name: ' + item.name, item: cleanItem };
+        if (!cleanItem.url.length)
+            return { success: false, message: 'Invalid item url: ' + item.url, item: cleanItem };
         return { success: true, message: null, item: cleanItem };
     };
     /**
-     * Clean up a patterns object, or construct a new one.
+     * Clean up a links object, or construct a new one.
      *
-     * @param object patterns
-     *   (optional) An existing patterns object to clean, such as one loaded
+     * @param object links
+     *   (optional) An existing links object to clean, such as one loaded
      *   from chrome storage, or imported via the gui. Properties:
-     *     - loaded: (bool) true if the patterns came from storage or other
-     *       code, false if this patterns is new.
-     *     - lastSave: (int) last time this patterns was saved.
+     *     - loaded: (bool) true if the data object came from storage or other
+     *       code, false if this data object is new.
+     *     - lastSave: (int) last time this object was saved.
      *     - lastUpdate: (int) last time updates were checked for.
      *     - version: (string) application version at the time of last save.
-     *     - autoUpdate: (bool) true if patterns should automatically add
+     *     - autoUpdate: (bool) true if object should automatically add
      *       new data found in default data object or/and poll a remote source
      *       for updates.
-     *     - items: (array) Collection of item pattern objects. Each object
-     *       defines how to locate a variable. See cleanItem() for object
-     *       details.
+     *     - items: (object) Container for individual collections of links:
+     *       - default: (array) Collection of individual link objects. Each object
+     *         defines a link to construct in the context of a variable. See 
+     *         cleanItem() for object details. These links are only created and
+     *         managed by the application.
+     *       - custom: (array) Same as default, but created and managed by the
+     *         end user.
      *
      * @return object
      *   An object (report) with properties:
-     *     - success: (bool) true on if patterns was clean, false if patterns
+     *     - success: (bool) true on if object was valid, false if object
      *       required cleaning.
      *     - message: (string) will be set to the last issue resolved if
-     *       patterns requried cleaning.
-     *     - patterns: (object) A patterns object safe for storage and use,
-     *       even if properties are empty. See @param patterns for object
+     *       object requried cleaning.
+     *     - data: (object) A links object safe for storage and use,
+     *       even if properties are empty. See @param links for object
      *       details.
      */
-    pvt.cleanPatterns = function(patterns) {
+    pvt.cleanData = function(data) {
         // Default report to return.
-        var report = { success: true, message: null, patterns: null };
-        // Default empty patterns object.
-        var cleanPatterns = {
+        var report = { success: true, message: null, data: null };
+        // Default empty object.
+        var cleanData = {
             loaded: false,
             lastSave: new Date().getTime(),
             lastUpdate: 0,
             version: appMeta.version,
             autoUpdate: true,
-            items: []
+            items: {
+                default: [],
+                custom: []
+            }
         };
-        if (typeof(patterns) != 'undefined') {
-            cleanPatterns.loaded = true;
-            if (typeof(patterns.lastSave) != 'undefined') cleanPatterns.lastSave = patterns.lastSave;
-            if (typeof(patterns.lastUpdate) == 'number') cleanPatterns.lastUpdate = patterns.lastUpdate;
-            if (typeof(patterns.autoUpdate) == 'boolean') cleanPatterns.autoUpdate = patterns.autoUpdate;
-            if (typeof(patterns.version) == 'string') cleanPatterns.version = patterns.version;
-            // Clean items. If in invalid items is found then disregard it.
-            if (Object.prototype.toString.call(patterns.items) === '[object Array]') {
-                for (var i in patterns.items) {
-                    var result = this.cleanItem(patterns.items[i]);
-                    if (result.success) {
-                        cleanPatterns.items.push(result.item);
-                    } else {
-                        report.success = false;
-                        report.message = result.message;
+        if (typeof(data) != 'undefined') {
+            cleanData.loaded = true;
+            if (typeof(data.lastSave) != 'undefined') cleanData.lastSave = data.lastSave;
+            if (typeof(data.lastUpdate) == 'number') cleanData.lastUpdate = data.lastUpdate;
+            if (typeof(data.autoUpdate) == 'boolean') cleanData.autoUpdate = data.autoUpdate;
+            if (typeof(data.version) == 'string') cleanData.version = data.version;
+            // Clean items. If in invalid item is found then disregard it.
+            if (typeof(data.items != 'undefined')) {
+                for (var i in data.items) {
+                    if (Object.prototype.toString.call(data.items[i]) === '[object Array]') {
+                        for (var j in data.items[i]) {
+                            var result = this.cleanItem(data.items[i][j]);
+                            if (result.success) {
+                                cleanData.items[i].push(result.item);
+                            } else {
+                                report.success = false;
+                                report.message = result.message;
+                            }
+                        }
                     }
                 }
             }
         }
-        report.patterns = cleanPatterns;
+        report.data = cleanData;
         return report;
     };
     /**
-     * Add a new pattern item to the patterns object.
+     * Add a link item to a list of links.
      *
      * @param object item
      *   See cleanItem() for object details.
@@ -132,7 +147,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         return result;
     };
     /**
-     * Remove a pattern item from the patterns object.
+     * Remove a link item from a list of items.
      *
      * @param int index
      *   The array index of the item to remove.
@@ -150,8 +165,8 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         if (broadcast) this.broadcastUpdate();
     };
     /**
-     * Report any conflicting properties of a potential new pattern item to an
-     * existing array of pattern items.
+     * Report any conflicting properties of a potential new item to an
+     * existing array of items.
      *
      * @param object item
      *   See cleanItem() for object details.
@@ -189,19 +204,19 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         return exists;
     };
     /**
-     * Get a copy of the patterns object.
+     * Get a copy of the data object.
      *
      * @return object
-     *   See cleanPatterns() for object details.
+     *   See cleanData() for object details.
      */
     pvt.getData = function() {
         return JSON.parse(JSON.stringify(this.data));
     };
     /**
-     * Broadcast that the patterns object was updated.
+     * Broadcast that the data object was updated.
      *
      * Controllers may listen for this with:
-     * $scope.$on('patternsUpdate', function(event, data) {});
+     * $scope.$on('linksUpdate', function(event, data) {});
      *
      * @param object data
      *   An object to broadcast to the rootScope.
@@ -216,15 +231,15 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         if (typeof(data) == 'undefined') {
             data = { apply: false };
         }
-        $rootScope.$broadcast('patternsUpdate', data);
+        $rootScope.$broadcast('linksUpdate', data);
     };
     /**
-     * Set patterns object to a new value.
+     * Set data object to a new value.
      *
      * This will trigger a broadcast update.
      *
-     * @param object patterns
-     *   see cleanPatterns() for object details.
+     * @param object data
+     *   see cleanData() for object details.
      * @param object broadcastData
      *   see broadcastUpdate() for object details.
      *
@@ -232,19 +247,19 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      *   An object (result) with properties:
      *     - success: (bool) true on success, false on failure.
      *     - message: (string) if success is false then this will be set to
-     *       the last issue found when validating patterns object.
+     *       the last issue found when validating data object.
      */
-    pvt.setPatterns = function(patterns, broadcastData) {
-        // Make sure the patterns object is constructed properly.
-        var result = this.cleanPatterns(patterns);
+    pvt.setData = function(data, broadcastData) {
+        // Make sure the data object is constructed properly.
+        var result = this.cleanData(data);
         if (result.success) {
-            this.data = result.patterns;
+            this.data = result.data;
             this.broadcastUpdate(broadcastData);
         }
         return result;
     };
     /**
-     * Save patterns object to chrome storage.
+     * Save data object to chrome storage.
      *
      * @param function callback
      *   Callback will be invoked when saving is finished.
@@ -256,9 +271,9 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
      */
     pvt.save = function(callback) {
         // Remove angular hashes but store result as an object.
-        var patterns = JSON.parse(angular.toJson(this.data));
-        patterns.lastSave = new Date().getTime();
-        chrome.storage.sync.set( { 'patterns': patterns } , function() {
+        var data = JSON.parse(angular.toJson(this.data));
+        data.lastSave = new Date().getTime();
+        chrome.storage.sync.set( { 'links': data } , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
                     callback({ success: 0, message: chrome.runtime.lastError.message });
@@ -269,9 +284,9 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         });
     };
     /**
-     * Check for any remote updates to the patterns object and apply if found.
+     * Check for any remote updates to the data object and apply if found.
      *
-     * Retrieves the update patterns object and overwrites the current.
+     * Retrieves the update data object and overwrites the current.
      *
      * @return void
      */
@@ -279,85 +294,85 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         var time = new Date().getTime();
         if (time > (this.data.lastUpdate + (24 * 60 * 60 * 1000))) {
             var parent = this;
-            $.get(chrome.extension.getURL('data/patterns.json'), {}, function(data) {
+            $.get(chrome.extension.getURL('data/links.json'), {}, function(data) {
                 if (typeof(data) != 'undefined') {
-                    var currentPatterns = parent.getData();
-                    var updatePatterns = JSON.parse(data);
-                    updatePatterns.lastUpdate = time;
-                    var result = parent.setPatterns(updatePatterns, { apply: true } );
+                    var currentData = parent.getData();
+                    var updateData = JSON.parse(data);
+                    updateData.lastUpdate = time;
+                    var result = parent.setData(updateData, { apply: true } );
                     if (result.success) {
                         parent.save(function(result) {
                             if (result.success) {
-                                console.log('Patterns has been updated.');
+                                console.log('Links has been updated.');
                             } else {
-                                console.log('Patterns requires update but has failed to to save!');
+                                console.log('Links requires update but has failed to to save!');
                             }
                         });
                     } else {
-                        console.log('Patterns requires update but could not merge objects.');
+                        console.log('Links requires update but could not merge objects.');
                     }
                 }
             });
         }
     };
-    // Load an empty (but balid) patterns object by default.
-    pvt.data = pvt.cleanPatterns();
+    // Load an empty (but valid) data object by default.
+    pvt.data = pvt.cleanData();
 
     /**
      * Public api.
      */
     var api = {};
-    api.setPatterns = function(patterns, broadcastData) {
-        return pvt.setPatterns(patterns, broadcastData);
+    api.setData = function(data, broadcastData) {
+        return pvt.setData(data, broadcastData);
     };
-    api.cleanPatterns = function() {
-        return pvt.cleanPatterns();
+    api.cleanData = function() {
+        return pvt.cleanData();
     };
     api.getData = function() {
         return pvt.getData();
     };
     api.addItem = function(item) {
-        return pvt.addItem(item, pvt.data.items, true);
+        return pvt.addItem(item, pvt.data.items.custom, true);
     };
     api.removeItem = function(item) {
-        return pvt.removeItem(index, pvt.data.items, true);
+        return pvt.removeItem(index, pvt.data.items.custom, true);
     };
     api.save = function(callback) {
         return pvt.save(callback);
     };
 
-    // When factory is first instantiated pull the patterns object out of
+    // When factory is first instantiated pull the data object out of
     // chrome storage. This will result in a broadcast update.
-    chrome.storage.sync.get(['patterns'], function(result) {
+    chrome.storage.sync.get(['links'], function(result) {
         if (chrome.runtime.lastError) {
-            console.log('Could not load patterns object from chrome storage: ' + chrome.runetime.lastError.message);
+            console.log('Could not load links object from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            // Clean the patterns, ignore any warnings (offenders removed).
-            var patterns = pvt.cleanPatterns(result['patterns']).patterns;
-            var result = api.setPatterns(patterns, { apply: true } );
+            // Clean the data, ignore any warnings (offenders removed).
+            var data = pvt.cleanData(result['links']).data;
+            var result = api.setData(data, { apply: true } );
             if (!result.success) {
-                console.log('Could not apply patterns from chrome storage: ' + result.message);
-                console.log(patterns);
+                console.log('Could not apply links from chrome storage: ' + result.message);
+                console.log(data);
             } else {
-                if (patterns.autoUpdate) pvt.update();
+                if (data.autoUpdate) pvt.update();
             }
         }
     });
 
-    // Listen for any updates to the patterns object in chrome storage. This
+    // Listen for any updates to the data object in chrome storage. This
     // should only happen if multiple browsers are open, or if extension code
     // on the other side of the javascript firewall (popup versus options
     // versus content) has written a change to storage. This will result in a
     // broadcast update.
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
-            if (key == 'patterns') {
+            if (key == 'links') {
                 // Clean the object, ignore any warnings (offenders removed).
-                var patterns = pvt.cleanPatterns(object.patterns.newValue).patterns;
-                var result = api.setPatterns(patterns, { apply: true } );
+                var data = pvt.cleanData(object.links.newValue).data;
+                var result = api.setData(data, { apply: true } );
                 if (!result.success) {
-                    console.log('Could not apply patterns from chrome storage: ' + result.message);
-                    console.log(patterns);
+                    console.log('Could not apply links from chrome storage: ' + result.message);
+                    console.log(data);
                 }
             }
         }

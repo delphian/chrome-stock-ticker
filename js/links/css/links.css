@@ -1,0 +1,18 @@
+
+/* Links Config */
+
+/* Links Accordian */
+.cst-links-config .cst-links .cst-add-link { margin-top: 20px; }
+.cst-links-config .cst-links table { width: 100%; }
+.cst-links-config .cst-links th.cst-link-name { width: 40%; }
+.cst-links-config .cst-links th.cst-link-url { width: 60%; }
+
+/* Import Export Accordian */
+.cst-links-config .cst-import-export {}
+.cst-links-config .cst-import-export textarea { width: 100%; height: 10em; }
+.cst-links-config .cst-import-export .cst-controls { margin-top: 10px; }
+
+.cst-links-config input.ng-invalid {
+   text-decoration: line-through;
+   color: #ff0000;
+}
