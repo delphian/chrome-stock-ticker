@@ -10,7 +10,7 @@ cstApp.controller('bar', function($scope) {
         $scope.variables.push($scope.variables.shift());
     };
     $scope.add = function(variable) {
-    	$scope.variables.push(variable.toUpperCase());
+        $scope.variables.push(variable.toUpperCase());
         $scope.addVariable = '';
     };
 });

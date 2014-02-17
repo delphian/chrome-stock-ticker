@@ -50,10 +50,10 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
         return { success: true, message: null, item: cleanItem };
     };
     /**
-     * Clean up a links object, or construct a new one.
+     * Clean up the data object, or construct a new one.
      *
-     * @param object links
-     *   (optional) An existing links object to clean, such as one loaded
+     * @param object data
+     *   (optional) An existing data object to clean, such as one loaded
      *   from chrome storage, or imported via the gui. Properties:
      *     - loaded: (bool) true if the data object came from storage or other
      *       code, false if this data object is new.
@@ -78,7 +78,7 @@ cstApp.factory('links', ['$rootScope', 'appMeta', function($rootScope, appMeta) 
      *     - message: (string) will be set to the last issue resolved if
      *       object requried cleaning.
      *     - data: (object) A links object safe for storage and use,
-     *       even if properties are empty. See @param links for object
+     *       even if properties are empty. See @param data for object
      *       details.
      */
     pvt.cleanData = function(data) {

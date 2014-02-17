@@ -2,7 +2,7 @@
 /**
  * Model to manage variable metrics.
  */
-cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resource) {
+cstApp.factory('variable', ['$rootScope', 'resource', 'appMeta', function($rootScope, resource, appMeta) {
     /**
      * Private data and methods.
      */
@@ -102,7 +102,7 @@ cstApp.factory('variable', ['$rootScope', 'resource', function($rootScope, resou
 /**
  * Model to manage configuration for displaying variables.
  */
-cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope, resource) {
+cstApp.factory('variableConfig', ['$rootScope', 'resource', 'appMeta', function($rootScope, resource, appMeta) {
     /**
      * Private data and methods. These are not directly accesible to
      * controllers or other factory services.
@@ -138,11 +138,11 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
             source: item.source
         };
         if (resource.getMetricNames().indexOf(cleanItem.name) == -1)
-            return { success: false, message: 'Invalid resource metric name: ' + cleanItem.name }
+            return { success: false, message: 'Invalid resource metric name: ' + cleanItem.name };
         if (!item.source.length)
-            return { success: false, message: 'Invalid abbreviation text: ' + cleanItem.name }
-        return { success: true, item: cleanItem }
-    }
+            return { success: false, message: 'Invalid abbreviation text: ' + cleanItem.name };
+        return { success: true, item: cleanItem };
+    };
     /**
      * Add a metric to be displayed when a variable is rendered.
      *
@@ -158,72 +158,106 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
         var result = this.cleanItem(item);
         if (result.success) {
             this.data.items.push(result.item);
-            return { success: true, message: null }
+            return { success: true, message: null };
         }
         return result;
-    }
+    };
     /**
-     * Clean up a variable display config object, or construct a new one.
+     * Clean up the data object, or construct a new one.
      *
-     * @param object config
-     *   (optional) An existing variable display config object to clean,
-     *   such as one loaded from chrome storage, or imported via the gui.
+     * @param object data
+     *   (optional) An existing data object to clean, such as one loaded
+     *   from chrome storage, or imported via the gui. Properties:
+     *     - loaded: (bool) true if the data object came from storage or other
+     *       code, false if this data object is new.
+     *     - lastSave: (int) last time this object was saved.
+     *     - lastUpdate: (int) last time updates were checked for.
+     *     - version: (string) application version at the time of last save.
+     *     - autoUpdate: (bool) true if object should automatically add
+     *       new data found in default data object or/and poll a remote source
+     *       for updates.
+     *     - alwaysDisplay: (bool) true if variable bar should always been
+     *       displayed even if no variables detected on page.
+     *     - items: (array) Collection of metric objects to show when
+     *       displaying a variable. See cleanItem() for object details.
      *
      * @return object
-     *   Will always return a valid config object, even if its properties
-     *   are empty.
+     *   An object (report) with properties:
+     *     - success: (bool) true on if object was valid, false if object
+     *       required cleaning.
+     *     - message: (string) will be set to the last issue resolved if
+     *       object requried cleaning.
+     *     - data: (object) A links object safe for storage and use,
+     *       even if properties are empty. See @param data for object
+     *       details.
      */
-    pvt.cleanConfig = function(config) {
-        var cleanConfig = {
+    pvt.cleanData = function(data) {
+        // Default report to return.
+        var report = { success: true, message: null, data: null };
+        // Default empty object.
+        var cleanData = {
+            loaded: false,
+            lastSave: new Date().getTime(),
+            lastUpdate: 0,
+            // version: appMeta.version,
+            autoUpdate: true,
+            alwaysDisplay: true,
             items: []
         };
-        if (typeof(config) != 'undefined') {
-            if (typeof(config.items) != 'undefined') {
-                for (i in config.items) {
-                    var result = this.cleanItem(config.items[i]);
-                    if (result.success) cleanConfig.items.push(result.item);
+        if (typeof(data) != 'undefined') {
+            cleanData.loaded = true;
+            if (typeof(data.lastSave) != 'undefined') cleanData.lastSave = data.lastSave;
+            if (typeof(data.lastUpdate) == 'number') cleanData.lastUpdate = data.lastUpdate;
+            if (typeof(data.autoUpdate) == 'boolean') cleanData.autoUpdate = data.autoUpdate;
+            if (typeof(data.alwaysDisplay) == 'boolean') cleanData.alwaysDisplay = data.alwaysDisplay;
+            if (typeof(data.version) == 'string') cleanData.version = data.version;
+            if (typeof(data.items) != 'undefined') {
+                for (var i in data.items) {
+                    var result = this.cleanItem(data.items[i]);
+                    if (result.success) {
+                        cleanData.items.push(result.item);
+                    } else {
+                        report.success = false;
+                        report.message = result.message;
+                    }
                 }
             }
         }
-        return cleanConfig;
-    }
+        report.data = cleanData;
+        return report;
+    };
+    /**
+     * Set data object to a new value.
+     *
+     * This will trigger a broadcast update.
+     *
+     * @param object data
+     *   see cleanData() for object details.
+     * @param object broadcastData
+     *   see broadcastUpdate() for object details.
+     *
+     * @return object
+     *   An object (result) with properties:
+     *     - success: (bool) true on success, false on failure.
+     *     - message: (string) if success is false then this will be set to
+     *       the last issue found when validating data object.
+     */
+    pvt.setData = function(data, broadcastData) {
+        // Make sure the data object is constructed properly.
+        var result = this.cleanData(data);
+        if (result.success) {
+            this.data = result.data;
+            api.broadcastUpdate(broadcastData);
+        }
+        return result;
+    };
 
     /**
      * Public api.
      */
     var api = {};
-    /**
-     * Set variable configuration object to a new value.
-     *
-     * This will trigger a variable configuration broadcast udpate.
-     *
-     * @param object config
-     *   The new configuration to set pvt.data to. A copy of this object
-     *   will be made, the parameter will not be directly assigned:
-     *     - items: (array) An array of item objects:
-     *       see pvt.cleanItem() for object details.
-     * @param object broadcastData
-     *   see broadcastUpdate() for object details.
-     *
-     * @return object
-     *   An object with properties:
-     *     - success: (bool) true on success, false otherwise.
-     *     - message: (string) will be set on failure.
-     */
-    api.setConfig = function(config, broadcastData) {
-        var rollback = pvt.data;
-        pvt.data = { items: [] };
-        if (typeof(config.items) != 'undefined') {
-            for (i in config.items) {
-                var result = pvt.addItem(config.items[i]);
-                if (!result.success) {
-                    pvt.data = rollback;
-                    return result;
-                }
-            }
-        }
-        this.broadcastUpdate(broadcastData);
-        return { success: true, message: null }
+    api.setData = function(data, broadcastData) {
+        return pvt.setData(data, broadcastData);
     };
     /**
      * Get a copy of the variable display configuration object.
@@ -315,8 +349,8 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
         if (chrome.runtime.lastError) {
             console.log('Could not load variable config from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
-            var config = pvt.cleanConfig(result['tickerbar']);
-            var result = api.setConfig(config, { apply: true } );
+            var config = pvt.cleanData(result['tickerbar']).data;
+            var result = api.setData(config, { apply: true } );
             if (!result.success) {
                 console.log('Could not apply variable config from chrome storage: ' + result.message);
                 console.log(config);
@@ -332,8 +366,8 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', function($rootScope,
     chrome.storage.onChanged.addListener(function(object, namespace) {
         for (key in object) {
             if (key == 'tickerbar') {
-                var config = pvt.cleanConfig(object.tickerbar.newValue);
-                var result = api.setConfig(config, { apply: true } );
+                var config = pvt.cleanData(object.tickerbar.newValue).data;
+                var result = api.setData(config, { apply: true } );
                 if (!result.success) {
                     console.log('Could not apply variable config from chrome storage: ' + result.message);
                     console.log(config);
