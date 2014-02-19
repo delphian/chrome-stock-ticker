@@ -28,20 +28,20 @@
               <th class="cst-pattern-modifier">Modifiers</th>
               <th class="cst-pattern-result">Result</th>
             </tr>
-            <form name="patternForm" novalidate>
+            <form name="patternForm">
               <tr ng-repeat="(index, pattern) in patterns.items">
                 <td><input class="form-control" ng-model="pattern.regex" /></td>
                 <td><input class="form-control" ng-model="pattern.modifiers" /></td>
                 <td><input class="form-control" ng-model="pattern.result" /></td>
-                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="patternRemove(index)"> </button></td>
+                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="remove(index)"> </button></td>
               </tr>
             </form>
-            <form name="cstAddPattern" novalidate>
+            <form name="cstAddPattern">
               <tr class="cst-add-pattern">
-                <td><input class="form-control" ng-model="addPattern.regex" ng-pattern="/^[a-zA-Z_ ]+$/" placeholder="Regex Pattern" /></td>
-                <td><input class="form-control" ng-model="addPattern.modifiers" ng-pattern="/^http://.+$/" placeholder="Modifiers" /></td>
+                <td><input class="form-control" ng-model="addPattern.regex" placeholder="Regex Pattern" /></td>
+                <td><input class="form-control" ng-model="addPattern.modifiers" placeholder="Modifiers" /></td>
                 <td><input class="form-control" ng-model="addPattern.result" placeholder="Capture Result Index" /></td>
-                <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="patternAdd()" ng-show="cstAddPattern.$valid"> </button></td>
+                <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="add()" ng-show="cstAddPattern.$valid"> </button></td>
               </tr>
             </form>
           </table>
