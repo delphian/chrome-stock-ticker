@@ -15,15 +15,27 @@
 .cst-variable table {
   width: auto;
   margin: 0px;
-}
-.cst-variable table td, .cst-variable table th {
   padding: 0px;
   padding-left: 4px;
-  margin: 0px;
-  font-size: 11px;
-  line-height: 11px;
   font-family: 'arial narrow';
   border: none;
+}
+.cst-variable table td, .cst-variable table th {
+  text-align: left;
+}
+/** 
+ * Display Headers.
+ */
+.cst-variable-header-true table td, .cst-variable-header-true table th {
+  font-size: 11px;
+  line-height: 11px;
+}
+/**
+ * Don't Display Headers.
+ */
+.cst-variable-header-false table td, .cst-variable-header-only table th {
+  font-size: 20px;
+  line-height: 22px;
 }
 
 /* Variable Configuration. */

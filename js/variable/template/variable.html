@@ -1,15 +1,17 @@
 
-<div class="cst-variable">
-  <div class="fix-angular-or-bootstrap" style="float:left;">
-    <cst-links-button variable="variable"></cst-links-button>
-  </div>
+<div class="cst-variable cst-variable-header-{{headers}}">
   <table>
     <tbody>
-      <tr ng-if="heading">
-        <th class="cst-metric-abbr" ng-repeat="item in bar.items">{{item.source}}<th>
-      </tr>
       <tr>
-        <td class="cst-metric-value" ng-repeat="item in bar.items">{{metrics[item.name].value}}</td>
+        <td><cst-links-button ng-if="values" variable="variable"></cst-links-button></td>
+        <td ng-repeat="item in bar.items">
+          <div ng-if="headers" class="cst-variable-header">
+            {{item.source}}
+          </div>
+          <div ng-if="values" class="cst-variable-value">
+            {{metrics[item.name].value}}
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

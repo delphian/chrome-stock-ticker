@@ -1,19 +1,28 @@
 
-<div class="cst-bar">
+<div class="cst-bar cst-bar-{{orient}}">
+  <div class="cst-bar-items">
+    <div class="cst-bar-item cst-bar-header" ng-if="orient=='vertical'">
+      <table>
+        <td><cst-variable headers="'only'" values="'false'"></cst-variable></td>
+        <td ng-if="orient=='vertical'" class="cst-bar-item-remove"></td>
+      </table>
+    </div>
+    <div class="cst-bar-item" ng-repeat="(index, variable) in variables">
+      <table>
+        <td><cst-variable variable="variable" headers="headers" values="'true'"></cst-variable></td>
+        <td class="cst-bar-item-remove"><button ng-if="orient=='vertical'" class="btn btn-danger btn-xs glyphicon glyphicon-remove-sign" ng-click="remove(index)"></button></td>
+      </table>
+    </div>
+  </div>
+  <div class="cst-bar-add">
+    <input type="text" class="form-control" placeholder="Symbol" ng-model="addVariable" ui-keypress="{enter: 'add(addVariable)'}"></input>
+  </div>
   <div class="cst-bar-nav cst-bar-prev">
     <div>
       <button class="btn btn-default btn-xs" ng-click="prev()">
         <span>&lt;</span>
       </button>
     </div>
-  </div>
-  <div class="cst-bar-items">
-    <div class="cst-bar-item" ng-repeat="variable in variables">
-      <cst-variable variable="variable"></cst-variable>
-    </div>
-  </div>
-  <div class="cst-bar-add">
-    <input type="text" class="form-control" placeholder="Symbol" ng-model="addVariable" ui-keypress="{enter: 'add(addVariable)'}"></input>
   </div>
   <div class="cst-bar-nav cst-bar-next">
     <div>

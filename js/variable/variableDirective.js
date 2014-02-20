@@ -9,6 +9,8 @@ cstApp.directive('cstVariable', function() {
         replace: true,
         scope: {
             variable: '=',
+            headers: '=',
+            values: '='
         },
         templateUrl: chrome.extension.getURL('/js/variable/template/variable.html')
     };

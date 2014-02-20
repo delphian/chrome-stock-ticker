@@ -14,17 +14,7 @@
     position: relative;
     text-align: left;
 }
-.cst-bar-items {
-    position: absolute;
-    left: 30px;
-    right: 84px;
-    top: 0px;
-    white-space: nowrap;
-}
 .cst-bar-nav {
-    position: absolute;
-    background-color: #F6F6F6;
-    background: linear-gradient(#F8F8F8, #E8E8E8);
     width: 30px;
     height: 30px;
 }
@@ -42,17 +32,8 @@
 }
 .cst-bar-prev div { margin-left: 5px; }
 .cst-bar-next div { margin-left: 14px; }
-.cst-bar-item {
-    margin-top: 4px;
-    margin-left: 10px;
-    display: inline-block;
-}
-
-/* Bar add variable form */
-.cst-bar .cst-bar-add { 
-  position: absolute;
+.cst-bar .cst-bar-add {
   width: 54px;
-  right: 40px;
 }
 .cst-bar .cst-bar-add input {
   text-transform: capitalize;
@@ -61,5 +42,39 @@
   margin-top: 3px;
   height: 24px; 
   width: 52px; 
-  float: left; 
+  float: left;
 }
+
+.cst-bar-item .cst-bar-item-remove { width: 14px; }
+.cst-bar-item .cst-bar-item-remove button { width: 100%; padding: 0; }
+
+/**
+ * Horizontal Bar Display.
+ */
+.cst-bar-horizontal .cst-bar-item {
+  margin-top: 4px;
+  margin-left: 10px;
+  display: inline-block;
+}
+.cst-bar-horizontal .cst-bar-items {
+  position: absolute;
+  left: 30px;
+  right: 84px;
+  top: 0px;
+  white-space: nowrap;
+}
+.cst-bar-horizontal .cst-bar-nav {
+  position: absolute;
+  background-color: #F6F6F6;
+  background: linear-gradient(#F8F8F8, #E8E8E8);
+}
+.cst-bar-horizontal .cst-bar-add { 
+  position: absolute;
+  right: 40px;
+}
+/**
+ * Vertical Bar Display.
+ */
+.cst-bar-vertical .cst-bar-item { clear: left; }
+.cst-bar-vertical .cst-variable table { width: 100%; table-layout: fixed; }
+.cst-bar-vertical .cst-bar-nav { float: left; }

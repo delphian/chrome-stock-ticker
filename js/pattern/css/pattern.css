@@ -2,11 +2,11 @@
 /* Patterns */
 
 /* Patterns Accordian */
-.cst-patterns-config .cst-patterns .cst-add-metric { margin-top: 20px; }
+.cst-patterns-config .cst-patterns .cst-add-pattern td { padding-top: 20px; }
 .cst-patterns-config .cst-patterns table { width: 100%; }
-.cst-patterns-config .cst-patterns th.cst-metric-url { width: 30%; }
-.cst-patterns-config .cst-patterns th.cst-metric-selector { width: 30%; }
-.cst-patterns-config .cst-patterns th.cst-metric-regex { width: 10%; }
+.cst-patterns-config .cst-patterns th.cst-pattern-regex { width: 70%; }
+.cst-patterns-config .cst-patterns th.cst-pattern-modifiers { width: 15%; }
+.cst-patterns-config .cst-patterns th.cst-pattern-result { width: 15%; }
 
 /* Import Export Accordian */
 .cst-patterns-config .cst-import-export {}
