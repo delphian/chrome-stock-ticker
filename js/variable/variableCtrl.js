@@ -1,21 +1,21 @@
 
-cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function($scope, variable, varConfig) {
+cstApp.controller('variable', ['$scope', 'variable', 'variableConfig', function($scope, varServ, varConfigServ) {
     /**
      * Provided by directive:
      * $scope.variable: (string) (optional) Name of the variable.
      * $scope.header: (bool) Display metric names above values.
      * $scope.value: (bool) Display the metric values.
      */
-    $scope.bar = varConfig.getData();
+    $scope.bar = varConfigServ.getData();
     $scope.metrics = {};
     if (typeof($scope.variable) != 'undefined') {
-        variable.getMetrics($scope.variable.toUpperCase(), function(metrics) {
+        varServ.getMetrics($scope.variable.toUpperCase(), function(metrics) {
             $scope.metrics = metrics;
             $scope.$apply();
         });
     }
     $scope.$on('variableConfigUpdate', function(event, data) {
-        $scope.bar = varConfig.getData();
+        $scope.bar = varConfigServ.getData();
         if (data.apply) $scope.$apply();
     });
 }]);

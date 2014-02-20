@@ -7,7 +7,8 @@ cstApp.directive('cstBar', function() {
         controller: 'bar',
         replace: true,
         scope: {
-            variable: '@',
+            // https://github.com/angular/angular.js/issues/5296 ???
+            variables: '=',
             orient: '='
         },
         templateUrl: chrome.extension.getURL('/js/bar/template/bar.html')

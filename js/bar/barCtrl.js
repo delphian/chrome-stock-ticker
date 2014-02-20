@@ -6,7 +6,7 @@ cstApp.controller('bar', function($scope) {
      * $scope.orient: (string) orientation of bar, possible values are:
      *   'vertical', 'horizontal'.
      */
-    $scope.variables = $scope.variable.split(',');
+    //$scope.variables = $scope.variables.split(',');
     $scope.addVariable = '';
     // Used in template for cst-variable property value.
     $scope.headers = ($scope.orient == 'horizontal') ? true : false;

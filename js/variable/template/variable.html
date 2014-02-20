@@ -1,14 +1,14 @@
 
-<div class="cst-variable cst-variable-header-{{headers}}">
+<div class="cst-variable cst-variable-header-{{headers}} cst-variable-values-{{values}}">
   <table>
     <tbody>
       <tr>
         <td><cst-links-button ng-if="values" variable="variable"></cst-links-button></td>
         <td ng-repeat="item in bar.items">
-          <div ng-if="headers" class="cst-variable-header">
+          <div ng-if="headers&&(metrics[item.name].value.length||!hide)" class="cst-variable-header">
             {{item.source}}
           </div>
-          <div ng-if="values" class="cst-variable-value">
+          <div ng-if="values&&(metrics[item.name].value.length||!hide)" class="cst-variable-value">
             {{metrics[item.name].value}}
           </div>
         </td>

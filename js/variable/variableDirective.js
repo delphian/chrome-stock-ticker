@@ -1,6 +1,6 @@
 
 /**
- * <cst-variable variable="WMT"></cst-variable>
+ * <cst-variable variable="WMT" headers="'true'" values="'true'" hideEmpty="'true'"></cst-variable>
  */
 cstApp.directive('cstVariable', function() {
     return {
@@ -10,7 +10,13 @@ cstApp.directive('cstVariable', function() {
         scope: {
             variable: '=',
             headers: '=',
-            values: '='
+            values: '=',
+            hide: '='
+        },
+        compile: function(element, attrs) {
+           if (typeof(attrs.headers) == 'undefined') { attrs.headers = true; }
+           if (typeof(attrs.values) == 'undefined') { attrs.values = true; }
+           if (typeof(attrs.hide) == 'undefined') { attrs.hide = false; }
         },
         templateUrl: chrome.extension.getURL('/js/variable/template/variable.html')
     };

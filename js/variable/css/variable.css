@@ -26,14 +26,14 @@
 /** 
  * Display Headers.
  */
-.cst-variable-header-true table td, .cst-variable-header-true table th {
+.cst-variable-header-true table td {
   font-size: 11px;
   line-height: 11px;
 }
 /**
- * Don't Display Headers.
+ * Hide Headers or Values.
  */
-.cst-variable-header-false table td, .cst-variable-header-only table th {
+.cst-variable-header-false table td, .cst-variable-values-false table td {
   font-size: 20px;
   line-height: 22px;
 }

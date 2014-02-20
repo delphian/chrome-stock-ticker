@@ -10,28 +10,16 @@
   background: linear-gradient(#F8F8F8, #E8E8E8);
   z-index: 9999999;
 }
+
 .cst-bar {
     position: relative;
     text-align: left;
 }
-.cst-bar-nav {
-    width: 30px;
-    height: 30px;
-}
-.cst-bar-prev {
-    left: 0px;
-    top: 0px;
-}
-.cst-bar-next {
-    width: 40px;
-    right: 0px;
-    top: 0px;
-}
-.cst-bar-prev div, .cst-bar-next div {
-    margin-top: 4px;
-}
-.cst-bar-prev div { margin-left: 5px; }
-.cst-bar-next div { margin-left: 14px; }
+/* Left/Right navigation buttons. */
+.cst-bar-nav { width: 30px; height: 30px; }
+.cst-bar-prev { left: 0px; top: 0px; }
+.cst-bar-next { width: 40px; right: 0px; top: 0px; }
+
 .cst-bar .cst-bar-add {
   width: 54px;
 }
@@ -51,6 +39,12 @@
 /**
  * Horizontal Bar Display.
  */
+
+/* Left/Right navigation buttons. */
+.cst-bar-horizontal .cst-bar-nav button { margin-top: 4px; }
+.cst-bar-horizontal .cst-bar-prev button { margin-left: 5px; }
+.cst-bar-horizontal .cst-bar-next button { margin-left: 14px; }
+/* Bar item. */
 .cst-bar-horizontal .cst-bar-item {
   margin-top: 4px;
   margin-left: 10px;
@@ -72,9 +66,14 @@
   position: absolute;
   right: 40px;
 }
+
 /**
  * Vertical Bar Display.
  */
+
 .cst-bar-vertical .cst-bar-item { clear: left; }
 .cst-bar-vertical .cst-variable table { width: 100%; table-layout: fixed; }
-.cst-bar-vertical .cst-bar-nav { float: left; }
+.cst-bar-vertical .cst-bar-nav { float: left; width: 100px; margin: 0; padding: 0; }
+.cst-bar-vertical .cst-bar-nav button { width: 100px; padding: 0; margin: 0; height: 24px; margin-top: 3px; }
+.cst-bar-vertical .cst-bar-add { width: 100px; }
+.cst-bar-vertical .cst-bar-add input { width: 100%; }
