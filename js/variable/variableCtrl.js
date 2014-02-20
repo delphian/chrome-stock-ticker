@@ -46,7 +46,7 @@ cstApp.controller('variableConfig', ['$scope', 'resource', 'variableConfig', fun
         varConfig.removeItem(index);
     }
     $scope.save = function() {
-        var result = varConfig.setConfig($scope.tickerbar);
+        var result = varConfig.setData($scope.tickerbar);
         if (result.success) {
             varConfig.save(function(result) {
                 if (result.success) {
