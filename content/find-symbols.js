@@ -13,7 +13,7 @@ var showBar = function(variables) {
 
     if (variables.length) {
         var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
-        markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[\'' + variables.join(',\'') + '\']"></cst-bar>';
+        markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[\'' + variables.join('\',\'') + '\']"></cst-bar>';
         markup = markup + '</div>';
         $('body').append(markup);
         $('html').css('position', 'relative');
