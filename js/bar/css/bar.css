@@ -44,6 +44,7 @@
 .cst-bar-horizontal .cst-bar-nav button { margin-top: 4px; }
 .cst-bar-horizontal .cst-bar-prev button { margin-left: 5px; }
 .cst-bar-horizontal .cst-bar-next button { margin-left: 14px; }
+.cst-bar-horizontal .cst-variable table td div { margin-left: 2px; }
 /* Bar item. */
 .cst-bar-horizontal .cst-bar-item {
   margin-top: 4px;
