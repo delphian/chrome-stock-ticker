@@ -21,6 +21,7 @@
  * Common To All Bar Displays.
  */
 .cst-bar { position: relative; text-align: left; }
+.cst-bar table, .cst-bar td, .cst-bar th, .cst-bar tbody { vertical-align: -webkit-baseline-middle; }
 .cst-bar .cst-bar-add input { text-transform: uppercase; padding: 1px; font-size: 12px; font-family: 'arial narrow'; }
 .cst-bar .cst-bar-item > table td { padding: 0; }
 
