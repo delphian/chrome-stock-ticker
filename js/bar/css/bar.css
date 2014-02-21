@@ -1,4 +1,7 @@
 
+/**
+ * Horizontal Bar As Displayed on Content Page.
+ */
 #cst-tickerbar {
   position: fixed;
   height: 30px;
@@ -11,75 +14,41 @@
   z-index: 9999999;
 }
 
-.cst-bar {
-    position: relative;
-    text-align: left;
-}
-
-.cst-bar .cst-bar-add input {
-  text-transform: capitalize;
-  padding: 1px; 
-  margin: 1px;
-  margin-top: 3px;
-  height: 24px; 
-  width: 52px; 
-  float: left;
-}
-
 .cst-bar-item .cst-bar-item-remove { width: 14px; }
 .cst-bar-item .cst-bar-item-remove button { width: 100%; padding: 0; }
 
 /**
+ * Common To All Bar Displays.
+ */
+.cst-bar { position: relative; text-align: left; }
+.cst-bar .cst-bar-add input { text-transform: uppercase; padding: 1px; font-size: 12px; font-family: 'arial narrow'; }
+.cst-bar .cst-bar-item > table td { padding: 0; }
+
+/**
  * Horizontal Bar Display.
  */
-
 .cst-bar-horizontal { height: 30px; }
-.cst-bar-horizontal div { height: 30px; }
+.cst-bar-horizontal > div { position: absolute; height: 30px; top: 0; background: linear-gradient(#F8F8F8, #E8E8E8); }
 /** Left/Right navigation buttons. **/
-.cst-bar-horizontal .cst-bar-nav { 
-  position: absolute;
-  background-color: #F6F6F6;
-  background: linear-gradient(#F8F8F8, #E8E8E8);
-  width: 30px;
-  height: 30px;
-  top: 0;
-}
+.cst-bar-horizontal .cst-bar-nav {  background-color: #F6F6F6; background: linear-gradient(#F8F8F8, #E8E8E8); width: 30px; }
 .cst-bar-horizontal .cst-bar-prev { left: 0; }
 .cst-bar-horizontal .cst-bar-next { right: 0; }
 .cst-bar-horizontal .cst-bar-nav button { position: absolute; width: 19px; height: 22px; top: 4px; }
 .cst-bar-horizontal .cst-bar-prev button { left: 4px; }
 .cst-bar-horizontal .cst-bar-next button { right: 4px; }
-/** Add symbol. **/
-.cst-bar-horizontal .cst-bar-add {
-  position: absolute;
-  width: 60px;
-  top: 0;
-  right: 30px;
-}
-
+/** Add variable. **/
+.cst-bar-horizontal .cst-bar-add { width: 55px;  right: 30px; }
+.cst-bar-horizontal .cst-bar-add input { margin-top: 4px; margin-left: 5px; height: 22px; width: 50px; }
+/** Bar items (collection of variables). **/
+.cst-bar-horizontal .cst-bar-items { left: 30px; right: 95px; white-space: nowrap; }
+/** Individual bar item (variable). **/
+.cst-bar-horizontal .cst-bar-item { margin-top: 4px; margin-left: 4px; display: inline-block; }
+/** Variable inside the item. **/
 .cst-bar-horizontal .cst-variable table td div { margin-left: 2px; }
-/* Bar item. */
-.cst-bar-horizontal .cst-bar-item {
-  margin-top: 4px;
-  margin-left: 10px;
-  display: inline-block;
-}
-.cst-bar-horizontal .cst-bar-items {
-  position: absolute;
-  left: 30px;
-  right: 95px;
-  top: 0px;
-  white-space: nowrap;
-}
-.cst-bar-horizontal .cst-bar-add { 
-  position: absolute;
-  right: 40px;
-}
 
 /**
  * Vertical Bar Display.
  */
-
 .cst-bar-vertical .cst-bar-item { clear: left; }
 .cst-bar-vertical .cst-variable table { width: 100%; table-layout: fixed; }
 .cst-bar-vertical .cst-bar-nav { float: left; width: 100px; margin: 0; padding: 0; }
