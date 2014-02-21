@@ -15,14 +15,7 @@
     position: relative;
     text-align: left;
 }
-/* Left/Right navigation buttons. */
-.cst-bar-nav { width: 30px; height: 30px; }
-.cst-bar-prev { left: 0px; top: 0px; }
-.cst-bar-next { width: 40px; right: 0px; top: 0px; }
 
-.cst-bar .cst-bar-add {
-  width: 54px;
-}
 .cst-bar .cst-bar-add input {
   text-transform: capitalize;
   padding: 1px; 
@@ -40,10 +33,30 @@
  * Horizontal Bar Display.
  */
 
-/* Left/Right navigation buttons. */
-.cst-bar-horizontal .cst-bar-nav button { margin-top: 4px; }
-.cst-bar-horizontal .cst-bar-prev button { margin-left: 5px; }
-.cst-bar-horizontal .cst-bar-next button { margin-left: 14px; }
+.cst-bar-horizontal { height: 30px; }
+.cst-bar-horizontal div { height: 30px; }
+/** Left/Right navigation buttons. **/
+.cst-bar-horizontal .cst-bar-nav { 
+  position: absolute;
+  background-color: #F6F6F6;
+  background: linear-gradient(#F8F8F8, #E8E8E8);
+  width: 30px;
+  height: 30px;
+  top: 0;
+}
+.cst-bar-horizontal .cst-bar-prev { left: 0; }
+.cst-bar-horizontal .cst-bar-next { right: 0; }
+.cst-bar-horizontal .cst-bar-nav button { position: absolute; width: 19px; height: 22px; top: 4px; }
+.cst-bar-horizontal .cst-bar-prev button { left: 4px; }
+.cst-bar-horizontal .cst-bar-next button { right: 4px; }
+/** Add symbol. **/
+.cst-bar-horizontal .cst-bar-add {
+  position: absolute;
+  width: 60px;
+  top: 0;
+  right: 30px;
+}
+
 .cst-bar-horizontal .cst-variable table td div { margin-left: 2px; }
 /* Bar item. */
 .cst-bar-horizontal .cst-bar-item {
@@ -54,14 +67,9 @@
 .cst-bar-horizontal .cst-bar-items {
   position: absolute;
   left: 30px;
-  right: 84px;
+  right: 95px;
   top: 0px;
   white-space: nowrap;
-}
-.cst-bar-horizontal .cst-bar-nav {
-  position: absolute;
-  background-color: #F6F6F6;
-  background: linear-gradient(#F8F8F8, #E8E8E8);
 }
 .cst-bar-horizontal .cst-bar-add { 
   position: absolute;
