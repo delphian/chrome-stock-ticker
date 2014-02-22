@@ -1,7 +1,7 @@
 {
     "loaded": true,
-    "lastSave": 1392254742679,
-    "lastUpdate": 1392176986093,
+    "lastSave": 1393031999353,
+    "lastUpdate": 1393031999350,
     "version": "0.9.3",
     "autoUpdate": true,
     "urls": [
@@ -81,6 +81,30 @@
             "url": "http://finance.yahoo.com/q?s=SYMBOL",
             "selector": "span.time_rtq_ticker span",
             "regex": ""
+        },
+        {
+            "name": "Price to Book MRQ",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": "td.yfnc_modtitlew1 > table:nth-child(4) tr:nth-child(7) td:nth-child(2)",
+            "regex": "([0-9]*\\.?[0-9]{0,2})"
+        },
+        {
+            "name": "Price to Sales TTM",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": "td.yfnc_modtitlew1 > table:nth-child(4) tr:nth-child(6) td:nth-child(2)",
+            "regex": "([0-9]*\\.?[0-9]{0,2})"
+        },
+        {
+            "name": "Return on Assets TTM",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": "td.yfnc_modtitlew1 > table:nth-child(9) tr:nth-child(1) td:nth-child(2)",
+            "regex": "([0-9]*\\.?[0-9]{0,2})"
+        },
+        {
+            "name": "Return on Equity TTM",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": "td.yfnc_modtitlew1 > table:nth-child(9) tr:nth-child(3) td:nth-child(2)",
+            "regex": "([0-9]*\\.?[0-9]{0,2})"
         },
         {
             "name": "Volume",
