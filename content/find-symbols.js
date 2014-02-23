@@ -132,10 +132,13 @@ var cstLoadAllJS = function() {
         "js/pattern/patternCtrl.js",
         "js/pattern/patternDirective.js"
     ];
+    // Ensure that we load this in the correct order.
+    $.ajaxSetup({async:false});
     for (var i in conditionalJs)
         cstLoadJS(conditionalJs[i].file, conditionalJs[i].regex);
     for (var i in alwaysJs)
         cstLoadJS(alwaysJs[i]);
+    $.ajaxSetup({async:true});
 }
 
 $('document').ready(function() {
