@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/js/bar/css/bar.css" />
   <link rel="stylesheet" type="text/css" href="/js/pattern/css/pattern.css" />
   <link rel="stylesheet" type="text/css" href="/js/links/css/links.css" />
+
 </head>
 
 <body>
@@ -17,13 +18,17 @@
     <li class="active"><a href="#dashboard" data-toggle="tab">Dashboard</a></li>
     <li><a href="#watchlist" data-toggle="tab">List</a></li>
     <li><a href="#config" data-toggle="tab">Config</a></li>
-    <li><a href="#help" data-toggle="tab">Help</a></li>
+    <li><a href="#help" data-toggle="tab">About</a></li>
   </ul>
 
   <div class="tab-content">
     <div class="tab-pane active container" id="dashboard">
+      <div class="news" style="margin-top:30px;">
+        <div class="items"></div>
+      </div>
     </div>
-    <div class="tab-pane container" id="watchlist">
+    <div class="tab-pane container" id="watchlist" style="padding-top:30px;">
+      <p><small>Just testing this out as a possible watch list feature.</small></p>
       <cst-bar variables="variables" orient="'vertical'" ng-init="variables=[]"></cst-bar>
     </div>
     <div class="tab-pane container" id="config">
@@ -50,21 +55,26 @@
       </div>
     </div>
     <div class="tab-pane container" id="help">
-      <br />
-      <p>Stock Ticker for Chrome is designed as an experiment to add value for stock symbols on a contextual basis. The extension
-      is under heavy development, though as it is maintained by a single person updates may be slow. Please don't hesitate to leave
-      feedback and offer suggestions.</p>
-      <p>Comments and suggestions are welcome, please leave your feedback at <a href="https://chrome.google.com/webstore/support/eaghppefmpfgcloppacaehmeiibbboce">The Chrome Webstore</a>.</p>
-      <p>Other users of this extension can be contact at the <a href="https://groups.google.com/forum/embed/?place=forum/chrome-stock-ticker">Google Group</a>.</p>
-      <p>Just for fun you can try to see if anyone is online in the <a href="https://plus.google.com/hangouts/_/event/csvgnla1uonl79e9br3dsksg2rc">Google Hangout</a>.</p>
-      <p>The latest development release can be found on github at <a href="https://github.com/delphian/chrome-stock-ticker">https://github.com/delphian/chrome-stock-ticker</a></p>
+      <p style="margin-top:30px;">
+      Stock Ticker for Chrome will scan the current page that is being viewed for links to ticker symbols. When links are found a small bar will be displayed near the top of the page with each ticker symbol followed by relevant information such as the stock price or other metrics. The metrics shown are user configurable, so only the desired stock information is displayed.
+      </p>
+      <p>
+      Unlike other ticker bars Stock Ticker for Chrome is not real time. Metrics take several hours or longer to refresh. This is done intentionally. The purpose of the bar is to provide contextual information while browsing financial websites; information that will ideally be used to quickly dismiss a potential investment, resulting in more time spent researching stocks that present statistics already meeting a personal bare minimum required for further investigation. This is an investment tool designed to match only certain personalities and investment style. That being a slow, methodical, dispassionate research combined with a set of strict financial criteria.
+      </p>
+      <h3>Product Support</h3>
+      <ul>
+        <li>Install the extension from the <a href="https://chrome.google.com/webstore/detail/stock-ticker-for-chrome/eaghppefmpfgcloppacaehmeiibbboce">Chrome Web Store</a>. A <a href="https://chrome.google.com/webstore/detail/stock-ticker-for-chrome/eaghppefmpfgcloppacaehmeiibbboce/reviews">good review or g+1</a> always keeps me encouraged and updating products.</li>
+        <li>Please <a href="http://www.automatonsofmisery.com/enter/?action=register">register at Automatons of Misery</a> in order to post comments on the <a href="http://www.automatonsofmisery.com/applications/stock-ticker-chrome/">Stock Ticker for Chrome</a> page. Just saying thanks or providing constructive criticism will help improve the ticker bar.</li>
+        <li>Email or chat with me in google hangouts at bryan.hazelbaker@gmail.com</li>
+        <li>Find the latest code on <a href="https://github.com/delphian/chrome-stock-ticker">https://github.com/delphian/chrome-stock-ticker</a></li>
+      </ul>
     </div>
   </div>
 
   <script src="/libs/external/jquery/jquery.min.js"></script>
   <script src="/libs/external/angular/angular.min.js"></script>
   <script src="/libs/external/bower_components/angular-ui-utils/ui-utils.min.js"></script>
-
+  <script src="options.js"></script>
   <script src="/libs/CSTResource.js"></script>
   <script src="/js/cstApp.js"></script>
   <!-- cst resource -->
