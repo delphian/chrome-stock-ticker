@@ -4,9 +4,9 @@
   "name": "Stock Ticker for Chrome",
   "short_name": "Stock Ticker",
   "description": "Scans current page for any ticker symbols and if found will display associated stock information in ticker bar.",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "author": "Bryan Hazelbaker",
-  "homepage_url": "http:www.stocktickerforchrome.com",
+  "homepage_url": "http://www.automatonsofmisery.com/applications/stock-ticker-chrome/",
 
   "permissions": [
     "http://*/*",

@@ -11,5 +11,5 @@ cstApp.config(function($sceDelegateProvider) {
 });
 
 cstApp.constant('appMeta', {
-	version: '0.9.5'
+	version: '0.9.6'
 });
