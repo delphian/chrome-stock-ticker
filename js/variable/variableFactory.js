@@ -39,12 +39,38 @@ cstApp.factory('variable', ['$rootScope', 'resource', 'appMeta', function($rootS
         } else {
             var parent = this;
             var cacheKey = 'cache_' + varName;
-            chrome.storage.sync.get([cacheKey], function(result) {
+            chrome.storage.local.get([cacheKey], function(result) {
+                if (typeof(result[cacheKey]) != 'undefined')
+                    result[cacheKey] = JSON.parse(result[cacheKey]);
                 if (callback) callback.call(parent, result[cacheKey]);
             });
         }
     };
-
+    /**
+     * Remove all cache items from storage.
+     *
+     * @param storage
+     *   A storage object. Either chrome.storage.sync or chrome.storage.local
+     */
+    api.removeAllCache = function(storage) {
+        storage.get(null, function(data) {
+            if (chrome.runtime.lastError) {
+                console.log('Failed to retrieve all cache keys to reset.');
+            } else {
+                var keys = [];
+                for (var i in data) {
+                    if (i.match(/^cache_/))
+                        keys.push(i);
+                }
+                if (keys.length) {
+                    storage.remove(keys, function() {
+                        if (chrome.runtime.lastError)
+                            console.log('Failed to reset storage.');
+                    });
+                }
+            }
+        });
+    }
     api.setCache = function(varName, metrics) {
         // Write cache to local object.
         pvt.cache[varName] = {
@@ -54,8 +80,8 @@ cstApp.factory('variable', ['$rootScope', 'resource', 'appMeta', function($rootS
         // Write cache to google storage.
         var data = {};
         var cacheKey = 'cache_' + varName;
-        data[cacheKey] = pvt.cache[varName];
-        chrome.storage.sync.set( data , function() {
+        data[cacheKey] = JSON.stringify(pvt.cache[varName]);
+        chrome.storage.local.set( data , function() {
             if (chrome.runtime.lastError) {
                 console.log('Failed to save: ' + chrome.runtime.lastError.message);
             } else {
@@ -102,7 +128,7 @@ cstApp.factory('variable', ['$rootScope', 'resource', 'appMeta', function($rootS
 /**
  * Model to manage configuration for displaying variables.
  */
-cstApp.factory('variableConfig', ['$rootScope', 'resource', 'appMeta', function($rootScope, resource, appMeta) {
+cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta', function($rootScope, variable, resource, appMeta) {
     /**
      * Private data and methods. These are not directly accesible to
      * controllers or other factory services.
@@ -349,6 +375,8 @@ cstApp.factory('variableConfig', ['$rootScope', 'resource', 'appMeta', function(
         if (chrome.runtime.lastError) {
             console.log('Could not load variable config from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
+            // @todo remove this hack after a week or so. Add buttons to manually clear var cache. Add 48 hour cache clear.
+            variable.removeAllCache(chrome.storage.sync);
             var config = pvt.cleanData(result['tickerbar']).data;
             var result = api.setData(config, { apply: true } );
             if (!result.success) {
