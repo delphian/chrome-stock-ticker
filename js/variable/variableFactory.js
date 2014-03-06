@@ -227,7 +227,7 @@ cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta
             lastUpdate: 0,
             // version: appMeta.version,
             autoUpdate: true,
-            alwaysDisplay: true,
+            alwaysDisplay: false,
             items: []
         };
         if (typeof(data) != 'undefined') {
