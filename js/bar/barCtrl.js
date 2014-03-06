@@ -12,10 +12,12 @@ cstApp.controller('bar', function($scope) {
     $scope.headers = ($scope.orient == 'horizontal') ? true : false;
 
     $scope.prev = function() {
-        $scope.variables.unshift($scope.variables.pop());
+        if ($scope.variables.length)
+            $scope.variables.unshift($scope.variables.pop());
     };
     $scope.next = function() {
-        $scope.variables.push($scope.variables.shift());
+        if ($scope.variables.length)
+            $scope.variables.push($scope.variables.shift());
     };
     $scope.add = function(variable) {
         $scope.variables.push(variable.toUpperCase());
