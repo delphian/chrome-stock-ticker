@@ -10,17 +10,15 @@
  * the metrics. Be prepared cache items that don't exist yet.
  */
 var showBar = function(variables) {
-
-    if (variables.length) {
-        var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
-        markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[\'' + variables.join('\',\'') + '\']"></cst-bar>';
-        markup = markup + '</div>';
-        $('body').append(markup);
-        $('html').css('position', 'relative');
-        $('html').css({'margin-top':'30px'});
-        var element = $('#cst-tickerbar');
-        angular.bootstrap(element, ['chromeStockTicker']);
-    }
+    var initVars = (variables.length) ? "'" + variables.join('\',\'') + "'" : "";
+    var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
+    markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[' + initVars + ']"></cst-bar>';
+    markup = markup + '</div>';
+    $('body').append(markup);
+    $('html').css('position', 'relative');
+    $('html').css({'margin-top':'30px'});
+    var element = $('#cst-tickerbar');
+    angular.bootstrap(element, ['chromeStockTicker']);
 };
 
 var findVariables = function(html, patterns) {
@@ -143,11 +141,13 @@ var cstLoadAllJS = function() {
 
 $('document').ready(function() {
     cstLoadAllJS();
-    chrome.storage.sync.get(['patterns'], function(result) {
+    chrome.storage.sync.get(['patterns', 'tickerbar'], function(result) {
         if (chrome.runtime.lastError) {
             console.log('Content script can\'t read from synced storage: ' + chrome.runtime.lastError.message);
+        } else {
+            var variables = findVariables($('html').html(), result['patterns']);
+            if (variables.length || result['tickerbar'].alwaysDisplay)
+                showBar(variables);
         }
-        var variables = findVariables($('html').html(), result['patterns']);
-        showBar(variables);
     });
 });
