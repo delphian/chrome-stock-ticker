@@ -44,8 +44,9 @@
 .cst-bar-horizontal .cst-bar-items { left: 30px; right: 95px; white-space: nowrap; }
 /** Individual bar item (variable). **/
 .cst-bar-horizontal .cst-bar-item { margin-top: 4px; margin-left: 4px; display: inline-block; }
+.cst-bar-horizontal .cst-bar-item > table { margin: 0; }
 /** Variable inside the item. **/
-.cst-bar-horizontal .cst-variable table td div { margin-left: 2px; }
+.cst-bar-horizontal .cst-variable table td div { margin-left: 4px; color: #000000; }
 
 /**
  * Vertical Bar Display.
