@@ -47,7 +47,18 @@
     "js/links/template/links-config.html",
     "js/links/template/links-button.html"
   ],
-  
+
+  "commands": {
+    "cst_show_ticker_bar": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O",
+        "mac": "Command+Shift+O",
+        "windows": "Ctrl+Shift+O"
+      },
+      "description": "Show the ticker bar"
+    }
+  },
+
   "options_page": "options/options.html",
 
   "browser_action": {

@@ -8,17 +8,27 @@
  *
  * This may be called multiple times due to the async nature of fetching
  * the metrics. Be prepared cache items that don't exist yet.
+ *
+ * @param array variables
+ *   An array of ticker symbol strings.
  */
 var showBar = function(variables) {
+    if (typeof(variables) == 'undefined')
+        var variables = [];
     var initVars = (variables.length) ? "'" + variables.join('\',\'') + "'" : "";
-    var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
-    markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[' + initVars + ']"></cst-bar>';
-    markup = markup + '</div>';
-    $('body').append(markup);
-    $('html').css('position', 'relative');
-    $('html').css({'margin-top':'30px'});
-    var element = $('#cst-tickerbar');
-    angular.bootstrap(element, ['chromeStockTicker']);
+    if (!$('div#cst-tickerbar').length) {
+        var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
+        markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[' + initVars + ']"></cst-bar>';
+        markup = markup + '</div>';
+        $('body').append(markup);
+        $('html').css('position', 'relative');
+        $('html').css({'margin-top':'30px'});
+        var element = $('#cst-tickerbar');
+        angular.bootstrap(element, ['chromeStockTicker']);
+    } else {
+        $('div#cst-tickerbar').remove();
+        $('html').css({'margin-top':'0'});
+    }
 };
 
 var findVariables = function(html, patterns) {
@@ -138,6 +148,18 @@ var cstLoadAllJS = function() {
         cstLoadJS(alwaysJs[i]);
     $.ajaxSetup({async:true});
 }
+
+/**
+ * Listen for any messages from the background page, or other content scripts.
+ */
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.command == "cst_show_ticker_bar") {
+        showBar();
+        setTimeout(function() {
+            $('div.cst-bar-add input').focus();
+        }, 500);
+    }
+});
 
 $('document').ready(function() {
     cstLoadAllJS();
