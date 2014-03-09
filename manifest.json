@@ -37,6 +37,7 @@
     "js/pattern/patternDirective.js",
 
     "libs/cst-bootstrap.css",
+    "http://www.automatonsofmisery.com/chrome-stock-ticker/server/comments/index.php",
 
     "js/variable/template/variable.html",
     "js/variable/template/variable-config.html",
