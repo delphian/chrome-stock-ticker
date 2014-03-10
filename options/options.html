@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/js/bar/css/bar.css" />
   <link rel="stylesheet" type="text/css" href="/js/pattern/css/pattern.css" />
   <link rel="stylesheet" type="text/css" href="/js/links/css/links.css" />
-
+  <link rel="stylesheet" type="text/css" href="/js/lists/css/lists.css" />
 </head>
 
 <body>
@@ -39,7 +39,7 @@
     </div>
     <div class="tab-pane container" id="watchlist" style="padding-top:30px;">
       <p><small>Just testing this out as a possible watch list feature.</small></p>
-      <cst-bar variables="variables" orient="'vertical'" ng-init="variables=[]"></cst-bar>
+      <cst-lists></cst-lists>
     </div>
     <div class="tab-pane container" id="config">
       <br />
@@ -117,6 +117,10 @@
   <script src="/js/links/linksCtrl.js"></script>
   <script src="/js/links/linksDirective.js"></script>
   <script src="/js/links/linksFactory.js"></script>
+  <!-- cst lists -->
+  <script src="/js/lists/listsCtrl.js"></script>
+  <script src="/js/lists/listsDirective.js"></script>
+  <script src="/js/lists/listsFactory.js"></script>
 
   <script src="/libs/external/bootstrap/bootstrap-3.0.3/dist/js/bootstrap.min.js"></script>
 

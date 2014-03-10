@@ -1,0 +1,13 @@
+<div class="cst-lists cst-lists-config">
+  <div id="saveConfirmLists"></div>
+  <div class="controls">
+  	<div class="name">
+  	  <select class="form-control" ng-model="selectList" ng-options="item.name for item in lists.items.custom"></select>
+  	</div>
+	<div class="delete"><button class="form-control" ng-click="delete()">Delete</button></div>
+	<div class="new-name"><input placeholder="List Name" class="form-control" type="text" ng-model="addList.name" /></div>
+	<div class="add"><button class="form-control" ng-click="add()">Add</button></div>
+	<div class="save"><button class="form-control" ng-click="save()">Update</button></div>
+  </div>
+  <cst-bar variables="list.variables" orient="'vertical'"></cst-bar>
+</div>

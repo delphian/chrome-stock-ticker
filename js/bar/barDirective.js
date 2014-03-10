@@ -1,5 +1,7 @@
 /**
- * <cst-bar variable="WMT, TGT"></cst-bar>
+ * <cst-bar variables="['WMT', 'TGT']"></cst-bar>
+ *
+ * Possibly the use if ng-init may be required to avoid an injest loop.
  */
 cstApp.directive('cstBar', function() {
     return {

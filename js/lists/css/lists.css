@@ -1,0 +1,10 @@
+
+.cst-lists-config {}
+.cst-lists-config .controls .form-control { height: 22px; padding-top: 0; padding-bottom: 0; }
+.cst-lists-config .controls { height: 30px; }
+.cst-lists-config .controls div { float: left; }
+.cst-lists-config .controls .name { width: 60%; }
+.cst-lists-config .controls .delete { width: 10%; }
+.cst-lists-config .controls .new-name { width: 10%; }
+.cst-lists-config .controls .add { width: 10%; }
+.cst-lists-config .controls .save { width: 10%; }
