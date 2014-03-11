@@ -223,9 +223,9 @@ cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta
         // Default empty object.
         var cleanData = {
             loaded: false,
-            lastSave: new Date().getTime(),
+            lastSave: 0,
             lastUpdate: 0,
-            // version: appMeta.version,
+            version: appMeta.version,
             autoUpdate: true,
             alwaysDisplay: false,
             items: []
@@ -277,6 +277,17 @@ cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta
         }
         return result;
     };
+    /**
+     * Setup initial values when this factory is run for the very first time
+     * ever (not every time the extension loads).
+     */
+    pvt.setup = function() {
+        this.setData();
+        var result = this.addItem({ "name": "Price", "source": "Price" });
+        if (!result.success)
+            console.log(result.message);
+        api.save();
+    };
 
     /**
      * Public api.
@@ -285,14 +296,12 @@ cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta
     api.setData = function(data, broadcastData) {
         return pvt.setData(data, broadcastData);
     };
-    /**
-     * Get a copy of the variable display configuration object.
-     *
-     * @return object
-     */
     api.getData = function() {
         return JSON.parse(JSON.stringify(pvt.data));
     };
+    api.setup = function() {
+        return pvt.setup();
+    }
     /**
      * Add a metric to be displayed when a variable is rendedred.
      *
@@ -359,10 +368,12 @@ cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta
         chrome.storage.sync.set( {'tickerbar': this.getData()} , function() {
             if (typeof(callback) != 'undefined') {
                 if (chrome.runtime.lastError) {
-                    callback({ success: 0, message: chrome.runtime.lastError.message });
+                    if (typeof(callback) == 'function')
+                        callback({ success: 0, message: chrome.runtime.lastError.message });
                 } else {
                     parent.broadcastUpdate();
-                    callback({ success: 1, message: null });
+                    if (typeof(callback) == 'function')
+                        callback({ success: 1, message: null });
                 }
             }
         });
@@ -375,6 +386,11 @@ cstApp.factory('variableConfig', ['$rootScope', 'variable', 'resource', 'appMeta
         if (chrome.runtime.lastError) {
             console.log('Could not load variable config from chrome storage: ' + chrome.runetime.lastError.message);
         } else {
+            if (typeof(result['tickerbar']) == 'undefined') {
+                setTimeout(function() {
+                    api.setup();
+                }, 1000);
+            }
             // @todo remove this hack after a week or so. Add buttons to manually clear var cache. Add 48 hour cache clear.
             variable.removeAllCache(chrome.storage.sync);
             var config = pvt.cleanData(result['tickerbar']).data;

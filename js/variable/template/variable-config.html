@@ -1,11 +1,13 @@
 
 <div class="cst-variable-config">
   <h2>Ticker Bar</h2>
-  <p>Select which metrics to show on the ticker bar.</p>
+  <p>Use Shift-Alt-O (windows), Shift-Command-O (mac) to toggle the bar.<br />
+  <input type="checkbox" ng-model="tickerbar.alwaysDisplay" /> Always display the tickerbar, even when no stock symbols are found.
+  </p>
   <div>
     <div id="saveConfirmTickerBar"></div>
     <p>
-      <input type="checkbox" ng-model="tickerbar.alwaysDisplay" /> Always display the tickerbar, even when no stock symbols are found.
+      Select which metrics to show on the ticker bar:
     </p>
     <table>
       <tr>

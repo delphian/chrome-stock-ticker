@@ -25,6 +25,8 @@
     "libs/CSTResource.js",
     "js/cstApp.js",
     "js/resource/resourceFactory.js",
+    "js/resource/resourceDirective.js",
+    "js/resource/resourceCtrl.js",
     "js/links/linksFactory.js",
     "js/links/linksCtrl.js",
     "js/links/linksDirective.js",
@@ -33,11 +35,18 @@
     "js/variable/variableFactory.js",
     "js/bar/barCtrl.js",
     "js/bar/barDirective.js",
+    "js/pattern/patternFactory.js",
     "js/pattern/patternCtrl.js",
     "js/pattern/patternDirective.js",
+    "js/bootstrap/bootstrapCtrl.js",
+    "js/bootstrap/bootstrapDirective.js",
 
     "libs/cst-bootstrap.css",
     "http://www.automatonsofmisery.com/chrome-stock-ticker/server/comments/index.php",
+
+    "data/resource.json",
+    "data/patterns.json",
+    "data/links.json",
 
     "js/variable/template/variable.html",
     "js/variable/template/variable-config.html",
@@ -46,7 +55,8 @@
     "js/pattern/template/pattern-config.html",
     "js/resource/template/resource-config.html",
     "js/links/template/links-config.html",
-    "js/links/template/links-button.html"
+    "js/links/template/links-button.html",
+    "js/bootstrap/template/bootstrap.html"
   ],
 
   "commands": {

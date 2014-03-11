@@ -79,7 +79,7 @@ cstApp.factory('patterns', ['$rootScope', 'appMeta', function($rootScope, appMet
         // Default empty patterns object.
         var cleanPatterns = {
             loaded: false,
-            lastSave: new Date().getTime(),
+            lastSave: 0,
             lastUpdate: 0,
             version: appMeta.version,
             autoUpdate: true,

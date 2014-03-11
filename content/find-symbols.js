@@ -3,62 +3,13 @@
  * @file
  */
 
-/**
- * Print all tickers into the ticker bar.
- *
- * This may be called multiple times due to the async nature of fetching
- * the metrics. Be prepared cache items that don't exist yet.
- *
- * @param array variables
- *   An array of ticker symbol strings.
- */
-var showBar = function(variables) {
-    if (typeof(variables) == 'undefined')
-        var variables = [];
-    var initVars = (variables.length) ? "'" + variables.join('\',\'') + "'" : "";
-    if (!$('div#cst-tickerbar').length) {
-        var markup = '<div id="cst-tickerbar" class="cst-bootstrap" ng-app="chromeStockTicker">';
-        markup = markup + '<cst-bar variables="variables" orient="\'horizontal\'" ng-init="variables=[' + initVars + ']"></cst-bar>';
-        markup = markup + '</div>';
-        $('body').append(markup);
-        $('html').css('position', 'relative');
-        $('html').css({'margin-top':'30px'});
-        var element = $('#cst-tickerbar');
-        angular.bootstrap(element, ['chromeStockTicker']);
-    } else {
-        $('div#cst-tickerbar').remove();
-        $('html').css({'margin-top':'0'});
-    }
-};
-
-var findVariables = function(html, patterns) {
-    var symbols = [];
-    // Iterate through all 'a' elements.
-    $(html).find('a').each(function() {
-        var href = $(this).attr('href');
-        // If the element has a 'href' attribute.
-        if (typeof(href) != 'undefined') {
-            try {
-                href = decodeURIComponent(href);
-                for (var i=0; i<patterns.items.length; i++) {
-                    var match;
-                    var regex = new RegExp(patterns.items[i].regex, patterns.items[i].modifiers);
-                    // If the href attribute matches one of our patterns.
-                    while ((match = regex.exec(href)) !== null) {
-                        symbols.push(match[patterns.items[i].result].toUpperCase());
-                    }
-                }
-            } catch (err) {
-                console.log('Can not examine href (' + href + '): ' + err);
-            }
-        }
-    });
-    // Remove any duplicates.
-    var symbolsCleaned = [];
-    $.each(symbols, function(i, el) {
-        if($.inArray(el, symbolsCleaned) === -1) symbolsCleaned.push(el);
-    });
-    return symbolsCleaned;
+var initChromeStockTicker = function() {
+    var markup = '<div ng-app="chromeStockTicker">';
+    var markup = markup + '  <cst-bootstrap></cst-bootstrap>';
+    var markup = markup + '</div>';
+    $('body').append(markup);
+    // var element = $('#cst-tickerbar');
+    // angular.bootstrap(element, ['chromeStockTicker']);
 };
 
 /**
@@ -79,7 +30,11 @@ var findVariables = function(html, patterns) {
 var cstLoadJS = function(file, regex) {
     var load = function(file) {
         $.get(chrome.extension.getURL(file), {}, function(data) {
-            eval(data);
+            try {
+                eval(data);
+            } catch (err) {
+                console.log("Error while trying to evaluate " + file + " (" + err + ")");
+            }
         });
     }
     var found = false;
@@ -129,16 +84,21 @@ var cstLoadAllJS = function() {
         "libs/CSTResource.js",
         "js/cstApp.js",
         "js/resource/resourceFactory.js",
+        "js/resource/resourceDirective.js",
+        "js/resource/resourceCtrl.js",
         "js/links/linksFactory.js",
         "js/links/linksCtrl.js",
         "js/links/linksDirective.js",
+        "js/pattern/patternFactory.js",
+        "js/pattern/patternDirective.js",
+        "js/pattern/patternCtrl.js",
+        "js/variable/variableFactory.js",
         "js/variable/variableCtrl.js",
         "js/variable/variableDirective.js",
-        "js/variable/variableFactory.js",
         "js/bar/barCtrl.js",
         "js/bar/barDirective.js",
-        "js/pattern/patternCtrl.js",
-        "js/pattern/patternDirective.js"
+        "js/bootstrap/bootstrapDirective.js",
+        "js/bootstrap/bootstrapCtrl.js"
     ];
     // Ensure that we load this in the correct order.
     $.ajaxSetup({async:false});
@@ -162,14 +122,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 $('document').ready(function() {
+    initChromeStockTicker();
     cstLoadAllJS();
-    chrome.storage.sync.get(['patterns', 'tickerbar'], function(result) {
-        if (chrome.runtime.lastError) {
-            console.log('Content script can\'t read from synced storage: ' + chrome.runtime.lastError.message);
-        } else {
-            var variables = findVariables($('html').html(), result['patterns']);
-            if (variables.length || result['tickerbar'].alwaysDisplay)
-                showBar(variables);
-        }
-    });
 });
