@@ -2,12 +2,16 @@
 /**
  * Model to manage variable metrics.
  */
-cstApp.factory('variable', ['$rootScope', 'resource', 'appMeta', function($rootScope, resource, appMeta) {
+cstApp.factory('variable', ['$rootScope', '$timeout', 'resource', 'appMeta', function($rootScope, $timeout, resource, appMeta) {
     /**
      * Private data and methods.
      */
     var pvt = {
-        cache: []
+        cache: [],
+        // Record time of last fetch
+        lastFetch: new Date().getTime(),
+        // Queue next fetch.
+        delayFetch: 0
     };
 
     /**
@@ -111,13 +115,24 @@ cstApp.factory('variable', ['$rootScope', 'resource', 'appMeta', function($rootS
                 console.log('Loading from factory cache ' + varName);
                 if (callback) callback.call(this, cache.metrics);
             } else {
-                console.log('Fetching ' + varName);
+                // Slow down multiple requests.
+                var time = new Date().getTime();
+                if ((time - 1000) > pvt.lastFetch) {
+                    pvt.delayFetch = 0;
+                } else {
+                    pvt.delayFetch = (pvt.delayFetch * 1.5) + 500;
+                }
                 var parent = this;
                 var cstResource = new CSTResource(resource.getData());
-                cstResource.fetchAllMetrics(replacements, function(metrics) {
-                    parent.setCache(varName, metrics);
-                    if (callback) callback.call(parent, metrics);
-                });
+                var localDelay = pvt.delayFetch;
+                pvt.lastFetch = time;
+                $timeout(function() {
+                    console.log('Fetching ' + varName + ' @ ' + localDelay);
+                    cstResource.fetchAllMetrics(replacements, function(metrics) {
+                        parent.setCache(varName, metrics);
+                        if (callback) callback.call(parent, metrics);
+                    });
+                }, localDelay);
             }
         });
     }; 
