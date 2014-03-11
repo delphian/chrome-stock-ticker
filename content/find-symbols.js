@@ -4,12 +4,12 @@
  */
 
 var initChromeStockTicker = function() {
-    var markup = '<div ng-app="chromeStockTicker">';
+    var markup = '<div id="chromeStockTicker">';
     var markup = markup + '  <cst-bootstrap></cst-bootstrap>';
     var markup = markup + '</div>';
     $('body').append(markup);
-    // var element = $('#cst-tickerbar');
-    // angular.bootstrap(element, ['chromeStockTicker']);
+    var element = $('#chromeStockTicker');
+    angular.bootstrap(element, ['chromeStockTicker']);
 };
 
 /**
@@ -122,6 +122,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 $('document').ready(function() {
-    initChromeStockTicker();
     cstLoadAllJS();
+    initChromeStockTicker();
 });
