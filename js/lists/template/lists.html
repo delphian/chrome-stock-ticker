@@ -2,7 +2,7 @@
   <div id="saveConfirmLists"></div>
   <div class="cst-lists-controls cst-controls">
   	<div class="cst-lists-select cst-select">
-  	  <select class="form-control" ng-model="selectList" ng-options="item.name for item in lists.items.custom"></select>
+  	  <select class="form-control" ng-model="list" ng-options="item as item.name for item in lists.items.custom"></select>
   	</div>
   </div>
   <cst-list-vertical variables="list.variables"></cst-list-vertical>

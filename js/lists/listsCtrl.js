@@ -2,7 +2,7 @@
 /**
  * A list controller manages a collection of variables.
  */
-cstApp.controller('list', ['$scope', 'variable', 'variableConfig', function($scope, variable, variableConfig) {
+cstApp.controller('list', ['$rootScope', '$scope', 'variable', 'variableConfig', function($rootScope, $scope, variable, variableConfig) {
     /**
      * Provided by directive:
      * $scope.variables: (array) a collection of variable names.
@@ -16,7 +16,8 @@ cstApp.controller('list', ['$scope', 'variable', 'variableConfig', function($sco
         for (var i in $scope.variables) {
             variable.getMetrics($scope.variables[i].toUpperCase(), function(metrics) {
                 $scope.variablesData.push({ "metrics": metrics });
-                $scope.$apply();
+                if (!$scope.$$phase && !$rootScope.$$phase)
+                    $scope.$digest();
             });
         }        
     });
@@ -63,13 +64,7 @@ cstApp.controller('lists', ['$scope', 'lists', function($scope, lists) {
      *   (Nothing)
      */
     $scope.lists = lists.getData();
-    // Array of variables in currently viewed list.
-    $scope.list = {
-        "name": "",
-        "variables": []
-    };
-    // Switch to this list.
-    $scope.selectList = '';
+    $scope.list = {};
     $scope.addList = {
         name: ''
     };
@@ -82,17 +77,13 @@ cstApp.controller('lists', ['$scope', 'lists', function($scope, lists) {
         // to that found item.
         var result = lists.compareItem({ name: listName }, $scope.lists.items.custom);
         if (typeof(result['name']) != 'undefined') {
-            $scope.selectList = result['name'][0]['item'];
+            $scope.list = $scope.lists.items.custom[result['name'][0]['index']];
         } else {
             // Default to first list found.
             if ($scope.lists.items.custom.length > 0)
-                $scope.selectList = $scope.lists.items.custom[0];
+                $scope.list = $scope.lists.items.custom[0];
         }
         if (data.apply) $scope.$apply();
-    });
-    $scope.$watch('selectList', function(value) {
-        $scope.list = value;
-        //console.log(value);
     });
     // Add a new list.
     $scope.add = function() {
@@ -103,6 +94,10 @@ cstApp.controller('lists', ['$scope', 'lists', function($scope, lists) {
         if (!result.success) {
             $('#saveConfirmLists').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to add list: '+result.message+'</div>');
         } else {
+            lists.save(function(result) {
+                if (!result.success)
+                    $('#saveConfirmLists').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save new list: '+result.message+'</div>');
+            });
             $scope.addList = { name: '' };
         }
     };
