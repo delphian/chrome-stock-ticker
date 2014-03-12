@@ -1,13 +1,20 @@
-<div class="cst-lists cst-lists-config">
+<div class="cst-lists">
   <div id="saveConfirmLists"></div>
-  <div class="controls">
-  	<div class="name">
+  <div class="cst-lists-controls cst-controls">
+  	<div class="cst-lists-select cst-select">
   	  <select class="form-control" ng-model="selectList" ng-options="item.name for item in lists.items.custom"></select>
   	</div>
-	<div class="delete"><button class="form-control" ng-click="delete()">Delete</button></div>
-	<div class="new-name"><input placeholder="List Name" class="form-control" type="text" ng-model="addList.name" /></div>
-	<div class="add"><button class="form-control" ng-click="add()">Add</button></div>
-	<div class="save"><button class="form-control" ng-click="save()">Update</button></div>
   </div>
-  <cst-bar variables="list.variables" orient="'vertical'"></cst-bar>
+  <cst-list-vertical variables="list.variables"></cst-list-vertical>
+  <div class="cst-lists-controls cst-controls">
+    <div class="cst-lists-save cst-save">
+      <button class="btn btn-success" ng-click="save()">Save List</button>
+    </div>
+    <div class="cst-lists-remove cst-remove">
+      <button class="btn btn-danger" ng-click="remove()">Delete List</button>
+    </div>
+    <div class="cst-lists-add cst-add">
+      <input placeholder="Add List" class="form-control" type="text" ng-model="addList.name" ui-keypress="{enter: 'add(addList.name)'}"/>
+    </div>
+  </div>
 </div>

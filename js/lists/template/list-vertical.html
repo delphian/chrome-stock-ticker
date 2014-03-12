@@ -1,0 +1,32 @@
+
+<div class="cst-list cst-list-vertical">
+  <table>
+    <tr>
+      <th></th>
+      <th class="cst-metric" ng-repeat="item in bar.items">{{item.source}}</th>
+      <th></th>
+    </tr>
+    <tr ng-repeat="(index, data) in variablesData">
+      <td class="cst-symbol"><cst-links-button variable="variables[index]"></cst-links-button></td>
+      <td class="cst-metric" ng-repeat="item in bar.items">{{data.metrics[item.name].value}}</td>
+      <td class="cst-remove">
+        <button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="remove(index)"> </button>
+      </td>
+    </tr>
+  </table>
+  <div class="cst-controls">
+    <div class="cst-add">
+      <input type="text" class="form-control" placeholder="Symbol" ng-model="addVariable" ui-keypress="{enter: 'add(addVariable)'}"></input>
+    </div>
+    <div class="cst-nav cst-prev">
+      <button class="btn btn-default" ng-click="prev()">
+        <span>&lt;</span>
+      </button>
+    </div>
+    <div class="cst-nav cst-next">
+      <button class="btn btn-default" ng-click="next()">
+        <span>&gt;</span>
+      </button>
+    </div>
+  </div>
+</div>

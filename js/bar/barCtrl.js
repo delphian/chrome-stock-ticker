@@ -1,12 +1,11 @@
 
-cstApp.controller('bar', function($scope) {
+cstApp.controller('bar', ['$scope', function($scope) {
     /**
      * Provided by directive:
      * $scope.variable: (string) comma deliniated list of variables.
      * $scope.orient: (string) orientation of bar, possible values are:
      *   'vertical', 'horizontal'.
      */
-    //$scope.variables = $scope.variables.split(',');
     $scope.addVariable = '';
     // Used in template for cst-variable property value.
     $scope.headers = ($scope.orient == 'horizontal') ? true : false;
@@ -26,4 +25,4 @@ cstApp.controller('bar', function($scope) {
     $scope.remove = function(index) {
         $scope.variables.splice(index, 1);
     }
-});
+}]);

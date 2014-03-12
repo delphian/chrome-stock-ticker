@@ -1,3 +1,59 @@
+
+/**
+ * A list controller manages a collection of variables.
+ */
+cstApp.controller('list', ['$scope', 'variable', 'variableConfig', function($scope, variable, variableConfig) {
+    /**
+     * Provided by directive:
+     * $scope.variables: (array) a collection of variable names.
+     */
+    $scope.addVariable = '';
+    $scope.bar = variableConfig.getData();
+    $scope.variablesData = [];
+
+    $scope.$watch('variables', function() {
+        $scope.variablesData = [];
+        for (var i in $scope.variables) {
+            variable.getMetrics($scope.variables[i].toUpperCase(), function(metrics) {
+                $scope.variablesData.push({ "metrics": metrics });
+                $scope.$apply();
+            });
+        }        
+    });
+
+    $scope.$on('variableConfigUpdate', function(event, data) {
+        $scope.bar = variableConfig.getData();
+        if (data.apply) $scope.$apply();
+    });
+
+    $scope.prev = function() {
+        if ($scope.variables.length) {
+            $scope.variables.unshift($scope.variables.pop());
+            $scope.variablesData.unshift($scope.variablesData.pop());
+        }
+    };
+    $scope.next = function() {
+        if ($scope.variables.length) {
+            $scope.variables.push($scope.variables.shift());
+            $scope.variablesData.push($scope.variablesData.shift());
+        }
+    };
+    $scope.add = function(variableName) {
+        if (variableName.length) {
+            variable.getMetrics(variableName.toUpperCase(), function(metrics) {
+                $scope.variables.push(variableName.toUpperCase());
+                $scope.variablesData.push({ "metrics": metrics });
+                $scope.addVariable = '';
+                $scope.$apply();
+            });
+        }
+    };
+    $scope.remove = function(index) {
+        $scope.variables.splice(index, 1);
+        $scope.variablesData.splice(index, 1);
+    };
+}]);
+
 /**
  * Lists controller manages switching out one array of variables for another.
  */

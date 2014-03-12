@@ -52,6 +52,7 @@
     "js/variable/template/variable-config.html",
     "js/variable/template/metric.html",
     "js/bar/template/bar.html",
+    "js/bar/template/bar-vertical.html",
     "js/pattern/template/pattern-config.html",
     "js/resource/template/resource-config.html",
     "js/links/template/links-config.html",
@@ -94,6 +95,7 @@
         "js/variable/css/variable.css",
         "js/resource/css/resource.css",
         "js/bar/css/bar.css",
+        "js/bar/css/bar-vertical.css",
         "js/pattern/css/pattern.css"
       ]
     }
