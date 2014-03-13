@@ -120,7 +120,7 @@ cstApp.factory('variable', ['$rootScope', '$timeout', 'resource', 'appMeta', fun
                 if ((time - 1000) > pvt.lastFetch) {
                     pvt.delayFetch = 0;
                 } else {
-                    pvt.delayFetch = (pvt.delayFetch * 1.5) + 500;
+                    pvt.delayFetch = (pvt.delayFetch * 1.25) + 500;
                 }
                 var parent = this;
                 var cstResource = new CSTResource(resource.getData());

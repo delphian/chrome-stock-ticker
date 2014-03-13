@@ -1,7 +1,7 @@
 {
     "loaded": true,
-    "lastSave": 1393031999353,
-    "lastUpdate": 1393031999350,
+    "lastSave": 1394683462237,
+    "lastUpdate": 1394603814636,
     "version": "0.9.3",
     "autoUpdate": true,
     "urls": [
@@ -50,7 +50,7 @@
             "name": "Dividend Payout Ratio",
             "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
             "selector": ".yfnc_modtitlew2 .yfnc_datamodoutline1~ .yfnc_datamodoutline1+ .yfnc_datamodoutline1 td table tr:nth-child(7) td:nth-child(2)",
-            "regex": "([0-9]*\\.?[0-9]{0,1})"
+            "regex": "([0-9,]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Dividend Yield",
@@ -71,22 +71,22 @@
             "regex": ""
         },
         {
-            "name": "PE TTM",
-            "url": "http://www.bloomberg.com/quote/SYMBOL:US",
-            "selector": "table.key_stat_data tr:nth-child(1) td",
-            "regex": "([0-9]*\\.?[0-9]{0,1})"
-        },
-        {
             "name": "Price",
             "url": "http://finance.yahoo.com/q?s=SYMBOL",
             "selector": "span.time_rtq_ticker span",
-            "regex": ""
+            "regex": "([0-9,]*\\.?[0-9]{0,2})"
         },
         {
             "name": "Price to Book MRQ",
             "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
             "selector": "td.yfnc_modtitlew1 > table:nth-child(4) tr:nth-child(7) td:nth-child(2)",
             "regex": "([0-9]*\\.?[0-9]{0,2})"
+        },
+        {
+            "name": "Price to Earnings TTM",
+            "url": "http://finance.yahoo.com/q/ks?s=SYMBOL+Key+Statistics",
+            "selector": "td.yfnc_modtitlew1 > table:nth-child(4) tr:nth-child(3) td:nth-child(2)",
+            "regex": "([0-9]*\\.?[0-9]{0,1})"
         },
         {
             "name": "Price to Sales TTM",
@@ -110,7 +110,7 @@
             "name": "Volume",
             "url": "http://finance.yahoo.com/q?s=SYMBOL",
             "selector": "table#table2 tr:nth-child(3) td.yfnc_tabledata1 span",
-            "regex": ""
+            "regex": "([0-9,]*\\.?[0-9]{0,2})"
         }
     ]
 }
