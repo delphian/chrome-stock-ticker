@@ -248,9 +248,12 @@ CSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
     // already been cached, or flush is specified, or the cache is older than
     // 60 minutes.
     if ((typeof(this.cache.metrics[metric.name]) == 'undefined') || flush 
-        || (this.cache.metrics[metric.name].timestamp + 60 * 60 * 1000) < new Date().getTime()) {
+        || (this.cache.metrics[metric.name].timestamp + 4 * 60 * 60 * 1000) < new Date().getTime()) {
         var url = this.replaceUrlVars(metric.url, replacements);
         this.fetchUrl(url, {}, function(html) {
+            html = html.replace(/<img.*\>/g, '');
+            html = html.replace(/<script.*>.*<\/script>/g, '');
+            html = html.replace(/<script.*\/>/g, '');
             var value = $(html).find(metric.selector).text();
             if ((typeof(metric.regex) != 'undefined') && metric.regex.length) {
                 var regex = new RegExp(metric.regex, 'g');
