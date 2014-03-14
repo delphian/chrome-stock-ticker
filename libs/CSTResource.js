@@ -251,9 +251,9 @@ CSTResource.prototype.fetchMetric = function (metric, replacements, callback, fl
         || (this.cache.metrics[metric.name].timestamp + 4 * 60 * 60 * 1000) < new Date().getTime()) {
         var url = this.replaceUrlVars(metric.url, replacements);
         this.fetchUrl(url, {}, function(html) {
-            html = html.replace(/<img.*\>/g, '');
-            html = html.replace(/<script.*>.*<\/script>/g, '');
-            html = html.replace(/<script.*\/>/g, '');
+            html = html.replace(/<img[^>]*>/g, '');
+            html = html.replace(/<script[^>]*>.*?<\/script>/g, '');
+            html = html.replace(/<script[^>]*>/g, '');
             var value = $(html).find(metric.selector).text();
             if ((typeof(metric.regex) != 'undefined') && metric.regex.length) {
                 var regex = new RegExp(metric.regex, 'g');
