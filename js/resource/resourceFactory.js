@@ -414,6 +414,38 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
             });
         }
     };
+    /**
+     * Reset data object to the default json object file, save results to
+     * storage.
+     *
+     * @param function callback
+     *   Callback will be invoked when saving is finished.
+     * @param object resetData
+     *   (optional) If provided then this object will be used to reset against
+     *   instead of reading from the default json object file.
+     *
+     * @return void
+     *   Callback is invoked when operation is finished with arguments:
+     *   - result: (object) An object with properties:
+     *     - success: (bool) true on success, false on failure.
+     *     - message: (string) will be set on failure.
+     */
+    pvt.reset = function(callback, resetData) {
+        parent = this;
+        $.get(chrome.extension.getURL('data/resource.json'), {}, function(data) {
+            if (typeof(resetData) != 'undefined')
+                data = resetData;
+            resetData = parent.cleanData(JSON.parse(data)).data;
+            var result = parent.setData(resetData, { apply: true } );
+            if (result.success) {
+                parent.save(function(result) {
+                    callback(result);
+                });
+            }
+            callback(result);
+        });
+    };
+
     // Load an empty resource by default.
     pvt.data = pvt.cleanResource().resource;
 
@@ -447,6 +479,9 @@ cstApp.factory('resource', ['$rootScope', 'appMeta', function($rootScope, appMet
     };
     api.save = function(callback) {
         return pvt.save(callback);
+    };
+    api.reset = function(callback, resetData) {
+        return pvt.reset(callback, resetData);
     };
 
 

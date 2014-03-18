@@ -15,30 +15,6 @@
   <div>
     <div class="panel-group" id="accordion">
 
-      <div class="panel panel-default cst-url-map">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-              URL Mapping
-            </a>
-          </h4>
-        </div>
-        <div id="collapseOne" class="panel-collapse collapse">
-          <div class="panel-body">
-            <p>URL Maps instruct the browser on what, if anything, needs to be
-            done first before accessing the given URL (such as a login process).
-            Normally nothing needs to be done.</p>
-            <table><tr><th>URL</th></tr>
-              <tr ng-repeat="(index, url) in resource.urls">
-                <td><input class="url" ng-model="url.url" /></td>
-                <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="urlRemove(index)"> </button></td>
-              </tr>
-            </table>
-            <button class="btn btn-success glyphicon glyphicon-plus-sign" ng-click="urlAdd()"> URL</button>
-          </div>
-        </div>
-      </div>
-
       <div class="panel panel-default cst-metric-map">
         <div class="panel-heading">
           <h4 class="panel-title">
@@ -67,7 +43,7 @@
                   <td><input class="form-control" ng-model="metric.url" /></td>
                   <td><input class="form-control" ng-model="metric.selector" /></td>
                   <td><input class="form-control" ng-model="metric.regex" /></td>
-                  <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="metricRemove(index)"> </button></td>
+                  <td><button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="remove(index)"> </button></td>
                 </tr>
               </form>
               <form name="cstAddMetric" novalidate>
@@ -76,7 +52,7 @@
                   <td><input class="form-control" ng-model="addMetric.url" ng-pattern="/^http://.+$/" placeholder="URL" /></td>
                   <td><input class="form-control" ng-model="addMetric.selector" placeholder="CSS Selector" /></td>
                   <td><input class="form-control" ng-model="addMetric.regex" placeholder="Regex" /></td>
-                  <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="metricAdd()" ng-show="cstAddMetric.$valid"> </button></td>
+                  <td><button class="btn btn-success glyphicon glyphicon-plus" ng-click="add()" ng-show="cstAddMetric.$valid"> </button></td>
                 </tr>
               </form>
             </table>
@@ -94,14 +70,13 @@
         </div>
         <div id="collapseThree" class="panel-collapse collapse">
           <div class="panel-body">
-            <p>Import will overwrite any metrics will name conflicts and add new metrics if any are missing.
-            The import will <b>not</b> remove old or custom metrics. Use reset to clear all all existing
-            metrics. Export operates on the saved resource object in chrome storage; be sure and save any
-            recent changes before exporting.</p>
+            <p>Import will destroy all existing resource data. Use reset to clear all all existing
+            metrics and reset to factory defaults. Export operates on the last saved resource data;
+            be sure and save any recent changes before exporting.</p>
             <p>
               <input type="checkbox" class="cst-checkbox" ng-model="export.pretty" /> Make JSON pretty.
             </p>
-            <textarea class="form control"></textarea>
+            <textarea class="form control" ng-model="export.data"></textarea>
             <div class="cst-controls">
               <button class="btn btn-success" ng-click="export()">Export</button>
               <button class="btn btn-warning" ng-click="import()">Import</button>
@@ -114,6 +89,6 @@
     </div>
     <br />
     <div id="saveConfirmResource"></div>
-    <button class="btn btn-warning" ng-show="metricForm.$valid" ng-click="saveResource()">Update Resource</button>
+    <button class="btn btn-warning" ng-show="metricForm.$valid" ng-click="save()">Update Resource</button>
   </div>
 </div>
