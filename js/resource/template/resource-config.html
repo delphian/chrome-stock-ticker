@@ -60,6 +60,23 @@
         </div>
       </div>
 
+      <div class="panel panel-default cst-metric-test">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              Test Fetch
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+          <div class="panel-body">
+            <input class="form-control" placeholder="Enter Stock Symbol to Test Fetching Metrics" type="text" ng-model="testMetrics.variable" ui-keypress="{enter: 'test()'}" />
+            <br />
+            <pre>{{testMetrics.metrics|json}}</pre>
+          </div>
+        </div>
+      </div>
+
       <div class="panel panel-default cst-import-export">
         <div class="panel-heading">
           <h4 class="panel-title">

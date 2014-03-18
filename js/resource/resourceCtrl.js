@@ -1,8 +1,9 @@
 
-cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, resource) {
+cstApp.controller('resourceConfig', ['$scope', 'resource', 'variable', function($scope, resource, variable) {
     $scope.resource = resource.getData();
     $scope.addMetric = { name: '', url: '', selector: '', regex: '' };
     $scope.export = { pretty: false, data: null };
+    $scope.testMetrics = { metrics: {}, variable: null };
 
     $scope.$on('resourceUpdate', function(event, data) {
         $scope.resource = resource.getData();
@@ -59,6 +60,13 @@ cstApp.controller('resourceConfig', ['$scope', 'resource', function($scope, reso
         } else {
             $('#saveConfirmResource').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
         }
+    };
+    $scope.test = function() {
+        variable.getMetrics($scope.testMetrics.variable, function(metrics) {
+            $scope.testMetrics.metrics = metrics;
+            $scope.testMetrics.variable = '';
+            $scope.$digest();
+        });
     };
 
 }]);
