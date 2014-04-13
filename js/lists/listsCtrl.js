@@ -101,6 +101,14 @@ cstApp.controller('lists', ['$scope', 'lists', function($scope, lists) {
             $scope.addList = { name: '' };
         }
     };
+    // Remove the currently selected list.
+    // @todo check return values.
+    $scope.remove = function(index) {
+        var result = lists.compareItem({ name: $scope.list.name }, $scope.lists.items.custom);
+        var index = result['name'][0]['index'];
+        var result = lists.removeItem(index);
+        lists.save();
+    };
     //
     $scope.save = function() {
         var result = lists.setData($scope.lists);
