@@ -45,13 +45,16 @@ cstApp.controller('list', ['$rootScope', '$scope', 'variable', 'variableConfig',
                 $scope.variables.push(variableName.toUpperCase());
                 $scope.variablesData.push({ "metrics": metrics });
                 $scope.addVariable = '';
-                $scope.$apply();
+                if (!$scope.$$phase && !$rootScope.$$phase)
+                    $scope.$apply();
+                $scope.$emit('listUpdate', 'add');
             });
         }
     };
     $scope.remove = function(index) {
         $scope.variables.splice(index, 1);
         $scope.variablesData.splice(index, 1);
+        $scope.$emit('listUpdate', 'remove');
     };
 }]);
 
@@ -85,6 +88,9 @@ cstApp.controller('lists', ['$scope', 'lists', function($scope, lists) {
         }
         if (data.apply) $scope.$apply();
     });
+    $scope.$on('listUpdate', function(event, data) {
+        $scope.save();
+    });
     // Add a new list.
     $scope.add = function() {
         var result = lists.addItem({
@@ -114,11 +120,8 @@ cstApp.controller('lists', ['$scope', 'lists', function($scope, lists) {
         var result = lists.setData($scope.lists);
         if (result.success) {
             lists.save(function(result) {
-                if (result.success) {
-                    $('#saveConfirmLists').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a>Saved!</div>');
-                } else {
+                if (!result.success)
                     $('#saveConfirmLists').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');
-                }
             });
         } else {
             $('#saveConfirmLists').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">x</a>Failed to save: '+result.message+'</div>');

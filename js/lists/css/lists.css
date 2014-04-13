@@ -15,9 +15,9 @@
 /**
  * Single vertical list.
  */
-.cst-list-vertical { clear: both; padding-top: 15px; }
-.cst-list-vertical .cst-controls { margin-top: 16px; }
-.cst-list-vertical .cst-controls > div { float: left; width: 80px; margin: 0; padding: 0; }
+.cst-list-vertical { clear: both; padding-top: 20px; }
+.cst-list-vertical .cst-controls { margin-top: 12px; }
+.cst-list-vertical .cst-controls > div { float: left; width: 120px; margin: 0; padding: 0; }
 .cst-list-vertical .cst-controls button { width: 100%; }
 .cst-list-vertical .cst-controls input { height: 30px; }
 .cst-list-vertical table td { margin: 0; padding: 0; }
