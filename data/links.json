@@ -26,7 +26,12 @@
             {
                 "name": "Chart: Total Debt to Equity",
                 "url": "http://www.wikinvest.com/special/Search?search=SYMBOL%20Debt%20To%20Equity"
+            },
+            {
+                "name": "Chart: Dividend Payments",
+                "url": "http://dividata.com/stock/SYMBOL/dividend"
             }
+
         ],
         "custom": []
     }

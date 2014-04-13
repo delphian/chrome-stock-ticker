@@ -4,8 +4,8 @@
 /* Links Accordian */
 .cst-links-config .cst-links .cst-add-link { margin-top: 20px; }
 .cst-links-config .cst-links table { width: 100%; }
-.cst-links-config .cst-links th.cst-link-name { width: 40%; }
-.cst-links-config .cst-links th.cst-link-url { width: 60%; }
+.cst-links-config .cst-links th.cst-link-name { width: 30%; }
+.cst-links-config .cst-links th.cst-link-url { width: 70%; }
 
 /* Import Export Accordian */
 .cst-links-config .cst-import-export {}
