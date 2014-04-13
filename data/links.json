@@ -1,35 +1,31 @@
 {
     "loaded": true,
-    "lastSave": 1392600872109,
-    "lastUpdate": 1392593681747,
+    "lastSave": 1397368577761,
+    "lastUpdate": 1397356714663,
     "version": "0.9.4",
     "autoUpdate": true,
     "useDefault": true,
     "items": {
         "default": [
             {
-                "name": "Income Statement",
+                "name": "Financial: Income Statement",
                 "url": "http://finance.yahoo.com/q/is?s=SYMBOL+Income+Statement&annual"
             },
             {
-                "name": "Balance Sheet",
+                "name": "Financial: Balance Sheet",
                 "url": "http://finance.yahoo.com/q/bs?s=SYMBOL+Balance+Sheet&annual"
             },
             {
-                "name": "Cash Flow",
+                "name": "Financial: Cash Flow",
                 "url": "http://finance.yahoo.com/q/cf?s=SYMBOL+Cash+Flow&annual"
             },
             {
-                "name": "Free Cash Flow Chart",
-                "url": "http://ycharts.com/companies/SYMBOL/free_cash_flow"
+                "name": "Chart: Free Cash Flow",
+                "url": "http://www.wikinvest.com/special/Search?search=SYMBOL%20Free%20Cash%20Flow"
             },
             {
-                "name": "Dividend Chart",
-                "url": "http://www.buyupside.com/dividendcharts/dividendchartdisplay.php?symbol=SYMBOL&interval=allyears"
-            },
-            {
-                "name": "Fair Value Calculator",
-                "url": "http://www.vuru.co/analysis/SYMBOL/valuation"
+                "name": "Chart: Total Debt to Equity",
+                "url": "http://www.wikinvest.com/special/Search?search=SYMBOL%20Debt%20To%20Equity"
             }
         ],
         "custom": []
