@@ -3,18 +3,19 @@
  * List selection and management.
  */
 .cst-lists { margin-bottom: 10px; }
-.cst-lists .cst-controls {}
+.cst-lists .cst-controls { }
 .cst-lists .cst-controls > div { height: 30px; }
 .cst-lists .cst-controls .form-control { height: 30px; }
 .cst-lists .cst-controls .btn { height: 30px; padding-top: 4px; }
-.cst-lists .cst-controls .cst-lists-select { width: 300px; margin-bottom: 15px; }
-.cst-lists .cst-controls .cst-lists-save { float: left; }
-.cst-lists .cst-controls .cst-lists-remove { }
-.cst-lists .cst-controls .cst-lists-add { width: 300px; margin-top: 20px; }
+.cst-lists .cst-controls .cst-lists-select { width: 200px; float: left; }
+.cst-lists .cst-controls .cst-lists-save { float: left; margin-left: 10px; }
+.cst-lists .cst-controls .cst-lists-remove { float: left; }
+.cst-lists .cst-controls .cst-lists-add { margin-left: 10px; width: 100px; float: left; }
 
 /**
- * Vertical List.
+ * Single vertical list.
  */
+.cst-list-vertical { clear: both; padding-top: 15px; }
 .cst-list-vertical .cst-controls { margin-top: 16px; }
 .cst-list-vertical .cst-controls > div { float: left; width: 80px; margin: 0; padding: 0; }
 .cst-list-vertical .cst-controls button { width: 100%; }

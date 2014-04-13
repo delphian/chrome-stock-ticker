@@ -4,17 +4,15 @@
   	<div class="cst-lists-select cst-select">
   	  <select class="form-control" ng-model="list" ng-options="item as item.name for item in lists.items.custom"></select>
   	</div>
-  </div>
-  <cst-list-vertical variables="list.variables"></cst-list-vertical>
-  <div class="cst-lists-controls cst-controls">
-    <div class="cst-lists-save cst-save">
-      <button class="btn btn-success" ng-click="save()">Save List</button>
-    </div>
     <div class="cst-lists-remove cst-remove">
-      <button class="btn btn-danger" ng-click="remove()">Delete List</button>
+      <button class="btn btn-danger glyphicon glyphicon-remove-sign" ng-click="remove()"> </button>
     </div>
     <div class="cst-lists-add cst-add">
       <input placeholder="Add List" class="form-control" type="text" ng-model="addList.name" ui-keypress="{enter: 'add(addList.name)'}"/>
     </div>
+    <div class="cst-lists-save cst-save">
+      <button class="btn btn-success" ng-click="save()">Save</button>
+    </div>
   </div>
+  <cst-list-vertical variables="list.variables"></cst-list-vertical>
 </div>
