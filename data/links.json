@@ -28,6 +28,10 @@
                 "url": "http://www.wikinvest.com/special/Search?search=SYMBOL%20Debt%20To%20Equity"
             },
             {
+                "name": "Chart: Revenue",
+                "url": "http://www.wikinvest.com/special/Search?search=SYMBOL%20Sales"
+            },
+            {
                 "name": "Chart: Dividend Payments",
                 "url": "http://dividata.com/stock/SYMBOL/dividend"
             }
